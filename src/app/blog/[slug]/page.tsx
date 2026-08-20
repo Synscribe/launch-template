@@ -116,11 +116,15 @@ async function Article({ params }: BlogPostPageProps) {
                 </Badge>
               ) : null}
 
-              <h1 className="mt-6 max-w-3xl text-balance font-display text-[clamp(2.4rem,3vw,3.25rem)] leading-[1.03] tracking-[-0.035em] text-paper">
+              <h1 className="mt-6 max-w-3xl text-balance font-display text-[clamp(2.4rem,3vw,3.25rem)] leading-[1.03] tracking-[-0.035em] text-ink">
                 {post.title}
               </h1>
 
-              <div className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-paper/75">
+              <p className="mt-5 max-w-2xl text-base leading-7 text-ink-muted sm:text-lg sm:leading-8">
+                {description}
+              </p>
+
+              <div className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-ink-muted">
                 {updatedAt ? (
                   <p>
                     Last updated:{" "}
@@ -130,24 +134,11 @@ async function Article({ params }: BlogPostPageProps) {
                   </p>
                 ) : null}
                 {updatedAt ? (
-                  <span aria-hidden="true" className="text-paper/35">
+                  <span aria-hidden="true" className="text-ink-faint">
                     •
                   </span>
                 ) : null}
                 <p>{estimateReadingMinutes(post.content)} min read</p>
-                {post.publishedAt ? (
-                  <>
-                    <span aria-hidden="true" className="text-paper/35">
-                      •
-                    </span>
-                    <p>
-                      Published:{" "}
-                      <time dateTime={publishedAt}>
-                        {formatBlogDate(post.publishedAt)}
-                      </time>
-                    </p>
-                  </>
-                ) : null}
               </div>
             </div>
 

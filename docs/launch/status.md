@@ -68,21 +68,22 @@ None. Add the checklist ID, approver, reason, impact, follow-up owner, and due d
 
 ## Launch log
 
-| Date       | Event                        | Result / follow-up                                           |
-| ---------- | ---------------------------- | ------------------------------------------------------------ |
-| 2026-08-20 | Previous template audited    | New architecture recorded in `PLAN.md`                       |
-| 2026-08-20 | Phase 0 and Phase 1 built    | Foundation and homepage completed                            |
-| 2026-08-20 | Local launch audit and QA    | 18 pass, 0 warning, 3 intentional info; deploy audit remains |
-| 2026-08-20 | shadcn/ui foundation added   | Button, Card, and Badge adopted without a component catalog  |
-| 2026-08-20 | First use-case detail built  | JSON-backed website-migrations page; index awaits review     |
-| 2026-08-20 | Use-case detail audited      | 26 pass, 0 warning, 3 intentional info; desktop/mobile clean |
-| 2026-08-20 | Use-case content deepened    | Group-aware model; 26 pass, 0 warning; desktop/mobile clean  |
-| 2026-08-20 | Use-case reading pass        | Desktop hero 1,360→722px; mobile hero 1,981→1,248px          |
-| 2026-08-20 | Uses collection completed    | Grouped hub and four details; 58 pass, 0 warning, 3 info     |
-| 2026-08-20 | Wisp blog completed          | Direct CMS calls, SSR index/articles, RSS, and sitemap       |
-| 2026-08-20 | Blog launch audit            | 794 pass, 1 crawl-limit warning, 3 template info, 0 failures |
-| 2026-08-20 | Blog discovery UI added      | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures |
-| 2026-08-20 | Article layout and TOC added | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures |
+| Date       | Event                        | Result / follow-up                                                |
+| ---------- | ---------------------------- | ----------------------------------------------------------------- |
+| 2026-08-20 | Previous template audited    | New architecture recorded in `PLAN.md`                            |
+| 2026-08-20 | Phase 0 and Phase 1 built    | Foundation and homepage completed                                 |
+| 2026-08-20 | Local launch audit and QA    | 18 pass, 0 warning, 3 intentional info; deploy audit remains      |
+| 2026-08-20 | shadcn/ui foundation added   | Button, Card, and Badge adopted without a component catalog       |
+| 2026-08-20 | First use-case detail built  | JSON-backed website-migrations page; index awaits review          |
+| 2026-08-20 | Use-case detail audited      | 26 pass, 0 warning, 3 intentional info; desktop/mobile clean      |
+| 2026-08-20 | Use-case content deepened    | Group-aware model; 26 pass, 0 warning; desktop/mobile clean       |
+| 2026-08-20 | Use-case reading pass        | Desktop hero 1,360→722px; mobile hero 1,981→1,248px               |
+| 2026-08-20 | Uses collection completed    | Grouped hub and four details; 58 pass, 0 warning, 3 info          |
+| 2026-08-20 | Wisp blog completed          | Direct CMS calls, SSR index/articles, RSS, and sitemap            |
+| 2026-08-20 | Blog launch audit            | 794 pass, 1 crawl-limit warning, 3 template info, 0 failures      |
+| 2026-08-20 | Blog discovery UI added      | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures      |
+| 2026-08-20 | Article layout and TOC added | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures      |
+| 2026-08-20 | Article hero corrected       | Original tokens restored; description and last-updated date shown |
 
 ## Temporary template integrations
 

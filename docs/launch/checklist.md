@@ -80,7 +80,7 @@ This is the main on-page priority order. Review each indexable page in exactly t
 2. **Meta description.** A page-specific summary that earns the click and matches visible content. There is no arbitrary pass/fail character count; search engines may choose a different snippet.
 3. **H1.** The clear visible main heading. It should agree with the title without needing to be identical.
 4. **First 200 visible words.** State what the page is about, who it helps, and the useful substance early. Do not make crawlers or users cross animation, vague brand prose, or client-only rendering to discover the topic.
-5. **Published and updated dates.** When the content actually has these dates, show them accurately to readers and include `datePublished`/`dateModified` in the applicable JSON-LD. Never invent or automatically refresh a date merely to look current.
+5. **Published and updated dates.** When the content actually has these dates, show the date treatment that helps readers accurately—for example, “Last updated”—and include `datePublished`/`dateModified` in the applicable JSON-LD when available. Never invent or automatically refresh a date merely to look current.
 
 Why this order: the title and description shape the search result, the H1 establishes the visible subject, and the opening copy confirms relevance. Dates help time-sensitive editorial content when they are real source data.
 

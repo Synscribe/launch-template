@@ -1,19 +1,11 @@
 .articleHero {
   background:
     radial-gradient(
-      ellipse at 5% 85%,
-      transparent 0 13rem,
-      rgba(191, 227, 209, 0.09) 13.1rem 13.2rem,
-      transparent 13.3rem 20rem,
-      rgba(191, 227, 209, 0.08) 20.1rem 20.2rem,
-      transparent 20.3rem
+      circle at 85% 8%,
+      rgba(191, 227, 209, 0.58),
+      transparent 24rem
     ),
-    radial-gradient(
-      ellipse at 70% -20%,
-      rgba(191, 227, 209, 0.11),
-      transparent 32rem
-    ),
-    var(--night);
+    var(--canvas);
 }
 
 .prose {
