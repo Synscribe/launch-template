@@ -10,7 +10,11 @@ type MethodStep = ContentItem & {
   number: string;
 };
 
-export const USE_CASE_FEATURE_IDS = [
+export const USE_CASE_VISUAL_IDS = [
+  "website-migration-overview",
+  "saas-rebuild-overview",
+  "startup-launch-overview",
+  "seo-landing-page-overview",
   "url-inventory",
   "url-decisions",
   "page-meaning",
@@ -27,10 +31,10 @@ export const USE_CASE_FEATURE_IDS = [
   "internal-links",
 ] as const;
 
-export type UseCaseFeatureId = (typeof USE_CASE_FEATURE_IDS)[number];
+export type UseCaseVisualId = (typeof USE_CASE_VISUAL_IDS)[number];
 
 export type UseCaseCapability = {
-  id: UseCaseFeatureId;
+  visualId: UseCaseVisualId;
   category: string;
   title: string;
   description: string;
@@ -59,13 +63,7 @@ export type UseCaseContent = {
   hero: {
     title: string;
     summary: string;
-    fit: string[];
-    primaryGoal: string;
-    brief: {
-      label: string;
-      title: string;
-      badge: string;
-    };
+    visualId: UseCaseVisualId;
   };
   risks: {
     title: string;
@@ -138,16 +136,16 @@ function slug(value: unknown, fileName: string, field: string): string {
   return result;
 }
 
-function featureId(
+function visualId(
   value: unknown,
   fileName: string,
   field: string,
-): UseCaseFeatureId {
+): UseCaseVisualId {
   const result = slug(value, fileName, field);
-  if (!(USE_CASE_FEATURE_IDS as readonly string[]).includes(result)) {
-    fail(fileName, field, `one of ${USE_CASE_FEATURE_IDS.join(", ")}`);
+  if (!(USE_CASE_VISUAL_IDS as readonly string[]).includes(result)) {
+    fail(fileName, field, `one of ${USE_CASE_VISUAL_IDS.join(", ")}`);
   }
-  return result as UseCaseFeatureId;
+  return result as UseCaseVisualId;
 }
 
 function textList(value: unknown, fileName: string, field: string): string[] {
@@ -232,7 +230,11 @@ function capabilities(
     const itemRecord = record(item, fileName, itemField);
 
     return {
-      id: featureId(itemRecord.id, fileName, `${itemField}.id`),
+      visualId: visualId(
+        itemRecord.visualId,
+        fileName,
+        `${itemField}.visualId`,
+      ),
       category: text(itemRecord.category, fileName, `${itemField}.category`),
       title: text(itemRecord.title, fileName, `${itemField}.title`),
       description: text(
@@ -248,9 +250,9 @@ function capabilities(
     };
   });
 
-  const ids = items.map((item) => item.id);
+  const ids = items.map((item) => item.visualId);
   if (new Set(ids).size !== ids.length) {
-    fail(fileName, field, "an array with unique feature IDs");
+    fail(fileName, field, "an array with unique visual IDs");
   }
   return items;
 }
@@ -276,7 +278,6 @@ function parseUseCase(value: unknown, fileName: string): UseCaseContent {
   const source = record(value, fileName, "root");
   const seo = record(source.seo, fileName, "seo");
   const hero = record(source.hero, fileName, "hero");
-  const brief = record(hero.brief, fileName, "hero.brief");
   const risks = record(source.risks, fileName, "risks");
   const solution = record(source.solution, fileName, "solution");
   const method = record(source.method, fileName, "method");
@@ -306,13 +307,7 @@ function parseUseCase(value: unknown, fileName: string): UseCaseContent {
     hero: {
       title: text(hero.title, fileName, "hero.title"),
       summary: text(hero.summary, fileName, "hero.summary"),
-      fit: textList(hero.fit, fileName, "hero.fit"),
-      primaryGoal: text(hero.primaryGoal, fileName, "hero.primaryGoal"),
-      brief: {
-        label: text(brief.label, fileName, "hero.brief.label"),
-        title: text(brief.title, fileName, "hero.brief.title"),
-        badge: text(brief.badge, fileName, "hero.brief.badge"),
-      },
+      visualId: visualId(hero.visualId, fileName, "hero.visualId"),
     },
     risks: {
       title: text(risks.title, fileName, "risks.title"),

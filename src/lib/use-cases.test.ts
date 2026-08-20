@@ -28,8 +28,11 @@ describe("use-case content", () => {
       groups: ["migrations-and-rebuilds", "technical-seo"],
     });
     expect(websiteMigration).not.toHaveProperty("order");
+    expect(websiteMigration?.hero.visualId).toBe("website-migration-overview");
     expect(websiteMigration?.solution.items).toHaveLength(5);
-    expect(websiteMigration?.solution.items.map((item) => item.id)).toEqual([
+    expect(
+      websiteMigration?.solution.items.map((item) => item.visualId),
+    ).toEqual([
       "url-inventory",
       "url-decisions",
       "page-meaning",
@@ -40,6 +43,7 @@ describe("use-case content", () => {
     expect(websiteMigration?.faq.items).toHaveLength(4);
 
     for (const useCase of useCases) {
+      expect(useCase.hero.visualId).toBeTruthy();
       expect(useCase.solution.items).toHaveLength(5);
       expect(useCase.faq.items).toHaveLength(4);
     }

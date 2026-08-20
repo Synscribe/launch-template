@@ -9,17 +9,7 @@
   "hero": {
     "title": "Rebuild your SaaS website around how people buy.",
     "summary": "Turn a crowded marketing site into clear paths for learning, comparing, and taking action.",
-    "fit": [
-      "Replacing a SaaS site that has grown without a plan",
-      "Repositioning the product for a new market",
-      "Giving marketing a faster way to ship useful pages"
-    ],
-    "primaryGoal": "Help each buyer find the right answer without losing valuable pages during the rebuild.",
-    "brief": {
-      "label": "Rebuild brief",
-      "title": "Design around buyer questions",
-      "badge": "Growth site"
-    }
+    "visualId": "saas-rebuild-overview"
   },
   "risks": {
     "title": "More pages do not always make a better website.",
@@ -44,7 +34,7 @@
     "introduction": "We plan the buyer paths, page system, and launch together. The new design does not have to guess what the old site was doing.",
     "items": [
       {
-        "id": "buyer-journeys",
+        "visualId": "buyer-journeys",
         "category": "Understand the buyer",
         "title": "Map the questions people ask before they buy.",
         "description": "We separate first-time visitors, active evaluators, and ready buyers. Each group gets a shorter path to the information it needs.",
@@ -55,7 +45,7 @@
         ]
       },
       {
-        "id": "information-architecture",
+        "visualId": "information-architecture",
         "category": "Simplify the site",
         "title": "Build the navigation around real decisions.",
         "description": "We group pages by the jobs they do, not the team that requested them. Old and new routes are mapped before the structure changes.",
@@ -66,7 +56,7 @@
         ]
       },
       {
-        "id": "reusable-pages",
+        "visualId": "reusable-pages",
         "category": "Speed up publishing",
         "title": "Reuse strong rules, not generic copy.",
         "description": "Repeated page types share code, metadata rules, and quality checks. Their message and proof stay specific to the audience.",
@@ -77,7 +67,7 @@
         ]
       },
       {
-        "id": "conversion-path",
+        "visualId": "conversion-path",
         "category": "Improve the journey",
         "title": "Make the next step clear on every page.",
         "description": "We decide what a visitor should do after each page. Product, pricing, demo, and contact paths are tested as one journey.",
@@ -88,7 +78,7 @@
         ]
       },
       {
-        "id": "release-gates",
+        "visualId": "release-gates",
         "category": "Protect the launch",
         "title": "Verify the rebuilt site before switching traffic.",
         "description": "We crawl the final environment, compare it with the URL map, and test forms, analytics, canonicals, robots, and the sitemap.",

@@ -1,0 +1,44 @@
+<svg width="960" height="720" viewBox="0 0 960 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="720" rx="48" fill="#FBFAF6"/>
+  <circle cx="850" cy="90" r="210" fill="#BFE3D1" fill-opacity="0.58"/>
+  <path d="M0 144H960M0 288H960M0 432H960M0 576H960M192 0V720M384 0V720M576 0V720M768 0V720" stroke="#17201F" stroke-opacity="0.045"/>
+
+  <text x="72" y="78" fill="#C83F1B" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="3">MIGRATION MAP</text>
+  <text x="72" y="140" fill="#17201F" font-family="Georgia, serif" font-size="48">Every old path has</text>
+  <text x="72" y="192" fill="#17201F" font-family="Georgia, serif" font-size="48">a clear next step.</text>
+
+  <g transform="translate(72 252)">
+    <rect width="816" height="104" rx="22" fill="#F5F2EA" stroke="#17201F" stroke-opacity="0.12"/>
+    <text x="28" y="46" fill="#56605D" font-family="ui-monospace, monospace" font-size="18">/old-services</text>
+    <path d="M344 52H460" stroke="#DF5028" stroke-width="3" stroke-linecap="round"/>
+    <path d="M446 38L460 52L446 66" stroke="#DF5028" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="510" y="46" fill="#17201F" font-family="ui-monospace, monospace" font-size="18">/services</text>
+    <rect x="676" y="28" width="108" height="40" rx="20" fill="#BFE3D1"/>
+    <text x="698" y="53" fill="#17201F" font-family="Arial, sans-serif" font-size="14" font-weight="700">REDIRECT</text>
+  </g>
+
+  <g transform="translate(72 376)">
+    <rect width="816" height="104" rx="22" fill="#F5F2EA" stroke="#17201F" stroke-opacity="0.12"/>
+    <text x="28" y="46" fill="#56605D" font-family="ui-monospace, monospace" font-size="18">/about-us</text>
+    <path d="M344 52H460" stroke="#DF5028" stroke-width="3" stroke-linecap="round"/>
+    <path d="M446 38L460 52L446 66" stroke="#DF5028" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="510" y="46" fill="#17201F" font-family="ui-monospace, monospace" font-size="18">/about</text>
+    <rect x="708" y="28" width="76" height="40" rx="20" fill="#E7E3D9"/>
+    <text x="727" y="53" fill="#17201F" font-family="Arial, sans-serif" font-size="14" font-weight="700">MOVE</text>
+  </g>
+
+  <g transform="translate(72 500)">
+    <rect width="816" height="104" rx="22" fill="#F5F2EA" stroke="#17201F" stroke-opacity="0.12"/>
+    <text x="28" y="46" fill="#56605D" font-family="ui-monospace, monospace" font-size="18">/expired-offer</text>
+    <path d="M344 52H460" stroke="#DF5028" stroke-width="3" stroke-linecap="round"/>
+    <path d="M446 38L460 52L446 66" stroke="#DF5028" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="510" y="46" fill="#17201F" font-family="Arial, sans-serif" font-size="17">No replacement</text>
+    <rect x="684" y="28" width="100" height="40" rx="20" fill="#F3D8CF"/>
+    <text x="707" y="53" fill="#8E3119" font-family="Arial, sans-serif" font-size="14" font-weight="700">REMOVE</text>
+  </g>
+
+  <g transform="translate(72 644)">
+    <circle cx="10" cy="10" r="10" fill="#7AB99B"/>
+    <text x="34" y="16" fill="#56605D" font-family="Arial, sans-serif" font-size="16">Reviewed before launch</text>
+  </g>
+</svg>

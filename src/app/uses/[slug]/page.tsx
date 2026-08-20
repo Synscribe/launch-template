@@ -8,7 +8,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -18,7 +17,7 @@ import {
 } from "@/lib/seo";
 import { getAllUseCases, getUseCaseBySlug } from "@/lib/use-cases";
 
-import { FeatureVisual } from "./_components/feature-visuals";
+import { UseCaseVisual } from "./_components/use-case-visual";
 import styles from "./use-case.module.css";
 
 type UseCasePageProps = {
@@ -91,50 +90,7 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
               </div>
             </div>
 
-            <Card
-              className={`${styles.briefCard} gap-0 rounded-2xl border-0 p-7 py-7 text-paper ring-0 sm:p-8 sm:py-8`}
-            >
-              <CardContent className="px-0">
-                <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-5">
-                  <div>
-                    <p className="text-xs font-bold tracking-[0.18em] text-mint uppercase">
-                      {useCase.hero.brief.label}
-                    </p>
-                    <p className="mt-1 text-xl font-semibold">
-                      {useCase.hero.brief.title}
-                    </p>
-                  </div>
-                  <Badge className="border-0 bg-mint/10 text-mint hover:bg-mint/10">
-                    {useCase.hero.brief.badge}
-                  </Badge>
-                </div>
-
-                <div className="border-b border-white/10 py-5">
-                  <p className="text-xs tracking-[0.15em] text-white/60 uppercase">
-                    Primary goal
-                  </p>
-                  <p className="mt-2 text-base leading-7 text-paper">
-                    {useCase.hero.primaryGoal}
-                  </p>
-                </div>
-
-                <div className="pt-5">
-                  <p className="text-xs tracking-[0.15em] text-white/60 uppercase">
-                    Good fit for
-                  </p>
-                  <ul className="mt-3 space-y-3">
-                    {useCase.hero.fit.map((item) => (
-                      <li className="flex gap-3 text-sm leading-6" key={item}>
-                        <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-mint/10 text-mint">
-                          <CheckIcon className="size-3" aria-hidden="true" />
-                        </span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+            <UseCaseVisual id={useCase.hero.visualId} priority />
           </div>
         </div>
       </section>
@@ -190,8 +146,8 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
             {useCase.solution.items.map((capability) => (
               <article
                 className={`${styles.capabilityRow} scroll-mt-24 py-20 sm:py-28`}
-                id={capability.id}
-                key={capability.id}
+                id={capability.visualId}
+                key={capability.visualId}
               >
                 <div className={styles.capabilityCopy}>
                   <h3 className="max-w-xl text-balance font-display text-3xl leading-[1.04] tracking-[-0.03em] sm:text-4xl">
@@ -218,7 +174,7 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
                   </ul>
                 </div>
 
-                <FeatureVisual id={capability.id} />
+                <UseCaseVisual id={capability.visualId} />
               </article>
             ))}
           </div>

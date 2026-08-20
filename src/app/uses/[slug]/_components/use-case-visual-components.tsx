@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from "react";
+import type { ReactNode } from "react";
 import {
   ArrowRightIcon,
   BadgeCheckIcon,
@@ -18,9 +18,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 
-import type { UseCaseFeatureId } from "@/lib/use-cases";
-
-import styles from "./feature-visuals.module.css";
+import styles from "./use-case-visuals.module.css";
 
 function VisualShell({
   label,
@@ -42,6 +40,121 @@ function VisualShell({
         {children}
       </div>
     </div>
+  );
+}
+
+function SaasHeroVisual() {
+  return (
+    <VisualShell label="SaaS rebuild">
+      <div className="mt-5 flex items-center gap-3">
+        <span className="grid size-11 place-items-center rounded-full bg-ink text-mint">
+          <UsersIcon className="size-5" />
+        </span>
+        <div>
+          <p className="font-display text-3xl leading-none">
+            Make every visit clearer
+          </p>
+          <p className="mt-2 text-sm text-ink-muted">
+            Organize the site around buyer questions
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-7 space-y-3">
+        {[
+          ["Learn", "What does it do?"],
+          ["Compare", "Why is it a fit?"],
+          ["Act", "What happens next?"],
+        ].map(([stage, question]) => (
+          <div
+            className="grid grid-cols-[4.5rem_1fr_auto] items-center gap-3 rounded-xl border border-ink/10 bg-canvas p-3.5"
+            key={stage}
+          >
+            <span className="text-xs font-bold text-signal-strong uppercase">
+              {stage}
+            </span>
+            <span className="text-sm font-semibold">{question}</span>
+            <ArrowRightIcon className="size-4 text-ink-faint" />
+          </div>
+        ))}
+      </div>
+    </VisualShell>
+  );
+}
+
+function StartupHeroVisual() {
+  return (
+    <VisualShell label="Launch story">
+      <div className="mt-5 flex items-center gap-3">
+        <span className="grid size-11 place-items-center rounded-full bg-ink text-mint">
+          <TargetIcon className="size-5" />
+        </span>
+        <div>
+          <p className="font-display text-3xl leading-none">
+            Explain it in three steps
+          </p>
+          <p className="mt-2 text-sm text-ink-muted">
+            Keep the first visit easy to follow
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-7 grid grid-cols-3 gap-3">
+        {["Problem", "Product", "Next step"].map((part, index) => (
+          <div
+            className={`rounded-xl border p-3.5 ${
+              index === 1
+                ? "border-mint-strong/35 bg-mint/45"
+                : "border-ink/10 bg-canvas"
+            }`}
+            key={part}
+          >
+            <span className="font-mono text-[11px] text-ink-faint">
+              0{index + 1}
+            </span>
+            <p className="mt-7 text-sm font-semibold">{part}</p>
+          </div>
+        ))}
+      </div>
+    </VisualShell>
+  );
+}
+
+function SeoLandingHeroVisual() {
+  return (
+    <VisualShell label="Search-led page">
+      <div className="mt-5 flex items-center gap-3">
+        <span className="grid size-11 place-items-center rounded-full bg-ink text-mint">
+          <SearchCheckIcon className="size-5" />
+        </span>
+        <div>
+          <p className="font-display text-3xl leading-none">
+            Start with one real search
+          </p>
+          <p className="mt-2 text-sm text-ink-muted">
+            Build the page around the answer
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-7 rounded-xl border border-ink/10 bg-canvas p-4">
+        <div className="flex items-center gap-3 rounded-lg bg-paper px-3 py-3 shadow-sm">
+          <SearchIcon className="size-4 text-signal" />
+          <span className="text-sm font-semibold">
+            How can this help my team?
+          </span>
+        </div>
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <span className="text-xs font-bold text-ink-faint uppercase">
+            Search need
+          </span>
+          <ArrowRightIcon className="size-4 text-signal" />
+          <span className="text-xs font-bold text-ink uppercase">
+            Useful page
+          </span>
+        </div>
+      </div>
+    </VisualShell>
   );
 }
 
@@ -583,24 +696,22 @@ function InternalLinksVisual() {
   );
 }
 
-const FEATURE_VISUALS: Record<UseCaseFeatureId, ComponentType> = {
-  "url-inventory": UrlInventoryVisual,
-  "url-decisions": UrlDecisionsVisual,
-  "page-meaning": PageMeaningVisual,
-  "release-gates": ReleaseGatesVisual,
-  "post-launch-monitoring": MonitoringVisual,
-  "offer-and-audience": OfferAndAudienceVisual,
-  "conversion-path": ConversionPathVisual,
-  "proof-and-trust": ProofAndTrustVisual,
-  "measurement-plan": MeasurementPlanVisual,
-  "buyer-journeys": BuyerJourneysVisual,
-  "information-architecture": InformationArchitectureVisual,
-  "reusable-pages": ReusablePagesVisual,
-  "search-intent": SearchIntentVisual,
-  "internal-links": InternalLinksVisual,
+export {
+  BuyerJourneysVisual,
+  ConversionPathVisual,
+  InformationArchitectureVisual,
+  InternalLinksVisual,
+  MeasurementPlanVisual,
+  MonitoringVisual,
+  OfferAndAudienceVisual,
+  PageMeaningVisual,
+  ProofAndTrustVisual,
+  ReleaseGatesVisual,
+  ReusablePagesVisual,
+  SaasHeroVisual,
+  SearchIntentVisual,
+  SeoLandingHeroVisual,
+  StartupHeroVisual,
+  UrlDecisionsVisual,
+  UrlInventoryVisual,
 };
-
-export function FeatureVisual({ id }: { id: UseCaseFeatureId }) {
-  const Visual = FEATURE_VISUALS[id];
-  return <Visual />;
-}

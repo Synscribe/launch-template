@@ -9,17 +9,7 @@
   "hero": {
     "title": "Move your website without losing what already works.",
     "summary": "We protect important URLs, search traffic, and customer journeys while the new site is built.",
-    "fit": [
-      "Moving a marketing site to Next.js",
-      "Rebranding or changing the site structure",
-      "Replacing a CMS without losing useful content"
-    ],
-    "primaryGoal": "Ship the new site without breaking the paths people and search engines already trust.",
-    "brief": {
-      "label": "Migration plan",
-      "title": "Know every old URL",
-      "badge": "Launch-critical"
-    }
+    "visualId": "website-migration-overview"
   },
   "risks": {
     "title": "Most migration mistakes happen behind the scenes.",
@@ -44,7 +34,7 @@
     "introduction": "Each step leaves something concrete to review. No mystery. No last-minute SEO cleanup.",
     "items": [
       {
-        "id": "url-inventory",
+        "visualId": "url-inventory",
         "category": "Find what matters",
         "title": "Build one list of the old site.",
         "description": "We combine the sitemap, crawl, analytics, Search Console, CMS, and backlink data. This catches valuable pages that normal navigation misses.",
@@ -55,7 +45,7 @@
         ]
       },
       {
-        "id": "url-decisions",
+        "visualId": "url-decisions",
         "category": "Plan the move",
         "title": "Give every old URL a clear future.",
         "description": "Each old path gets one outcome: keep, move, combine, or remove. Redirects go straight to the closest useful page.",
@@ -66,7 +56,7 @@
         ]
       },
       {
-        "id": "page-meaning",
+        "visualId": "page-meaning",
         "category": "Protect the page",
         "title": "Improve the page without losing its purpose.",
         "description": "We keep the topic people came for, then improve the page. Titles, H1s, opening copy, and internal links are checked first.",
@@ -77,7 +67,7 @@
         ]
       },
       {
-        "id": "release-gates",
+        "visualId": "release-gates",
         "category": "Test the launch",
         "title": "Check the real site before it goes live.",
         "description": "We crawl the final environment and compare it with the approved URL map. We also test forms, analytics, canonicals, robots, and the sitemap.",
@@ -88,7 +78,7 @@
         ]
       },
       {
-        "id": "post-launch-monitoring",
+        "visualId": "post-launch-monitoring",
         "category": "Watch the move",
         "title": "Catch problems early after launch.",
         "description": "We check old and new URLs as soon as the site moves. Then we watch crawl errors, landing-page traffic, and conversions for the first few weeks.",
