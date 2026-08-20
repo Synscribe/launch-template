@@ -30,7 +30,7 @@ export default function ContactPage() {
       data-contact-delivery={deliveryConfigured ? "configured" : "missing"}
       id="main-content"
     >
-      <section className="border-b border-ink/10 py-12 sm:py-20 lg:py-28">
+      <section className="py-12 sm:py-20 lg:py-28">
         <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
           <div className="lg:pt-5">
             <p className="text-sm font-semibold tracking-[0.16em] text-signal-strong uppercase">
@@ -62,28 +62,8 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="rounded-[var(--radius-card)] border border-ink/10 bg-paper p-5 shadow-[var(--shadow-card)] sm:p-8 lg:p-10">
+          <div className="self-start overflow-hidden rounded-[var(--radius-card)] border border-ink/10 bg-paper p-5 shadow-[var(--shadow-card)] sm:p-8 lg:p-10">
             <ContactForm deliveryConfigured={deliveryConfigured} />
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 md:grid-cols-[0.7fr_1.3fr] md:gap-16">
-          <h2 className="font-display text-3xl leading-tight tracking-[-0.03em]">
-            What happens to your details
-          </h2>
-          <div className="max-w-2xl space-y-4 leading-7 text-ink-muted">
-            <p>
-              The form sends your message to the configured recipient. It also
-              includes your first landing page, campaign tags, external
-              referrer, and up to five recent pages on this site.
-            </p>
-            <p>
-              Private query values are not kept. Form values are not sent to
-              analytics. The final privacy policy must explain the
-              project&apos;s actual storage and retention choices before launch.
-            </p>
           </div>
         </div>
       </section>

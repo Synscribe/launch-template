@@ -94,6 +94,7 @@ None. Add the checklist ID, approver, reason, impact, follow-up owner, and due d
 | 2026-08-20 | Contact launch audit         | 792 pass, 4 known blog/crawl warnings, 4 template info, 0 failures |
 | 2026-08-20 | Visual skills added          | Canonical `.agents` skills shared with Claude through symlinks     |
 | 2026-08-20 | Visual skill samples checked | OG and `/uses` reviewed; audit 792 pass, 5 warning, 0 failures     |
+| 2026-08-20 | Contact UI refined           | Desktop/mobile reviewed; audit 791 pass, 6 warning, 0 failures     |
 
 ## Temporary template integrations
 

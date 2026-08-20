@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon, CheckCircle2Icon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import posthog from "posthog-js";
 import {
   type FormEvent,
@@ -109,27 +109,30 @@ export function ContactForm({ deliveryConfigured }: ContactFormProps) {
   if (state === "success") {
     return (
       <div
-        className="rounded-2xl border border-mint-strong/35 bg-mint/35 p-6 sm:p-8"
+        className="-m-5 bg-mint/25 p-5 sm:-m-8 sm:p-8 lg:-m-10 lg:p-10"
         role="status"
       >
-        <CheckCircle2Icon className="size-8 text-ink" aria-hidden="true" />
-        <h2 className="mt-5 text-2xl font-semibold tracking-tight">
-          Message sent.
+        <h2 className="max-w-lg font-display text-3xl leading-tight tracking-[-0.03em] sm:text-4xl">
+          Thank you. We&apos;ve received your message.
         </h2>
-        <p className="mt-3 leading-7 text-ink-muted">
-          The team has the details you shared.
+        <p className="mt-4 max-w-md leading-7 text-ink-muted">
+          We&apos;ll get back to you within 1–3 working days.
         </p>
-        <Button
-          className="mt-6 h-auto rounded-full px-5 py-3"
-          onClick={() => {
-            startedAt.current = Date.now();
-            setState("idle");
-          }}
-          type="button"
-          variant="outline"
-        >
-          Send another message
-        </Button>
+
+        <div className="mt-8 border-t border-ink/10 pt-6">
+          <Button
+            className="h-auto rounded-full px-5 py-3"
+            onClick={() => {
+              startedAt.current = Date.now();
+              setState("idle");
+            }}
+            type="button"
+            variant="outline"
+          >
+            Send another message
+            <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
+          </Button>
+        </div>
       </div>
     );
   }

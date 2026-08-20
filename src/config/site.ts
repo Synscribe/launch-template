@@ -17,11 +17,9 @@ export const siteConfig = Object.freeze({
   locale: "en-SG",
   contactEmail: env.contactEmail,
   navigation: [
-    { label: "Principles", href: "/#principles" },
-    { label: "Priorities", href: "/#priorities" },
-    { label: "Workflow", href: "/#workflow" },
-    { label: "Uses", href: "/uses" },
+    { label: "Use Cases", href: "/uses" },
     { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
   ] satisfies NavigationItem[],
   socialLinks,
 });
