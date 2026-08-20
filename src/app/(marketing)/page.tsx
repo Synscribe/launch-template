@@ -13,9 +13,9 @@ import {
 import styles from "./home.module.css";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "A safer way to build and launch Next.js websites",
+  title: "A practical Next.js template for agentic websites",
   description:
-    "A practical Next.js template for migrations, rebuilds, and new websites. Keep SEO, redirects, analytics, and launch checks close to the code.",
+    "Launch agentic websites, migrations, and rebuilds with technical SEO, redirects, analytics, and launch checks kept close to the code.",
   path: "/",
 });
 
@@ -112,22 +112,17 @@ export default function HomePage() {
             <p
               className={`${styles.kicker} flex items-center gap-3 text-xs font-bold tracking-[0.2em] text-ink-muted uppercase`}
             >
-              A practical Next.js launch template
+              A practical Next.js foundation
             </p>
             <h1
               className={`${styles.displayTitle} mt-7 max-w-4xl font-display text-[clamp(3.6rem,8vw,7.4rem)] leading-[0.9] tracking-[-0.065em]`}
             >
-              Build the new site. Leave the old mistakes behind.
+              Launch a new agentic website.
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-8 text-ink-muted sm:text-xl sm:leading-9">
-              A practical Next.js template for migrations, rebuilds, and new
-              websites. It keeps SEO, redirects, analytics, and launch checks
-              close to the code. Your design stays custom.
-            </p>
-            <p className="mt-4 max-w-2xl leading-7 text-ink-muted">
-              Start with the title, description, H1, and first 200 words. Map
-              old URLs before changing routes. Keep the blog, use cases, and
-              PostHog only when the project needs them.
+              Start with a practical Next.js foundation for agentic websites,
+              migrations, and rebuilds. Technical SEO, redirects, analytics, and
+              launch checks stay close to the code. The design stays yours.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link

@@ -32,7 +32,7 @@ export const env = Object.freeze({
   siteUrl: normalizedUrl(process.env.NEXT_PUBLIC_SITE_URL),
   siteDescription:
     optional(process.env.NEXT_PUBLIC_SITE_DESCRIPTION) ??
-    "A disciplined Next.js starting point for client migrations, rebuilds, and new launches.",
+    "A practical Next.js foundation for agentic websites, client migrations, rebuilds, and new launches.",
   deploymentEnvironment: deploymentEnvironment(
     process.env.NEXT_PUBLIC_DEPLOYMENT_ENV,
   ),
