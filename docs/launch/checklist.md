@@ -245,17 +245,37 @@ Verify old and new Search Console properties and host variants. Use Search Conso
 
 Test production delivery, recipient/CRM ownership, confirmation, failure handling, reply path, and monitoring. A form returning 200 is not enough if nobody receives the lead.
 
+Code: `src/app/contact/page.tsx`, `src/app/contact/_components/contact-form.tsx`, `src/app/api/contact/route.ts`, `src/lib/contact-delivery.ts`, `scripts/launch-audit.ts`.
+
+Evidence: raw page HTML, production delivery configuration marker, one received test lead at the reviewed destination, verified reply path, visible success/failure states, recipient owner, and production audit. Never place credentials or submitted personal data in the evidence file.
+
 ### FORM-02 — form input and output are bounded
 
 Validate types and sensible lengths server-side, escape output, reject unexpected fields, avoid logging secrets/PII, and show safe useful errors.
+
+Code: `src/lib/contact.ts`, `src/lib/contact-delivery.ts`, `src/app/api/contact/route.ts`.
+
+Evidence: focused validation/escaping tests plus rejected invalid, oversized, and unexpected fields in a live check.
 
 ### FORM-03 — abuse and retention match the risk
 
 Choose spam controls, rate limits, retention, consent, access, and deletion processes appropriate to the traffic and data. Do not copy a CAPTCHA or legal basis automatically between clients.
 
+The included honeypot, completion-time check, same-origin check, and in-memory per-instance rate limit are a low-risk baseline, not a universal production answer. Review whether the deployed traffic and hosting model require a durable rate limiter, CAPTCHA, WAF rule, or provider control. Record who can access delivered leads and when the inbox/CRM deletes them.
+
+Code: `src/app/api/contact/route.ts`, `src/app/api/contact/_lib/rate-limit.ts`, `src/app/privacy/page.tsx`, `docs/recipes/contact.md`.
+
+Evidence: abuse-control test, approved retention/access decision, and final privacy copy.
+
 ### FORM-04 — attribution is minimized
 
 Collect only useful attribution fields, document first/recent-page storage, avoid sensitive query values, and align analytics/storage with the privacy decision.
+
+The default keeps first-touch UTM fields, an external referrer without its query string, the first landing page, and at most five same-site paths. It drops all other query values, expires browser context after 90 days, validates it again on the server, and sends no form values or attribution to PostHog.
+
+Code: `src/lib/visitor-context.ts`, `src/app/contact/_components/visitor-context-tracker.tsx`, `src/lib/contact.ts`, `src/app/contact/_components/contact-form.tsx`.
+
+Evidence: tests showing sensitive query removal, same-origin enforcement, five-page and expiry bounds; approved privacy/analytics decision; inspected delivery and analytics payloads.
 
 ## P1 — non-blocking quality and feature-dependent checks
 

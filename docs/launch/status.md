@@ -21,7 +21,7 @@ This file is the per-project record. Replace template entries with owners, evide
 | Phase 0 foundation | Complete               | Config, shell, SEO, robots, sitemap, PostHog, docs, audit            |
 | Phase 1 homepage   | Complete               | `src/app/(marketing)/page.tsx`, desktop and mobile review            |
 | Legal approval     | Blocked for production | `TODO_CLIENT_LEGAL_REVIEW` intentionally present                     |
-| Contact            | Not started            | Later page phase                                                     |
+| Contact            | Complete               | SSR page/form, validated API, SMTP adapter, attribution, live test   |
 | Use cases          | Complete               | Grouped `/uses` hub and four JSON-backed detail pages                |
 | Blog               | Complete               | Wisp featured index, filters, article TOC/sharing, feed, and sitemap |
 
@@ -45,6 +45,10 @@ This file is the per-project record. Replace template entries with owners, evide
 | LEGAL-01 | Fail by design                      | Unassigned | Replace both legal scaffolds and record approval                       |
 | OPS-01   | Not started                         | Unassigned | Production owners and rollback path are unassigned                     |
 | QA-01    | Pass locally; deploy check required | Unassigned | `pnpm check`, build, browser review, and template audit                |
+| FORM-01  | Pass locally; production pending    | Unassigned | One SMTP-accepted test to `raymond@synscribe.com`; UI success verified |
+| FORM-02  | Pass                                | Unassigned | Validation, unexpected-field, URL normalization, and escaping tests    |
+| FORM-03  | Baseline implemented; review needed | Unassigned | Same-origin, timing, honeypot, rate limit; inbox retention TBD         |
+| FORM-04  | Pass for template default           | Unassigned | Five clean paths, first UTMs/referrer, 90-day expiry covered by tests  |
 
 ## P1 decisions
 
@@ -68,25 +72,30 @@ None. Add the checklist ID, approver, reason, impact, follow-up owner, and due d
 
 ## Launch log
 
-| Date       | Event                        | Result / follow-up                                                |
-| ---------- | ---------------------------- | ----------------------------------------------------------------- |
-| 2026-08-20 | Previous template audited    | New architecture recorded in `PLAN.md`                            |
-| 2026-08-20 | Phase 0 and Phase 1 built    | Foundation and homepage completed                                 |
-| 2026-08-20 | Local launch audit and QA    | 18 pass, 0 warning, 3 intentional info; deploy audit remains      |
-| 2026-08-20 | shadcn/ui foundation added   | Button, Card, and Badge adopted without a component catalog       |
-| 2026-08-20 | First use-case detail built  | JSON-backed website-migrations page; index awaits review          |
-| 2026-08-20 | Use-case detail audited      | 26 pass, 0 warning, 3 intentional info; desktop/mobile clean      |
-| 2026-08-20 | Use-case content deepened    | Group-aware model; 26 pass, 0 warning; desktop/mobile clean       |
-| 2026-08-20 | Use-case reading pass        | Desktop hero 1,360→722px; mobile hero 1,981→1,248px               |
-| 2026-08-20 | Uses collection completed    | Grouped hub and four details; 58 pass, 0 warning, 3 info          |
-| 2026-08-20 | Wisp blog completed          | Direct CMS calls, SSR index/articles, RSS, and sitemap            |
-| 2026-08-20 | Blog launch audit            | 794 pass, 1 crawl-limit warning, 3 template info, 0 failures      |
-| 2026-08-20 | Blog discovery UI added      | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures      |
-| 2026-08-20 | Article layout and TOC added | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures      |
-| 2026-08-20 | Article hero corrected       | Original tokens restored; description and last-updated date shown |
+| Date       | Event                        | Result / follow-up                                                 |
+| ---------- | ---------------------------- | ------------------------------------------------------------------ |
+| 2026-08-20 | Previous template audited    | New architecture recorded in `PLAN.md`                             |
+| 2026-08-20 | Phase 0 and Phase 1 built    | Foundation and homepage completed                                  |
+| 2026-08-20 | Local launch audit and QA    | 18 pass, 0 warning, 3 intentional info; deploy audit remains       |
+| 2026-08-20 | shadcn/ui foundation added   | Button, Card, and Badge adopted without a component catalog        |
+| 2026-08-20 | First use-case detail built  | JSON-backed website-migrations page; index awaits review           |
+| 2026-08-20 | Use-case detail audited      | 26 pass, 0 warning, 3 intentional info; desktop/mobile clean       |
+| 2026-08-20 | Use-case content deepened    | Group-aware model; 26 pass, 0 warning; desktop/mobile clean        |
+| 2026-08-20 | Use-case reading pass        | Desktop hero 1,360→722px; mobile hero 1,981→1,248px                |
+| 2026-08-20 | Uses collection completed    | Grouped hub and four details; 58 pass, 0 warning, 3 info           |
+| 2026-08-20 | Wisp blog completed          | Direct CMS calls, SSR index/articles, RSS, and sitemap             |
+| 2026-08-20 | Blog launch audit            | 794 pass, 1 crawl-limit warning, 3 template info, 0 failures       |
+| 2026-08-20 | Blog discovery UI added      | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures       |
+| 2026-08-20 | Article layout and TOC added | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures       |
+| 2026-08-20 | Article hero corrected       | Original tokens restored; description and last-updated date shown  |
+| 2026-08-20 | Contact form completed       | SSR form, bounded API, SMTP adapter, attribution, abuse baseline   |
+| 2026-08-20 | Contact delivery tested      | One SMTP-accepted message to `raymond@synscribe.com`; UI success   |
+| 2026-08-20 | Contact launch audit         | 792 pass, 4 known blog/crawl warnings, 4 template info, 0 failures |
 
 ## Temporary template integrations
 
 | Integration | Current value                                                    | Required client action                            | Owner      |
 | ----------- | ---------------------------------------------------------------- | ------------------------------------------------- | ---------- |
 | Wisp        | Cyber Sierra publication ID and content origin in `.env.example` | Replace or delete the blog before a client launch | Unassigned |
+
+The Cyber Sierra SMTP environment was loaded only into the local test process for the authorized delivery above. No mail credential or test recipient is stored in this repository. Configure client-owned server values and verify the real production recipient before launch.

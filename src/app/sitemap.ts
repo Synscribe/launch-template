@@ -22,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/uses",
     ...useCases.map((useCase) => `/uses/${useCase.slug}`),
     "/blog",
+    "/contact",
   ];
 
   if (!usesTemplateIdentity) routes.push("/privacy", "/terms");

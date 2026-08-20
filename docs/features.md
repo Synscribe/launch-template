@@ -4,10 +4,10 @@ Use this file at kickoff to decide what the project keeps, deletes, or adds. Def
 
 ## Rules
 
-- PostHog, blog, and use cases are included by default as their phases are completed.
+- PostHog, blog, use cases, and contact are included by default as their phases are completed.
 - If unused, delete the route/components/content, navigation and sitemap entries, tests, dependency, and recipe references.
 - Do not retain an unused integration behind `enabled: false`.
-- Contact and advanced capabilities are added when the real project selects them.
+- Advanced capabilities are added when the real project selects them.
 - Record the project decision in `docs/launch/status.md`.
 
 ## Catalog
@@ -25,7 +25,7 @@ Use this file at kickoff to decide what the project keeps, deletes, or adds. Def
 | Blog                                         | Keep unless unused        | Wisp index and article routes complete                                    | P1                       | `src/app/blog`, `src/lib/blog.ts`, `docs/recipes/blog.md`                 |
 | Use cases                                    | Keep unless unused        | Grouped hub and four details complete                                     | P1                       | `/uses`, drop-in use-case JSON, group manifest, dynamic detail route      |
 | Migration redirects                          | Keep for migrations       | Empty map                                                                 | P0 for migration         | `docs/launch/url-map.csv`, `src/config/redirects.ts`                      |
-| Contact form                                 | Add when selected         | Not started                                                               | P0 if primary conversion | Accessible UI, validated server handler, delivery and abuse controls      |
+| Contact form                                 | Keep unless unused        | Implemented; delivery unavailable until server mail values are set        | P0 if primary conversion | `src/app/contact`, `src/app/api/contact`, `docs/recipes/contact.md`       |
 | Social previews                              | Keep                      | Implemented baseline                                                      | P1                       | `src/app/opengraph-image.tsx`, page metadata                              |
 | Animated sections                            | Add deliberately          | Homepage has CSS-only motion                                              | P1/P2                    | Route-local code, reduced motion, no hidden critical copy                 |
 | Generated graphics                           | Add deliberately          | Not installed                                                             | P1/P2                    | Project-owned optimized assets with provenance/alt intent                 |

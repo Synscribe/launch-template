@@ -45,6 +45,7 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 - Privacy and terms: safe noindex scaffolds only. They deliberately block production until replaced and reviewed.
 - Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented; adding a content file automatically adds its validated route and sitemap entry.
 - Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. The `.env.example` ID is temporarily Cyber Sierra's and must be replaced or the blog deleted for a client.
+- Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured.
 
 ## Architecture rules
 
@@ -61,6 +62,8 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 Global identity and navigation live in `src/config/site.ts`; environment parsing lives in `src/config/env.ts`. Email and social links are optional. Page content does not belong in global config.
 
 Set the server-only `WISP_BLOG_ID` to the publication used by `/blog` and `WISP_CONTENT_ORIGIN` to the site that owns source-relative links in those articles. Featured content and optional filters are declared in `src/app/blog/blog.config.ts`. See [`docs/recipes/blog.md`](docs/recipes/blog.md) for configuration and complete removal steps.
+
+Set all `MAIL_*` values and `CONTACT_TO_EMAIL` to activate `/contact`; none may use a `NEXT_PUBLIC_` prefix. The default stores only first-touch campaign fields and five recent same-site paths, and sends no form values to PostHog. See [`docs/recipes/contact.md`](docs/recipes/contact.md) for privacy decisions, verification, and removal.
 
 Set `NEXT_PUBLIC_DEPLOYMENT_ENV` deliberately:
 

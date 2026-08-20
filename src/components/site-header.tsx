@@ -38,14 +38,14 @@ export function SiteHeader() {
         </nav>
 
         <Link
-          href="/#workflow"
+          href="/contact"
           className={buttonVariants({
             size: "sm",
             className:
               "h-auto rounded-full bg-signal px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_28px_rgba(224,78,34,0.22)] hover:-translate-y-0.5 hover:bg-signal-strong",
           })}
         >
-          See the workflow
+          Start a project
           <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
         </Link>
       </div>

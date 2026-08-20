@@ -21,7 +21,7 @@ export default function PrivacyPage() {
       sections={[
         {
           title: "Information collected",
-          body: "Document submitted form fields, analytics identifiers, cookies, server logs, account information, uploaded content, and any information received from integrations. Remove categories the production site does not collect.",
+          body: "Document submitted form fields, analytics identifiers, cookies, server logs, account information, uploaded content, and any information received from integrations. The included contact form keeps first-touch campaign tags, the external referrer without its query, the first landing page, and up to five recent same-site paths in local browser storage for submission with the form. Remove categories the production site does not collect.",
         },
         {
           title: "How information is used",

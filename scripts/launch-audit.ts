@@ -347,6 +347,36 @@ function auditPage(page: Page, sitemapUrls: Set<string>): void {
   const canonical = linkHref(page.html, "canonical");
   const bodyWords = words(plainText(page.html));
 
+  if (subject === "/contact") {
+    const deliveryTag = firstTag(
+      page.html,
+      /<[^>]+\bdata-contact-delivery=["'][^"']+["'][^>]*>/i,
+    );
+    const deliveryState = deliveryTag
+      ? attr(deliveryTag, "data-contact-delivery")
+      : undefined;
+    const hasForm = /<form\b/i.test(page.html);
+
+    record(
+      "FORM-01",
+      hasForm ? "PASS" : "FAIL",
+      subject,
+      hasForm ? "Server-rendered form markup present" : "Contact form missing",
+    );
+    record(
+      "FORM-01",
+      deliveryState === "configured"
+        ? "PASS"
+        : mode === "production"
+          ? "FAIL"
+          : "INFO",
+      subject,
+      deliveryState === "configured"
+        ? "Delivery configuration present; verify the production recipient end to end"
+        : "Delivery is intentionally unavailable until all server-only mail values are set",
+    );
+  }
+
   if (indexable) {
     if (title) record("SEO-02", "PASS", subject, `Title: ${title}`);
     else record("SEO-02", "FAIL", subject, "Missing meta title");

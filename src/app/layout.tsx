@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import { VisitorContextTracker } from "@/app/contact/_components/visitor-context-tracker";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { siteConfig } from "@/config/site";
@@ -21,6 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Suspense fallback={null}>
+          <VisitorContextTracker />
+        </Suspense>
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
