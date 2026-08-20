@@ -1,6 +1,6 @@
 # Next.js Client Launch Template — Audit and Rebuild Plan
 
-Status: planning only. No application code has been copied from the old template.
+Status: foundation, homepage, use cases, and Wisp blog implemented. This document remains the architecture and phased roadmap.
 
 This plan is based on an audit of `../zero-to-rank-template` on 2026-08-20. It defines the new template's architecture, documentation contract, launch priorities, and page-by-page build order.
 
@@ -285,27 +285,27 @@ The full checklist will be created in Phase 0. It should cover the following wit
 
 `docs/features.md` will expand this table and link every row to its recipe, code, and checklist IDs.
 
-| Capability                                     | Base default         | Priority when selected      | Intended implementation                                                                                               |
-| ---------------------------------------------- | -------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Explicit homepage                              | On                   | P0                          | Bespoke `page.tsx` with route-local sections.                                                                         |
-| Header, footer, 404, error UI                  | On                   | P0                          | Small shared shell.                                                                                                   |
-| Root/page metadata, canonical, robots, sitemap | On                   | P0                          | Native Next.js APIs.                                                                                                  |
-| Design tokens and primitives                   | On, minimal          | P0                          | Client-facing CSS variables plus only the shadcn primitives used by current pages.                                    |
-| Terms and privacy routes                       | On                   | P0                          | Clearly incomplete templates; launch audit requires approved replacement.                                             |
-| Migration inventory and redirects              | Off for startups     | P0 for migrations           | URL-map document plus reviewed Next/host redirects.                                                                   |
-| Contact form with attribution                  | Off                  | P0 if it is the primary CTA | Provider-neutral recipe, validated server route, privacy/spam controls.                                               |
-| Use-case index/detail pages                    | On; delete if unused | P1                          | Explicit dynamic content model, crawlable index, route-owned template. No feature flag.                               |
-| Basic blog                                     | On; delete if unused | P1                          | Local MDX/Markdown first unless a CMS is an actual requirement. No feature flag.                                      |
-| Blog tags and search                           | Off                  | P2                          | Add after the basic index/post path is server-rendered and stable.                                                    |
-| PostHog                                        | On; delete if unused | P1/P2                       | Normal integration with environment configuration, consent decision, event plan, and no PII capture. No feature flag. |
-| Animated sections                              | Off                  | P1/P2                       | Route-local React/CSS or selected library; reduced-motion and performance gates.                                      |
-| Generated graphics                             | Off                  | P1/P2                       | Skill creates optimized project-owned assets and records usage/alt intent.                                            |
-| 1:1 site clone/rebuild workflow                | Tooling only         | P0 for clone work           | Skill inventories URLs/assets and performs breakpoint visual comparisons.                                             |
-| Docs/knowledge base                            | Off                  | P2                          | Choose MDX/docs tooling only when required.                                                                           |
-| `llms.txt`                                     | Off                  | P2                          | Derived from enabled content; never independently hand-maintained.                                                    |
-| `.md` route representations                    | Off                  | P2                          | Generated from the same source with duplicate-indexing safeguards.                                                    |
-| Internationalization/hreflang                  | Off                  | P1/P2                       | Dedicated recipe once locales are known.                                                                              |
-| A/B testing/personalization                    | Off                  | P2                          | Add only with measurement plan and crawl/cache review.                                                                |
+| Capability                                     | Base default         | Priority when selected      | Intended implementation                                                                                                |
+| ---------------------------------------------- | -------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Explicit homepage                              | On                   | P0                          | Bespoke `page.tsx` with route-local sections.                                                                          |
+| Header, footer, 404, error UI                  | On                   | P0                          | Small shared shell.                                                                                                    |
+| Root/page metadata, canonical, robots, sitemap | On                   | P0                          | Native Next.js APIs.                                                                                                   |
+| Design tokens and primitives                   | On, minimal          | P0                          | Client-facing CSS variables plus only the shadcn primitives used by current pages.                                     |
+| Terms and privacy routes                       | On                   | P0                          | Clearly incomplete templates; launch audit requires approved replacement.                                              |
+| Migration inventory and redirects              | Off for startups     | P0 for migrations           | URL-map document plus reviewed Next/host redirects.                                                                    |
+| Contact form with attribution                  | Off                  | P0 if it is the primary CTA | Provider-neutral recipe, validated server route, privacy/spam controls.                                                |
+| Use-case index/detail pages                    | On; delete if unused | P1                          | Explicit dynamic content model, crawlable index, route-owned template. No feature flag.                                |
+| Basic blog                                     | On; delete if unused | P1                          | Direct Wisp integration selected for this template; server-rendered and configured by publication ID. No feature flag. |
+| Blog search, feed, and related content         | On with blog         | P2                          | Implemented server-side because the temporary source has enough content; tag pages wait for useful source tags.        |
+| PostHog                                        | On; delete if unused | P1/P2                       | Normal integration with environment configuration, consent decision, event plan, and no PII capture. No feature flag.  |
+| Animated sections                              | Off                  | P1/P2                       | Route-local React/CSS or selected library; reduced-motion and performance gates.                                       |
+| Generated graphics                             | Off                  | P1/P2                       | Skill creates optimized project-owned assets and records usage/alt intent.                                             |
+| 1:1 site clone/rebuild workflow                | Tooling only         | P0 for clone work           | Skill inventories URLs/assets and performs breakpoint visual comparisons.                                              |
+| Docs/knowledge base                            | Off                  | P2                          | Choose MDX/docs tooling only when required.                                                                            |
+| `llms.txt`                                     | Off                  | P2                          | Derived from enabled content; never independently hand-maintained.                                                     |
+| `.md` route representations                    | Off                  | P2                          | Generated from the same source with duplicate-indexing safeguards.                                                     |
+| Internationalization/hreflang                  | Off                  | P1/P2                       | Dedicated recipe once locales are known.                                                                               |
+| A/B testing/personalization                    | Off                  | P2                          | Add only with measurement plan and crawl/cache review.                                                                 |
 
 ## 10. Design-system and animation boundary
 
@@ -409,15 +409,15 @@ Current progress: the server-rendered `/uses` hub groups and links four JSON-bac
 
 ### Phase 5 — basic blog
 
-The blog is a default, deletable surface rather than a feature flag. Start with local Markdown/MDX because it is portable and requires no external account. Build, in order:
+The blog is a default, deletable surface rather than a feature flag. The project selected a direct Wisp connection instead of the originally proposed local Markdown/MDX source. It includes:
 
-1. one article route;
-2. server-rendered blog index;
-3. sitemap integration and article metadata;
-4. feed;
-5. tags/pagination/search only when there is enough content to use them.
+1. server-rendered article and index routes;
+2. server-side search and pagination;
+3. sanitized article HTML, visible dates, metadata, and Article JSON-LD;
+4. dynamic sitemap integration and an RSS feed;
+5. related articles, with tag pages deferred until the source has useful tag data.
 
-A CMS becomes a project decision documented in `docs/launch/status.md`, not a default template dependency.
+`WISP_BLOG_ID` is server-only. Calls are direct, with no retry or application cache. The temporary Cyber Sierra publication must be replaced for a client project. `docs/recipes/blog.md` records the complete deletion path.
 
 ### Phase 6 — agent skills
 
@@ -562,7 +562,7 @@ These do not block the architecture plan, but should be decided when scaffolding
 - package manager and deployment platform;
 - whether the base example should include a working contact form or only its recipe;
 - preferred UI primitive baseline, if any;
-- whether local MDX is acceptable as the first blog source;
+- whether each client keeps Wisp, selects another content source, or deletes the blog;
 - whether skills should target Codex only or also be mirrored for other agent formats;
 - which real client migration will serve as the validation case;
 - the expected legal/privacy review process for Singapore and each client's operating markets.
@@ -585,4 +585,4 @@ These do not block the architecture plan, but should be decided when scaffolding
 
 ## 19. Recommended next action
 
-Build the basic blog slice with one local Markdown/MDX article, a server-rendered index, article metadata, sitemap integration, and a feed. Keep legal approval as a production gate requiring real project facts; do not invent generic approvals to close Phase 2.
+Build the focused agent skills in Phase 6, starting with `technical-seo-review` and `launch-review` because their source material and audit paths now exist. Keep legal approval as a production gate requiring real project facts; do not invent generic approvals to close Phase 2.

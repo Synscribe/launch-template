@@ -20,6 +20,11 @@ export function SiteFooter() {
         <nav aria-label="Footer navigation">
           <ul className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-ink-muted md:justify-end">
             <li>
+              <Link className="hover:text-ink" href="/blog">
+                Blog
+              </Link>
+            </li>
+            <li>
               <Link className="hover:text-ink" href="/privacy">
                 Privacy
               </Link>

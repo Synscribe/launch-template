@@ -44,7 +44,7 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 - PostHog: included through `src/instrumentation-client.ts`; add its token to activate it or delete the file and dependency.
 - Privacy and terms: safe noindex scaffolds only. They deliberately block production until replaced and reviewed.
 - Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented; adding a content file automatically adds its validated route and sitemap entry.
-- Blog: planned as a default surface for its page-by-page phase; it will be a folder to delete, not a feature flag.
+- Blog: connected directly to Wisp with server-rendered search, pagination, article pages, related posts, RSS, and sitemap entries. The `.env.example` ID is temporarily Cyber Sierra's and must be replaced or the blog deleted for a client.
 
 ## Architecture rules
 
@@ -59,6 +59,8 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 ## Configuration
 
 Global identity and navigation live in `src/config/site.ts`; environment parsing lives in `src/config/env.ts`. Email and social links are optional. Page content does not belong in global config.
+
+Set the server-only `WISP_BLOG_ID` to the publication used by `/blog` and `WISP_CONTENT_ORIGIN` to the site that owns source-relative links in those articles. See [`docs/recipes/blog.md`](docs/recipes/blog.md) for configuration and complete removal steps.
 
 Set `NEXT_PUBLIC_DEPLOYMENT_ENV` deliberately:
 

@@ -1,0 +1,147 @@
+.articleHero {
+  background:
+    radial-gradient(
+      circle at 85% 8%,
+      rgba(191, 227, 209, 0.58),
+      transparent 24rem
+    ),
+    var(--canvas);
+}
+
+.prose {
+  color: var(--ink-muted);
+  font-size: 1.0625rem;
+  line-height: 1.85;
+}
+
+.prose > * + * {
+  margin-top: 1.5rem;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  scroll-margin-top: 6rem;
+}
+
+.prose h2 {
+  margin-top: 4rem;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1.08;
+}
+
+.prose h3 {
+  margin-top: 3rem;
+  font-size: 1.75rem;
+  line-height: 1.15;
+}
+
+.prose h4 {
+  margin-top: 2.25rem;
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.prose a {
+  color: var(--signal-strong);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+.prose strong {
+  color: var(--ink);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4rem;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.65rem;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--signal);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  line-height: 1.5;
+  padding: 0.4rem 0 0.4rem 1.5rem;
+}
+
+.prose :not(pre) > code {
+  border-radius: 0.35rem;
+  background: var(--muted);
+  color: var(--ink);
+  padding: 0.12rem 0.35rem;
+  font-size: 0.9em;
+}
+
+.prose pre {
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: var(--night);
+  color: var(--paper);
+  padding: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.prose img {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+}
+
+.prose figure figcaption {
+  margin-top: 0.75rem;
+  color: var(--ink-faint);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.prose th,
+.prose td {
+  min-width: 9rem;
+  border: 1px solid var(--line);
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--muted);
+  color: var(--ink);
+}
+
+.prose iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 1rem;
+}

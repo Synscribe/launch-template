@@ -80,7 +80,7 @@ export type ArticleJsonLdInput = {
   headline: string;
   description: string;
   path: string;
-  authorName: string;
+  authorName?: string;
   publishedAt?: string;
   updatedAt?: string;
   imagePath?: string;
@@ -101,7 +101,9 @@ export function buildArticleJsonLd({
     headline,
     description,
     url: absoluteUrl(path),
-    author: { "@type": "Person", name: authorName },
+    ...(authorName
+      ? { author: { "@type": "Person" as const, name: authorName } }
+      : {}),
     publisher: { "@type": "Organization", name: siteConfig.name },
     ...(publishedAt ? { datePublished: publishedAt } : {}),
     ...(updatedAt ? { dateModified: updatedAt } : {}),

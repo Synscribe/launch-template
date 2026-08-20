@@ -121,7 +121,7 @@ Check:
 - Do not add `priority` or `changeFrequency` for Google; Google ignores them.
 - Optional `.md` representations are non-blocking. Their presence, absence, or sitemap omission must never stop launch.
 
-Code: `src/app/sitemap.ts`; later blog and use-case content loaders.
+Code: `src/app/sitemap.ts` and enabled content loaders such as `src/lib/blog.ts` and `src/lib/use-cases.ts`.
 
 ### SEO-06 — important content and links exist in rendered HTML
 

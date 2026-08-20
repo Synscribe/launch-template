@@ -41,6 +41,16 @@ describe("SEO helpers", () => {
     expect(article).not.toHaveProperty("dateModified");
   });
 
+  it("omits an article author when the source does not provide one", () => {
+    const article = buildArticleJsonLd({
+      headline: "A useful article",
+      description: "A useful description.",
+      path: "/blog/useful",
+    });
+
+    expect(article).not.toHaveProperty("author");
+  });
+
   it("builds ordered absolute breadcrumb items", () => {
     const breadcrumbs = buildBreadcrumbJsonLd([
       { name: "Home", path: "/" },

@@ -27,6 +27,25 @@ function normalizedUrl(value: string | undefined): string {
   }
 }
 
+function optionalUrl(
+  value: string | undefined,
+  name: string,
+): string | undefined {
+  const candidate = optional(value);
+  if (!candidate) return undefined;
+
+  try {
+    const url = new URL(candidate);
+    if (url.protocol !== "http:" && url.protocol !== "https:")
+      throw new Error();
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    throw new Error(
+      `${name} must be an absolute HTTP(S) URL. Received: ${candidate}`,
+    );
+  }
+}
+
 export const env = Object.freeze({
   siteName: optional(process.env.NEXT_PUBLIC_SITE_NAME) ?? "Launch Template",
   siteUrl: normalizedUrl(process.env.NEXT_PUBLIC_SITE_URL),
@@ -39,6 +58,11 @@ export const env = Object.freeze({
   contactEmail: optional(process.env.NEXT_PUBLIC_CONTACT_EMAIL),
   linkedinUrl: optional(process.env.NEXT_PUBLIC_LINKEDIN_URL),
   xUrl: optional(process.env.NEXT_PUBLIC_X_URL),
+  wispBlogId: optional(process.env.WISP_BLOG_ID),
+  wispContentOrigin: optionalUrl(
+    process.env.WISP_CONTENT_ORIGIN,
+    "WISP_CONTENT_ORIGIN",
+  ),
 });
 
 export const isProduction = env.deploymentEnvironment === "production";

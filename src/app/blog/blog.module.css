@@ -1,0 +1,35 @@
+.hero {
+  background:
+    radial-gradient(
+      circle at 84% 18%,
+      rgba(191, 227, 209, 0.65),
+      transparent 23rem
+    ),
+    radial-gradient(
+      circle at 8% 100%,
+      rgba(223, 80, 40, 0.07),
+      transparent 25rem
+    ),
+    var(--canvas);
+}
+
+.searchInput {
+  width: 100%;
+  min-height: 3rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0.75rem 1.15rem;
+  font: inherit;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--ink-faint);
+}
+
+.searchInput:focus-visible {
+  border-color: var(--signal);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 18%, transparent);
+}

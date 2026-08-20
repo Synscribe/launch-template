@@ -23,7 +23,7 @@ This file is the per-project record. Replace template entries with owners, evide
 | Legal approval     | Blocked for production | `TODO_CLIENT_LEGAL_REVIEW` intentionally present          |
 | Contact            | Not started            | Later page phase                                          |
 | Use cases          | Complete               | Grouped `/uses` hub and four JSON-backed detail pages     |
-| Blog               | Planned default        | Later page phase; delete folder if unused                 |
+| Blog               | Complete               | Wisp index, article routes, search, feed, and sitemap     |
 
 ## P0 evidence
 
@@ -33,13 +33,13 @@ This file is the per-project record. Replace template entries with owners, evide
 | ROUTE-01 | Pass for current routes             | Unassigned | Local template audit, `artifacts/launch-audit.json`                    |
 | ROUTE-02 | Pass                                | Unassigned | Custom 404 returned HTTP 404 in the local audit                        |
 | SEO-01   | Pass in template mode               | Unassigned | Local crawling blocked; production verification remains                |
-| SEO-02   | Pass for homepage                   | Unassigned | Metadata, one H1, and first-200-word review completed                  |
-| SEO-03   | Pass for homepage                   | Unassigned | Canonical verified by the local audit                                  |
+| SEO-02   | Pass for current routes             | Unassigned | Route metadata/H1 review; Wisp articles expose source dates            |
+| SEO-03   | Pass for current routes             | Unassigned | Canonicals verified by the local audit                                 |
 | SEO-04   | Implemented                         | Unassigned | Environment-aware `src/app/robots.ts`                                  |
-| SEO-05   | Pass for current routes             | Unassigned | Homepage, uses hub, and four details listed by `src/app/sitemap.ts`    |
-| SEO-06   | Pass for homepage                   | Unassigned | Copy and navigation present in rendered HTML                           |
+| SEO-05   | Pass for current routes             | Unassigned | Local routes and Wisp articles listed by `src/app/sitemap.ts`          |
+| SEO-06   | Pass for current routes             | Unassigned | Raw HTML includes blog links, article copy, dates, and navigation      |
 | SEO-07   | Pass locally                        | Unassigned | One canonical root; production origin decision remains                 |
-| PERF-01  | Pass for current homepage           | Unassigned | No content media; reduced motion leaves all copy visible               |
+| PERF-01  | Pass for representative routes      | Unassigned | Responsive Wisp images; noncritical images lazy; dimensions reserved   |
 | PERF-02  | Pass locally; deploy check required | Unassigned | Browser profile: LCP 36 ms, CLS 0 on local production build            |
 | SEC-01   | Pending production review           | Unassigned | No client secrets configured in the template                           |
 | LEGAL-01 | Fail by design                      | Unassigned | Replace both legal scaffolds and record approval                       |
@@ -48,13 +48,13 @@ This file is the per-project record. Replace template entries with owners, evide
 
 ## P1 decisions
 
-| ID           | Decision                                              | Owner      | Evidence                                         |
-| ------------ | ----------------------------------------------------- | ---------- | ------------------------------------------------ |
-| SEO-08       | WebSite schema on home; BreadcrumbList on uses routes | Unassigned | `src/lib/seo.ts`                                 |
-| SOCIAL-01    | Default generated image implemented                   | Unassigned | `src/app/opengraph-image.tsx`, audit passed      |
-| A11Y-01      | Non-blocking base review passed                       | Unassigned | Semantic snapshot, mobile layout, reduced motion |
-| ANALYTICS-01 | PostHog code included, token absent                   | Unassigned | `src/instrumentation-client.ts`                  |
-| MON-01       | Not assigned                                          | Unassigned | —                                                |
+| ID           | Decision                                               | Owner      | Evidence                                         |
+| ------------ | ------------------------------------------------------ | ---------- | ------------------------------------------------ |
+| SEO-08       | WebSite, BreadcrumbList, and Article schema where used | Unassigned | `src/lib/seo.ts`                                 |
+| SOCIAL-01    | Default and article source images implemented          | Unassigned | Generated fallback, Wisp images, audit passed    |
+| A11Y-01      | Non-blocking base review passed                        | Unassigned | Semantic snapshot, mobile layout, reduced motion |
+| ANALYTICS-01 | PostHog code included, token absent                    | Unassigned | `src/instrumentation-client.ts`                  |
+| MON-01       | Not assigned                                           | Unassigned | —                                                |
 
 ## Approved exceptions
 
@@ -73,3 +73,11 @@ None. Add the checklist ID, approver, reason, impact, follow-up owner, and due d
 | 2026-08-20 | Use-case content deepened   | Group-aware model; 26 pass, 0 warning; desktop/mobile clean  |
 | 2026-08-20 | Use-case reading pass       | Desktop hero 1,360→722px; mobile hero 1,981→1,248px          |
 | 2026-08-20 | Uses collection completed   | Grouped hub and four details; 58 pass, 0 warning, 3 info     |
+| 2026-08-20 | Wisp blog completed         | Direct CMS calls, SSR index/articles, RSS, and sitemap       |
+| 2026-08-20 | Blog launch audit           | 794 pass, 1 crawl-limit warning, 3 template info, 0 failures |
+
+## Temporary template integrations
+
+| Integration | Current value                                                    | Required client action                            | Owner      |
+| ----------- | ---------------------------------------------------------------- | ------------------------------------------------- | ---------- |
+| Wisp        | Cyber Sierra publication ID and content origin in `.env.example` | Replace or delete the blog before a client launch | Unassigned |

@@ -21,6 +21,7 @@ export const siteConfig = Object.freeze({
     { label: "Priorities", href: "/#priorities" },
     { label: "Workflow", href: "/#workflow" },
     { label: "Uses", href: "/uses" },
+    { label: "Blog", href: "/blog" },
   ] satisfies NavigationItem[],
   socialLinks,
 });
