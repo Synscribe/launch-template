@@ -299,7 +299,23 @@ Add submission automation only when publishing frequency and target search engin
 
 ### CONTENT-01 — richer publishing tools
 
-Add blog tags, search, related content, feeds, and freshness workflows after the basic server-rendered blog index/article path works and enough content exists to use them.
+Add blog tags, featured articles, filters, search, related content, feeds, and freshness workflows only after the basic server-rendered blog index/article path works and the publication has enough real content to support them.
+
+Why it matters: editorial controls should help readers find useful articles without creating empty archives, made-up categories, duplicate indexable URLs, or a client-only listing that crawlers cannot follow.
+
+Check:
+
+- Declare optional filters and featured behavior in `src/app/blog/blog.config.ts`; do not scatter tag names or pinned slugs through components.
+- Map each visible filter to a real Wisp tag. Remove a filter when the publication does not maintain that tag, and never invent a generic category for untagged posts.
+- Set `BLOG_FEATURED.heroSlug` to an approved lead article or `null`. Set `BLOG_FEATURED.tag` to the real featured tag or `null`. These are content choices, not feature flags.
+- Keep the default list, filters, search results, article links, and pagination in server-rendered HTML. Filters and pagination must use real links, while search must work as a normal GET form.
+- Keep `/blog` canonical. Exclude search, filter, and pagination variants from the main sitemap unless a project deliberately promotes a stable archive page with unique value.
+- Avoid repeating a pinned article in the first result grid. Test page one, a middle and final page, every configured filter, an empty result, and a search with and without results.
+- When changing the CMS or tag model, update the route config and this project's evidence in `docs/launch/status.md`; do not create a second publishing or SEO checklist.
+
+Code: `src/app/blog/blog.config.ts`, `src/app/blog/page.tsx`, `src/app/blog/_components/blog-pagination.tsx`, `src/lib/blog.ts`.
+
+Evidence: raw server-rendered HTML for the default and filtered views, visible pagination URLs that preserve the current filter/search, CMS tag review, `/sitemap.xml`, and the page/production launch audits.
 
 ## Primary references
 

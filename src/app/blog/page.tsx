@@ -3,14 +3,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
-import { BLOG_PAGE_SIZE, getBlogPosts, isWispConfigured } from "@/lib/blog";
+import { getBlogPost, getBlogPosts, isWispConfigured } from "@/lib/blog";
 import { createPageMetadata } from "@/lib/seo";
 
+import { BlogPagination } from "./_components/blog-pagination";
+import { FeaturedPost } from "./_components/featured-post";
 import { PostCard } from "./_components/post-card";
+import {
+  BLOG_FEATURED,
+  BLOG_FILTERS,
+  getBlogFilter,
+  labelForBlogTags,
+} from "./blog.config";
 import styles from "./blog.module.css";
 
 type BlogPageProps = {
   searchParams: Promise<{
+    category?: string | string[];
     page?: string | string[];
     query?: string | string[];
   }>;
@@ -33,10 +42,10 @@ function firstValue(value?: string | string[]): string {
   return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");
 }
 
-function pageHref(page: number, query: string): string {
+function filterHref(category: string, query: string): string {
   const params = new URLSearchParams();
+  if (category !== "all") params.set("category", category);
   if (query) params.set("query", query);
-  if (page > 1) params.set("page", String(page));
   const suffix = params.toString();
   return suffix ? `/blog?${suffix}` : "/blog";
 }
@@ -47,26 +56,10 @@ async function BlogResults({ searchParams }: BlogPageProps) {
   const page =
     Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
   const query = firstValue(rawParams.query).trim().slice(0, 120);
-
-  let result;
-  let unavailable = false;
-
-  try {
-    result = await getBlogPosts({ page, query: query || null });
-  } catch {
-    unavailable = true;
-    result = {
-      posts: [],
-      pagination: {
-        page,
-        limit: BLOG_PAGE_SIZE,
-        totalPages: 0,
-        totalPosts: 0,
-        nextPage: null,
-        prevPage: null,
-      },
-    };
-  }
+  const selectedFilter = getBlogFilter(firstValue(rawParams.category));
+  const category = selectedFilter?.value ?? "all";
+  const tag = selectedFilter?.tag ?? null;
+  const showFeatured = page === 1 && category === "all" && !query;
 
   if (!isWispConfigured) {
     return (
@@ -83,7 +76,21 @@ async function BlogResults({ searchParams }: BlogPageProps) {
     );
   }
 
-  if (unavailable) {
+  const [gridOutcome, featuredOutcome, heroOutcome] = await Promise.allSettled([
+    getBlogPosts({ page, query: query || null, tag }),
+    showFeatured && BLOG_FEATURED.tag
+      ? getBlogPosts({
+          page: 1,
+          tag: BLOG_FEATURED.tag,
+          limit: BLOG_FEATURED.limit,
+        })
+      : Promise.resolve(null),
+    showFeatured && BLOG_FEATURED.heroSlug
+      ? getBlogPost(BLOG_FEATURED.heroSlug)
+      : Promise.resolve(null),
+  ]);
+
+  if (gridOutcome.status === "rejected") {
     return (
       <div className="rounded-2xl border border-ink/10 bg-paper px-6 py-10 sm:px-10">
         <h2 className="text-2xl font-semibold tracking-tight">
@@ -96,30 +103,141 @@ async function BlogResults({ searchParams }: BlogPageProps) {
     );
   }
 
+  const result = gridOutcome.value;
+  const hero =
+    heroOutcome.status === "fulfilled" ? heroOutcome.value?.post : null;
+  const featuredPosts =
+    featuredOutcome.status === "fulfilled"
+      ? (featuredOutcome.value?.posts ?? [])
+          .filter((post) => post.slug !== hero?.slug)
+          .slice(0, BLOG_FEATURED.limit)
+      : [];
+  const pinnedSlugs = new Set([
+    ...(hero ? [hero.slug] : []),
+    ...featuredPosts.map((post) => post.slug),
+  ]);
+  const posts = showFeatured
+    ? result.posts.filter((post) => !pinnedSlugs.has(post.slug))
+    : result.posts;
+  const clearSearchHref = filterHref(category, "");
+
   return (
     <>
-      <div className="mb-9 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-ink-muted" aria-live="polite">
-          {query
-            ? `${result.pagination.totalPosts} result${result.pagination.totalPosts === 1 ? "" : "s"} for “${query}”`
-            : `${result.pagination.totalPosts} articles`}
-        </p>
-        {query ? (
-          <Link
-            className="text-sm font-semibold text-signal-strong"
-            href="/blog"
-          >
-            Clear search
-          </Link>
-        ) : null}
+      {showFeatured && (hero || featuredPosts.length > 0) ? (
+        <section aria-label="Featured articles" className="mb-16 sm:mb-20">
+          {hero ? (
+            <FeaturedPost post={hero} label={labelForBlogTags(hero.tags)} />
+          ) : null}
+
+          {featuredPosts.length > 0 ? (
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredPosts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  label={labelForBlogTags(post.tags)}
+                  post={post}
+                />
+              ))}
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
+      <div className="mb-9 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        {BLOG_FILTERS.length > 0 ? (
+          <nav aria-label="Filter articles by tag">
+            <ul className="flex flex-wrap gap-3">
+              <li>
+                <Link
+                  aria-current={category === "all" ? "page" : undefined}
+                  className={buttonVariants({
+                    variant: category === "all" ? "default" : "outline",
+                    className:
+                      "h-auto rounded-full bg-paper px-4 py-2 text-sm aria-[current=page]:bg-ink aria-[current=page]:text-paper",
+                  })}
+                  href={filterHref("all", query)}
+                >
+                  All
+                </Link>
+              </li>
+              {BLOG_FILTERS.map((filter) => (
+                <li key={filter.value}>
+                  <Link
+                    aria-current={
+                      category === filter.value ? "page" : undefined
+                    }
+                    className={buttonVariants({
+                      variant:
+                        category === filter.value ? "default" : "outline",
+                      className:
+                        "h-auto rounded-full bg-paper px-4 py-2 text-sm aria-[current=page]:bg-ink aria-[current=page]:text-paper",
+                    })}
+                    href={filterHref(filter.value, query)}
+                  >
+                    {filter.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ) : (
+          <span />
+        )}
+
+        <form action="/blog" className="relative w-full sm:w-72" role="search">
+          {category !== "all" ? (
+            <input name="category" type="hidden" value={category} />
+          ) : null}
+          <label className="sr-only" htmlFor="blog-search">
+            Search articles
+          </label>
+          <SearchIcon
+            className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-ink-faint"
+            aria-hidden="true"
+          />
+          <input
+            className={styles.searchInput}
+            defaultValue={query}
+            id="blog-search"
+            name="query"
+            placeholder="Search articles"
+            type="search"
+          />
+          <button className="sr-only" type="submit">
+            Search
+          </button>
+        </form>
       </div>
 
-      {result.posts.length > 0 ? (
+      {query || category !== "all" ? (
+        <div
+          className="mb-7 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-ink-muted"
+          aria-live="polite"
+        >
+          <p>
+            {result.pagination.totalPosts} result
+            {result.pagination.totalPosts === 1 ? "" : "s"}
+            {query ? ` for “${query}”` : ""}
+            {selectedFilter ? ` in ${selectedFilter.label}` : ""}
+          </p>
+          {query ? (
+            <Link
+              className="font-semibold text-signal-strong"
+              href={clearSearchHref}
+            >
+              Clear search
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
+
+      {posts.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {result.posts.map((post) => (
+          {posts.map((post) => (
             <PostCard
               key={post.id}
-              post={{ ...post, authorName: post.author.name }}
+              label={labelForBlogTags(post.tags)}
+              post={post}
             />
           ))}
         </div>
@@ -134,42 +252,12 @@ async function BlogResults({ searchParams }: BlogPageProps) {
         </div>
       )}
 
-      {result.pagination.totalPages > 1 ? (
-        <nav
-          aria-label="Blog pagination"
-          className="mt-12 flex items-center justify-between gap-4 border-t border-ink/10 pt-8"
-        >
-          {result.pagination.prevPage ? (
-            <Link
-              className={buttonVariants({
-                variant: "outline",
-                className: "h-auto rounded-full bg-paper px-5 py-2.5",
-              })}
-              href={pageHref(result.pagination.prevPage, query)}
-            >
-              Previous
-            </Link>
-          ) : (
-            <span />
-          )}
-          <p className="text-sm text-ink-muted">
-            Page {result.pagination.page} of {result.pagination.totalPages}
-          </p>
-          {result.pagination.nextPage ? (
-            <Link
-              className={buttonVariants({
-                variant: "outline",
-                className: "h-auto rounded-full bg-paper px-5 py-2.5",
-              })}
-              href={pageHref(result.pagination.nextPage, query)}
-            >
-              Next
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
-      ) : null}
+      <BlogPagination
+        category={category}
+        currentPage={result.pagination.page}
+        query={query}
+        totalPages={result.pagination.totalPages}
+      />
     </>
   );
 }
@@ -180,7 +268,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   return (
     <main id="main-content">
       <section className={`${styles.hero} border-b border-ink/10`}>
-        <div className="mx-auto w-full max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
+        <div className="mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 sm:py-16 lg:py-20">
           <div className="max-w-4xl">
             <p className="text-sm font-bold tracking-[0.16em] text-signal-strong uppercase">
               Blog
@@ -192,39 +280,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               The latest articles from the publication connected to this
               website.
             </p>
-
-            <form
-              action="/blog"
-              className="mt-9 flex max-w-2xl flex-col gap-3 sm:flex-row"
-              role="search"
-            >
-              <label className="sr-only" htmlFor="blog-search">
-                Search articles
-              </label>
-              <input
-                className={styles.searchInput}
-                id="blog-search"
-                name="query"
-                placeholder="Search articles"
-                type="search"
-              />
-              <button
-                className={buttonVariants({
-                  size: "lg",
-                  className:
-                    "h-12 rounded-full bg-ink px-6 text-paper hover:bg-ink/85",
-                })}
-                type="submit"
-              >
-                <SearchIcon aria-hidden="true" />
-                Search
-              </button>
-            </form>
           </div>
         </div>
       </section>
 
-      <section className="py-16 sm:py-20 lg:py-24">
+      <section className="py-14 sm:py-16 lg:py-20">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">{results}</div>
       </section>
     </main>

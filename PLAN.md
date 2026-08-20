@@ -285,27 +285,27 @@ The full checklist will be created in Phase 0. It should cover the following wit
 
 `docs/features.md` will expand this table and link every row to its recipe, code, and checklist IDs.
 
-| Capability                                     | Base default         | Priority when selected      | Intended implementation                                                                                                |
-| ---------------------------------------------- | -------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Explicit homepage                              | On                   | P0                          | Bespoke `page.tsx` with route-local sections.                                                                          |
-| Header, footer, 404, error UI                  | On                   | P0                          | Small shared shell.                                                                                                    |
-| Root/page metadata, canonical, robots, sitemap | On                   | P0                          | Native Next.js APIs.                                                                                                   |
-| Design tokens and primitives                   | On, minimal          | P0                          | Client-facing CSS variables plus only the shadcn primitives used by current pages.                                     |
-| Terms and privacy routes                       | On                   | P0                          | Clearly incomplete templates; launch audit requires approved replacement.                                              |
-| Migration inventory and redirects              | Off for startups     | P0 for migrations           | URL-map document plus reviewed Next/host redirects.                                                                    |
-| Contact form with attribution                  | Off                  | P0 if it is the primary CTA | Provider-neutral recipe, validated server route, privacy/spam controls.                                                |
-| Use-case index/detail pages                    | On; delete if unused | P1                          | Explicit dynamic content model, crawlable index, route-owned template. No feature flag.                                |
-| Basic blog                                     | On; delete if unused | P1                          | Direct Wisp integration selected for this template; server-rendered and configured by publication ID. No feature flag. |
-| Blog search, feed, and related content         | On with blog         | P2                          | Implemented server-side because the temporary source has enough content; tag pages wait for useful source tags.        |
-| PostHog                                        | On; delete if unused | P1/P2                       | Normal integration with environment configuration, consent decision, event plan, and no PII capture. No feature flag.  |
-| Animated sections                              | Off                  | P1/P2                       | Route-local React/CSS or selected library; reduced-motion and performance gates.                                       |
-| Generated graphics                             | Off                  | P1/P2                       | Skill creates optimized project-owned assets and records usage/alt intent.                                             |
-| 1:1 site clone/rebuild workflow                | Tooling only         | P0 for clone work           | Skill inventories URLs/assets and performs breakpoint visual comparisons.                                              |
-| Docs/knowledge base                            | Off                  | P2                          | Choose MDX/docs tooling only when required.                                                                            |
-| `llms.txt`                                     | Off                  | P2                          | Derived from enabled content; never independently hand-maintained.                                                     |
-| `.md` route representations                    | Off                  | P2                          | Generated from the same source with duplicate-indexing safeguards.                                                     |
-| Internationalization/hreflang                  | Off                  | P1/P2                       | Dedicated recipe once locales are known.                                                                               |
-| A/B testing/personalization                    | Off                  | P2                          | Add only with measurement plan and crawl/cache review.                                                                 |
+| Capability                                      | Base default         | Priority when selected      | Intended implementation                                                                                                |
+| ----------------------------------------------- | -------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Explicit homepage                               | On                   | P0                          | Bespoke `page.tsx` with route-local sections.                                                                          |
+| Header, footer, 404, error UI                   | On                   | P0                          | Small shared shell.                                                                                                    |
+| Root/page metadata, canonical, robots, sitemap  | On                   | P0                          | Native Next.js APIs.                                                                                                   |
+| Design tokens and primitives                    | On, minimal          | P0                          | Client-facing CSS variables plus only the shadcn primitives used by current pages.                                     |
+| Terms and privacy routes                        | On                   | P0                          | Clearly incomplete templates; launch audit requires approved replacement.                                              |
+| Migration inventory and redirects               | Off for startups     | P0 for migrations           | URL-map document plus reviewed Next/host redirects.                                                                    |
+| Contact form with attribution                   | Off                  | P0 if it is the primary CTA | Provider-neutral recipe, validated server route, privacy/spam controls.                                                |
+| Use-case index/detail pages                     | On; delete if unused | P1                          | Explicit dynamic content model, crawlable index, route-owned template. No feature flag.                                |
+| Basic blog                                      | On; delete if unused | P1                          | Direct Wisp integration selected for this template; server-rendered and configured by publication ID. No feature flag. |
+| Blog search, feed, related and featured content | On with blog         | P2                          | Implemented server-side; optional filters and featured slots map to real source tags in route-owned config.            |
+| PostHog                                         | On; delete if unused | P1/P2                       | Normal integration with environment configuration, consent decision, event plan, and no PII capture. No feature flag.  |
+| Animated sections                               | Off                  | P1/P2                       | Route-local React/CSS or selected library; reduced-motion and performance gates.                                       |
+| Generated graphics                              | Off                  | P1/P2                       | Skill creates optimized project-owned assets and records usage/alt intent.                                             |
+| 1:1 site clone/rebuild workflow                 | Tooling only         | P0 for clone work           | Skill inventories URLs/assets and performs breakpoint visual comparisons.                                              |
+| Docs/knowledge base                             | Off                  | P2                          | Choose MDX/docs tooling only when required.                                                                            |
+| `llms.txt`                                      | Off                  | P2                          | Derived from enabled content; never independently hand-maintained.                                                     |
+| `.md` route representations                     | Off                  | P2                          | Generated from the same source with duplicate-indexing safeguards.                                                     |
+| Internationalization/hreflang                   | Off                  | P1/P2                       | Dedicated recipe once locales are known.                                                                               |
+| A/B testing/personalization                     | Off                  | P2                          | Add only with measurement plan and crawl/cache review.                                                                 |
 
 ## 10. Design-system and animation boundary
 
@@ -415,9 +415,9 @@ The blog is a default, deletable surface rather than a feature flag. The project
 2. server-side search and pagination;
 3. sanitized article HTML, visible dates, metadata, and Article JSON-LD;
 4. dynamic sitemap integration and an RSS feed;
-5. related articles, with tag pages deferred until the source has useful tag data.
+5. related and featured articles, plus optional filters backed by real source tags and numbered pagination.
 
-`WISP_BLOG_ID` is server-only. Calls are direct, with no retry or application cache. The temporary Cyber Sierra publication must be replaced for a client project. `docs/recipes/blog.md` records the complete deletion path.
+`WISP_BLOG_ID` is server-only. Calls are direct, with no retry or application cache. Featured slugs and optional filters live in route-owned `src/app/blog/blog.config.ts`; filter/search/page variants remain server-rendered and canonical to `/blog`. The temporary Cyber Sierra publication must be replaced for a client project. `docs/recipes/blog.md` records configuration and the complete deletion path.
 
 ### Phase 6 — agent skills
 

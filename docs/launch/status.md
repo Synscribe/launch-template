@@ -16,14 +16,14 @@ This file is the per-project record. Replace template entries with owners, evide
 
 ## Current implementation phase
 
-| Phase              | Status                 | Evidence                                                  |
-| ------------------ | ---------------------- | --------------------------------------------------------- |
-| Phase 0 foundation | Complete               | Config, shell, SEO, robots, sitemap, PostHog, docs, audit |
-| Phase 1 homepage   | Complete               | `src/app/(marketing)/page.tsx`, desktop and mobile review |
-| Legal approval     | Blocked for production | `TODO_CLIENT_LEGAL_REVIEW` intentionally present          |
-| Contact            | Not started            | Later page phase                                          |
-| Use cases          | Complete               | Grouped `/uses` hub and four JSON-backed detail pages     |
-| Blog               | Complete               | Wisp index, article routes, search, feed, and sitemap     |
+| Phase              | Status                 | Evidence                                                          |
+| ------------------ | ---------------------- | ----------------------------------------------------------------- |
+| Phase 0 foundation | Complete               | Config, shell, SEO, robots, sitemap, PostHog, docs, audit         |
+| Phase 1 homepage   | Complete               | `src/app/(marketing)/page.tsx`, desktop and mobile review         |
+| Legal approval     | Blocked for production | `TODO_CLIENT_LEGAL_REVIEW` intentionally present                  |
+| Contact            | Not started            | Later page phase                                                  |
+| Use cases          | Complete               | Grouped `/uses` hub and four JSON-backed detail pages             |
+| Blog               | Complete               | Wisp featured index, filters, search, articles, feed, and sitemap |
 
 ## P0 evidence
 
@@ -56,6 +56,12 @@ This file is the per-project record. Replace template entries with owners, evide
 | ANALYTICS-01 | PostHog code included, token absent                    | Unassigned | `src/instrumentation-client.ts`                  |
 | MON-01       | Not assigned                                           | Unassigned | —                                                |
 
+## P2 decisions
+
+| ID         | Decision                                                     | Owner      | Evidence                                             |
+| ---------- | ------------------------------------------------------------ | ---------- | ---------------------------------------------------- |
+| CONTENT-01 | Real Wisp tags drive featured content and optional filtering | Unassigned | `src/app/blog/blog.config.ts`; desktop/mobile SSR QA |
+
 ## Approved exceptions
 
 None. Add the checklist ID, approver, reason, impact, follow-up owner, and due date here.
@@ -75,6 +81,7 @@ None. Add the checklist ID, approver, reason, impact, follow-up owner, and due d
 | 2026-08-20 | Uses collection completed   | Grouped hub and four details; 58 pass, 0 warning, 3 info     |
 | 2026-08-20 | Wisp blog completed         | Direct CMS calls, SSR index/articles, RSS, and sitemap       |
 | 2026-08-20 | Blog launch audit           | 794 pass, 1 crawl-limit warning, 3 template info, 0 failures |
+| 2026-08-20 | Blog discovery UI added     | 790 pass, 5 crawl/short-variant warnings, 3 info, 0 failures |
 
 ## Temporary template integrations
 

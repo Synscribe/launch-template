@@ -8,20 +8,24 @@ The blog is ordinary, deletable application code. It connects directly to Wisp o
 2. Set `WISP_CONTENT_ORIGIN` to the website that owns source-relative links and legacy images inside Wisp articles. Valid blog links stay local; other root-relative links return to this origin, and Next Image permits this hostname.
 3. Replace the temporary Cyber Sierra publication ID and content origin before using the template for another client.
 4. Confirm the Wisp publication belongs to the client and contains only content approved for the production domain.
-5. Review the first page, a search result, an article with an image, an article without an image, related articles, `/feed.xml`, and `/sitemap.xml`.
-6. Confirm titles, descriptions, H1s, opening copy, visible dates, canonical URLs, share images, and Article JSON-LD against `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, and `SOCIAL-01` in the canonical checklist.
-7. Record the source and evidence in `docs/launch/status.md`.
+5. In Wisp, add the real tags that the index should use. The temporary source currently has a `featured` tag and a `press-release` tag; do not assume another publication uses either.
+6. Edit `src/app/blog/blog.config.ts`. Add only filters backed by maintained Wisp tags. Set the optional lead article slug and featured tag, or use `null` to omit either featured surface. Remove a filter entry to hide it; there are no runtime feature flags.
+7. Review the first page, every configured filter, an empty result, a search result, a middle and final pagination page, an article with an image, an article without an image, related articles, `/feed.xml`, and `/sitemap.xml`.
+8. Confirm titles, descriptions, H1s, opening copy, visible dates, canonical URLs, share images, and Article JSON-LD against `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, and `CONTENT-01` in the canonical checklist.
+9. Record the source, selected filters/featured behavior, and evidence in `docs/launch/status.md`.
 
 Implementation:
 
 - `src/lib/blog.ts` calls the Wisp client directly and provides safe empty results only when no blog ID is configured.
-- `src/app/blog/page.tsx` server-renders search, pagination, and article links.
+- `src/app/blog/blog.config.ts` owns the small route-specific list of optional tag filters, the pinned lead slug, and the featured tag.
+- `src/app/blog/page.tsx` server-renders featured articles, filters, search, pagination, and article links.
+- `src/app/blog/_components/blog-pagination.tsx` builds crawlable previous, next, first, last, and nearby page links while preserving the active filter/search.
 - `src/app/blog/[slug]/page.tsx` renders sanitized Wisp HTML, visible source dates, metadata, and Article JSON-LD.
 - `src/lib/blog-content.ts` owns sanitization, description fallback, date formatting, and reading-time calculation.
 - `src/app/feed.xml/route.ts` serves the latest articles as RSS.
 - `src/app/sitemap.ts` lists the blog index and every article returned by Wisp.
 
-The temporary source currently has no useful tag data, so the template does not invent tag filters or archive pages.
+Tag filters are optional discovery controls, not independent tag archive pages. The template displays only real source tags and keeps filter, search, and pagination variants canonical to `/blog` and out of the sitemap.
 
 ## Remove
 

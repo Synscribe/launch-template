@@ -15,13 +15,13 @@
 
 .searchInput {
   width: 100%;
-  min-height: 3rem;
+  min-height: 2.75rem;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--paper);
   color: var(--ink);
-  padding: 0.75rem 1.15rem;
-  font: inherit;
+  padding: 0.65rem 1rem 0.65rem 2.6rem;
+  font-size: 0.875rem;
   outline: none;
 }
 

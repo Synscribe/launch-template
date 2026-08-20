@@ -2,23 +2,22 @@ import { ArrowUpRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatBlogDate, type BlogDate } from "@/lib/blog-content";
 
 export type BlogCardPost = {
   slug: string;
   title: string;
-  description: string | null;
   image: string | null;
-  publishedAt: BlogDate | null;
-  authorName?: string | null;
 };
 
 export function PostCard({
   post,
+  label = null,
   headingLevel = 2,
 }: {
   post: BlogCardPost;
+  label?: string | null;
   headingLevel?: 2 | 3;
 }) {
   const Heading = `h${headingLevel}` as "h2" | "h3";
@@ -43,15 +42,15 @@ export function PostCard({
       ) : null}
 
       <CardContent className="flex flex-1 flex-col px-6 py-6 sm:px-7 sm:py-7">
-        {post.publishedAt || post.authorName ? (
-          <p className="text-xs font-medium tracking-wide text-ink-faint">
-            {post.publishedAt ? formatBlogDate(post.publishedAt) : null}
-            {post.publishedAt && post.authorName ? " · " : null}
-            {post.authorName}
-          </p>
+        {label ? (
+          <Badge className="bg-mint/55 px-3 py-1 text-ink hover:bg-mint/55">
+            {label}
+          </Badge>
         ) : null}
 
-        <Heading className="mt-3 text-balance text-xl leading-snug font-semibold tracking-tight sm:text-2xl">
+        <Heading
+          className={`${label ? "mt-4" : "mt-0"} text-balance font-display text-2xl leading-[1.15] font-normal tracking-[-0.025em]`}
+        >
           <Link
             className="outline-none after:absolute after:inset-0 focus-visible:underline"
             href={`/blog/${post.slug}`}
@@ -59,12 +58,6 @@ export function PostCard({
             {post.title}
           </Link>
         </Heading>
-
-        {post.description ? (
-          <p className="mt-4 line-clamp-3 text-sm leading-7 text-ink-muted">
-            {post.description}
-          </p>
-        ) : null}
 
         <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-signal-strong">
           Read article

@@ -30,10 +30,12 @@ const emptyPosts: GetPostsResult = {
 export async function getBlogPosts({
   page = 1,
   query = null,
+  tag = null,
   limit = BLOG_PAGE_SIZE,
 }: {
   page?: number;
   query?: string | null;
+  tag?: string | null;
   limit?: number;
 } = {}): Promise<GetPostsResult> {
   if (!env.wispBlogId)
@@ -45,6 +47,7 @@ export async function getBlogPosts({
     page,
     limit,
     ...(query ? { query } : {}),
+    ...(tag ? { tags: [tag] } : {}),
   });
 }
 
