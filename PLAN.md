@@ -1,6 +1,6 @@
 # Next.js Client Launch Template — Audit and Rebuild Plan
 
-Status: foundation, homepage, use cases, and Wisp blog implemented. This document remains the architecture and phased roadmap.
+Status: foundation, homepage, contact, use cases, Wisp blog, and the first visual skills implemented. This document remains the architecture and phased roadmap.
 
 This plan is based on an audit of `../zero-to-rank-template` on 2026-08-20. It defines the new template's architecture, documentation contract, launch priorities, and page-by-page build order.
 
@@ -15,8 +15,7 @@ Build a small Next.js starting point for three kinds of work:
 The reusable value should live in:
 
 - good framework defaults;
-- a prioritized launch checklist;
-- a technical SEO guide that points to real code;
+- one prioritized launch and technical SEO checklist that points to real code;
 - migration and launch workflows;
 - focused agent skills for repetitive work;
 - deletable defaults plus recipes that explain how to configure, adapt, or remove them.
@@ -127,25 +126,25 @@ The untracked `../zero-to-rank-template/doc/seo-defaults.md` is a useful extract
 
 This is the most important part of the future repository. Other agents and client repositories should be able to start here.
 
-| Planned path                | Canonical responsibility                                                                                                                                | Copy/reference policy                                                                  |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `README.md`                 | Setup, project modes, and links to the documents below.                                                                                                 | Start here. Keep short.                                                                |
-| `AGENTS.md`                 | Mandatory agent workflow, source-of-truth paths, and required checks.                                                                                   | Copy into client repos.                                                                |
-| `docs/launch/checklist.md`  | **Canonical prioritized launch and technical SEO guide**, with stable IDs, rationale, applicability, evidence, and code links.                          | Primary file for agents to copy or work down; there is no separate SEO guide to drift. |
-| `docs/launch/migration.md`  | Existing-site inventory, URL mapping, redirects, DNS/domain cutover, and monitoring.                                                                    | Required for migration/rebuild projects.                                               |
-| `docs/launch/status.md`     | Per-project decisions, owners, exceptions, evidence links, and sign-off.                                                                                | Reset for every client. Never use template-complete statuses.                          |
-| `docs/features.md`          | **Canonical feature/consideration catalog**: default, opt-in, future, dependencies, and relevant checks.                                                | Use during project kickoff and scoping.                                                |
-| `docs/recipes/README.md`    | Index of configuration, deletion, and add-on recipes.                                                                                                   | Default features document clean removal; add-ons document installation.                |
-| `docs/recipes/*.md`         | Configuration/removal notes for default features plus installation notes for contact, docs/MDX, `llms.txt`, `.md` routes, i18n, and advanced animation. | Each recipe lists files added/changed and removal steps.                               |
-| `docs/launch/url-map.csv`   | Old URL → new URL/disposition inventory for migrations.                                                                                                 | Created per migration; not needed for new startups.                                    |
-| `src/config/site.ts`        | Minimal typed global identity and navigation.                                                                                                           | No page bodies, blocks, or per-page layout config.                                     |
-| `src/config/env.ts`         | Required/optional environment validation with no production fallbacks.                                                                                  | The build fails on invalid required values.                                            |
-| `src/config/redirects.ts`   | Small/medium migration redirect map, when applicable.                                                                                                   | Generated or reviewed from `url-map.csv`; empty for new sites.                         |
-| `src/lib/seo.ts`            | Metadata, URL normalization, and typed builders for applicable structured data.                                                                         | One SEO implementation boundary; no arbitrary JSON blobs in content files.             |
-| `src/app/robots.ts`         | Environment-aware crawl policy and sitemap URL.                                                                                                         | Production and preview behavior must be tested.                                        |
-| `src/app/sitemap.ts`        | Enabled, canonical, indexable routes only.                                                                                                              | Derived from actual content sources.                                                   |
-| `scripts/launch-audit.ts`   | Static plus live launch checks keyed to checklist IDs.                                                                                                  | Single executable audit entry point.                                                   |
-| `.agents/skills/*/SKILL.md` | Focused workflows for cloning, animation, visuals, SEO review, and launch review.                                                                       | Skills point back to canonical docs instead of copying them.                           |
+| Planned path                | Canonical responsibility                                                                                                                       | Copy/reference policy                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `README.md`                 | Setup, project modes, and links to the documents below.                                                                                        | Start here. Keep short.                                                                |
+| `AGENTS.md`                 | Mandatory agent workflow, source-of-truth paths, and required checks.                                                                          | Copy into client repos.                                                                |
+| `docs/launch/checklist.md`  | **Canonical prioritized launch and technical SEO guide**, with stable IDs, rationale, applicability, evidence, and code links.                 | Primary file for agents to copy or work down; there is no separate SEO guide to drift. |
+| `docs/launch/migration.md`  | Existing-site inventory, URL mapping, redirects, DNS/domain cutover, and monitoring.                                                           | Required for migration/rebuild projects.                                               |
+| `docs/launch/status.md`     | Per-project decisions, owners, exceptions, evidence links, and sign-off.                                                                       | Reset for every client. Never use template-complete statuses.                          |
+| `docs/features.md`          | **Canonical feature/consideration catalog**: default, opt-in, future, dependencies, and relevant checks.                                       | Use during project kickoff and scoping.                                                |
+| `docs/recipes/README.md`    | Index of configuration, deletion, and add-on recipes.                                                                                          | Default features document clean removal; add-ons document installation.                |
+| `docs/recipes/*.md`         | Configuration/removal notes for default features plus installation notes for docs/MDX, `llms.txt`, `.md` routes, i18n, and advanced animation. | Each recipe lists files added/changed and removal steps.                               |
+| `docs/launch/url-map.csv`   | Old URL → new URL/disposition inventory for migrations.                                                                                        | Created per migration; not needed for new startups.                                    |
+| `src/config/site.ts`        | Minimal typed global identity and navigation.                                                                                                  | No page bodies, blocks, or per-page layout config.                                     |
+| `src/config/env.ts`         | Required/optional environment validation with no production fallbacks.                                                                         | The build fails on invalid required values.                                            |
+| `src/config/redirects.ts`   | Small/medium migration redirect map, when applicable.                                                                                          | Generated or reviewed from `url-map.csv`; empty for new sites.                         |
+| `src/lib/seo.ts`            | Metadata, URL normalization, and typed builders for applicable structured data.                                                                | One SEO implementation boundary; no arbitrary JSON blobs in content files.             |
+| `src/app/robots.ts`         | Environment-aware crawl policy and sitemap URL.                                                                                                | Production and preview behavior must be tested.                                        |
+| `src/app/sitemap.ts`        | Enabled, canonical, indexable routes only.                                                                                                     | Derived from actual content sources.                                                   |
+| `scripts/launch-audit.ts`   | Static plus live launch checks keyed to checklist IDs.                                                                                         | Single executable audit entry point.                                                   |
+| `.agents/skills/*/SKILL.md` | Focused workflows for cloning, animation, visuals, SEO review, and launch review.                                                              | Skills point back to canonical docs instead of copying them.                           |
 
 Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-01`, `MIG-01`, `A11Y-01`, `PERF-01`, `FORM-01`, `DATA-01`, and `OPS-01`. IDs let other repos cite a requirement without depending on heading text.
 
@@ -175,7 +174,7 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 │   │   │   └── page.tsx
 │   │   ├── privacy/page.tsx
 │   │   ├── terms/page.tsx
-│   │   ├── contact/                 # add when selected
+│   │   ├── contact/                 # included by default; delete if unused
 │   │   ├── uses/                    # included by default; delete if unused
 │   │   ├── blog/                    # included by default; delete if unused
 │   │   ├── error.tsx
@@ -220,92 +219,17 @@ P1 items are valuable for most professional launches but may be inapplicable. Ex
 
 P2 items are enhancements or advanced capabilities: blog search, content tags, PostHog session replay, IndexNow automation, `llms.txt`, `.md` routes, a docs portal, i18n, experimentation, personalization, and advanced animation.
 
-Priority and default state are separate. A contact form can be P0 **if the project selects it**, while remaining absent from projects that do not need a form.
+Priority and default state are separate. A contact form can be P0 **if the project selects it**, while remaining deletable in projects that do not need a form.
 
-## 8. Initial launch-checklist scope
+## 8. Launch-checklist contract
 
-The full checklist will be created in Phase 0. It should cover the following without turning every preference into a blocker.
+The reusable launch and technical SEO requirements live only in `docs/launch/checklist.md`. That file owns the stable IDs, priorities, rationale, code references, and evidence expectations. This plan defines the priority model and implementation sequence, but it must not restate the requirements.
 
-### P0: every site
+Record project-specific decisions, evidence, and approved exceptions in `docs/launch/status.md`.
 
-- `[BRAND-01]` No template brand, domain, package name, logo, favicon, OG asset, analytics key, or placeholder token remains. Contact email and social accounts are optional; if supplied, they must be intentional and valid.
-- `[ROUTE-01]` Every internal nav, footer, CTA, and body link resolves to the intended 2xx page or reviewed redirect.
-- `[ROUTE-02]` Unknown routes return a real 404; removed content returns 404/410 or a relevant permanent redirect.
-- `[SEO-01]` The production site is crawlable and indexable; preview/staging behavior cannot leak into production.
-- `[SEO-02]` Review each indexable page in this priority order: **(1)** meta title, **(2)** meta description, **(3)** H1, **(4)** the visible first 200 words, and **(5)** published/updated dates in content and JSON-LD when those dates are available. All must accurately describe the page and align with its user intent.
-- `[SEO-03]` Critical pages have unique, accurate descriptions and self-consistent canonical URLs.
-- `[SEO-04]` `robots.txt` reflects the intended production policy and points to an absolute sitemap URL.
-- `[SEO-05]` The sitemap contains every canonical indexable HTML URL and excludes redirects, errors, `noindex` pages, and preview URLs. Optional `.md` representations never block launch.
-- `[SEO-06]` Important pages are reachable through crawlable `<a href>` links from another findable page; core content is present in server-rendered/prerendered HTML.
-- `[SEO-07]` URL casing, trailing-slash, host, and protocol policy are consistent; noncanonical variants redirect or canonicalize correctly.
-- `[PERF-01]` Above-the-fold imagery is correctly sized and optimized; dimensions prevent layout shift; fonts and third-party scripts do not unnecessarily block rendering.
-- `[PERF-02]` A representative mobile lab run has no known severe LCP, INP proxy, or CLS regression. Field Core Web Vitals monitoring is assigned after launch.
-- `[SEC-01]` No secret is exposed client-side or committed; security headers, dependency state, and external scripts are reviewed in proportion to the site.
-- `[LEGAL-01]` Legal pages contain client-approved details. Placeholder legal copy blocks launch.
-- `[OPS-01]` Production domain, DNS, TLS, environment variables, deployment target, rollback owner, error monitoring, and launch window are recorded.
-- `[QA-01]` The production build and launch audit pass against a preview deployment before DNS/cutover.
+## 9. Feature-catalog contract
 
-### P0: migration or rebuild only
-
-- `[MIG-01]` Inventory old URLs from the old sitemap, crawl, analytics, Search Console, CMS, backlinks, and important media/downloads.
-- `[MIG-02]` Give every old URL an explicit disposition: preserve, 301/308 to a relevant replacement, consolidate, or 404/410.
-- `[MIG-03]` Test redirect targets, loops, chains, query handling, host/protocol variants, and high-traffic URLs. Do not mass-redirect irrelevant pages to home.
-- `[MIG-04]` Preserve or intentionally replace titles, headings, copy, structured data, internal links, and media for pages with existing traffic.
-- `[MIG-05]` Update canonical, hreflang, sitemap, navigation, and body links to final URLs.
-- `[MIG-06]` Remove temporary `noindex`/crawl blocks at launch and verify representative URLs in Search Console.
-- `[MIG-07]` Keep permanent redirects for at least a year and preferably as long as they remain useful; assign post-launch monitoring for old and new properties.
-- `[MIG-08]` If the domain changes, verify old/new Search Console properties and complete the appropriate Change of Address workflow.
-
-### P0: selected conversion features
-
-- `[FORM-01]` The primary conversion path works end to end on production and reaches a monitored destination.
-- `[FORM-02]` Server-side validation includes reasonable length limits; output is escaped; errors do not leak secrets or personal data.
-- `[FORM-03]` Spam/rate-limit controls, retention, consent, privacy disclosure, and PII handling match the project risk.
-- `[FORM-04]` Attribution fields are minimized, accurate, and not sent to analytics or storage without the required privacy decision.
-
-### P1
-
-- `[SOCIAL-01]` Default and page-specific Open Graph/Twitter previews are correct and tested on important routes.
-- `[SEO-08]` Add only applicable structured data such as Organization, Breadcrumb, Article, Product, or LocalBusiness; validate it and keep it consistent with visible content. Include published/updated dates where the underlying content has them.
-- `[A11Y-01]` As a non-blocking quality review, check semantic landmarks, keyboard navigation, focus visibility, form labels/errors, color contrast, image alternatives, and zoom/responsive behavior.
-- `[ANALYTICS-01]` If analytics is selected, production events, exclusions, consent behavior, and ownership are verified; do not capture sensitive form fields.
-- `[MON-01]` Search Console, analytics, uptime/error reporting, and field performance dashboards have owners.
-- `[CONTENT-01]` About/contact/trust/authorship details support the site's actual business and content claims.
-- `[IMAGE-01]` Important image assets have intentional filenames, formats, crops, alt behavior, and sharing variants.
-
-### P2
-
-- `[LLM-01]` Generate `llms.txt` from enabled content sources if useful to the project; treat it as experimental discovery support.
-- `[LLM-02]` Serve selected content as `.md` from the same source, with an HTML canonical and an explicit indexing policy for the alternate representation.
-- `[INDEX-01]` Add IndexNow only when publishing frequency and target engines justify it.
-- `[CONTENT-02]` Add blog tags, search, RSS/Atom, related content, and content freshness workflows after a basic crawlable blog works.
-- `[PERF-03]` Add real-user monitoring and enforce route-level performance budgets once traffic and page shapes justify them.
-
-## 9. Initial feature catalog
-
-`docs/features.md` will expand this table and link every row to its recipe, code, and checklist IDs.
-
-| Capability                                      | Base default         | Priority when selected      | Intended implementation                                                                                                |
-| ----------------------------------------------- | -------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Explicit homepage                               | On                   | P0                          | Bespoke `page.tsx` with route-local sections.                                                                          |
-| Header, footer, 404, error UI                   | On                   | P0                          | Small shared shell.                                                                                                    |
-| Root/page metadata, canonical, robots, sitemap  | On                   | P0                          | Native Next.js APIs.                                                                                                   |
-| Design tokens and primitives                    | On, minimal          | P0                          | Client-facing CSS variables plus only the shadcn primitives used by current pages.                                     |
-| Terms and privacy routes                        | On                   | P0                          | Clearly incomplete templates; launch audit requires approved replacement.                                              |
-| Migration inventory and redirects               | Off for startups     | P0 for migrations           | URL-map document plus reviewed Next/host redirects.                                                                    |
-| Contact form with attribution                   | Off                  | P0 if it is the primary CTA | Provider-neutral recipe, validated server route, privacy/spam controls.                                                |
-| Use-case index/detail pages                     | On; delete if unused | P1                          | Explicit dynamic content model, crawlable index, route-owned template. No feature flag.                                |
-| Basic blog                                      | On; delete if unused | P1                          | Direct Wisp integration selected for this template; server-rendered and configured by publication ID. No feature flag. |
-| Blog search, feed, related and featured content | On with blog         | P2                          | Implemented server-side; optional filters and featured slots map to real source tags in route-owned config.            |
-| PostHog                                         | On; delete if unused | P1/P2                       | Normal integration with environment configuration, consent decision, event plan, and no PII capture. No feature flag.  |
-| Animated sections                               | Off                  | P1/P2                       | Route-local React/CSS or selected library; reduced-motion and performance gates.                                       |
-| Generated graphics                              | Off                  | P1/P2                       | Skill creates optimized project-owned assets and records usage/alt intent.                                             |
-| 1:1 site clone/rebuild workflow                 | Tooling only         | P0 for clone work           | Skill inventories URLs/assets and performs breakpoint visual comparisons.                                              |
-| Docs/knowledge base                             | Off                  | P2                          | Choose MDX/docs tooling only when required.                                                                            |
-| `llms.txt`                                      | Off                  | P2                          | Derived from enabled content; never independently hand-maintained.                                                     |
-| `.md` route representations                     | Off                  | P2                          | Generated from the same source with duplicate-indexing safeguards.                                                     |
-| Internationalization/hreflang                   | Off                  | P1/P2                       | Dedicated recipe once locales are known.                                                                               |
-| A/B testing/personalization                     | Off                  | P2                          | Add only with measurement plan and crawl/cache review.                                                                 |
+The current default, implementation status, priority, code location, and deletion/configuration path for every feature live in `docs/features.md` and `docs/recipes`. Do not maintain a second feature table in this plan.
 
 ## 10. Design-system and animation boundary
 
@@ -387,7 +311,7 @@ Exit: there is no plausible-looking legal placeholder that can accidentally ship
 
 ### Phase 3 — contact page and form recipe
 
-Add the contact feature only if it belongs in the base example after Phase 1 review. Separate:
+The contact form is a default, deletable surface rather than a feature flag. Keep these concerns separate:
 
 - form UI and accessible states;
 - server-side schema and length limits;
@@ -407,7 +331,7 @@ Use cases are a default, deletable surface rather than a feature flag. Start wit
 
 Do not use the old Synscribe envelope or copy the old fixed section set unless the new content actually requires it.
 
-Current progress: the server-rendered `/uses` hub groups and links four JSON-backed detail pages covering migrations, SaaS rebuilds, startup launches, and SEO landing pages. The copy uses short, direct sentences and the detail layout uses generous section spacing without a sticky jump bar. Each capability declares one validated feature ID that selects a route-owned visual; visual props and component structure do not live in JSON. Numeric page ordering has been removed. Each page references group IDs, while `src/content/use-cases/groups.json` owns hub labels and section order without becoming a component registry. Automatic discovery, grouping, static generation, and sitemap inclusion are covered by tests and the launch audit.
+Current progress: the server-rendered `/uses` hub groups and links four JSON-backed detail pages covering migrations, SaaS rebuilds, startup launches, and SEO landing pages. The copy uses short, direct sentences and the detail layout uses generous section spacing without a sticky jump bar. Heroes and capability rows use the same validated `visualId`; the route-local `UseCaseVisual` resolver maps each ID to either React or a project-owned local image without placing component props, paths, or layout in JSON. Numeric page ordering has been removed. Each page references group IDs, while `src/content/use-cases/groups.json` owns hub labels and section order without becoming a component registry. Automatic discovery, grouping, static generation, exhaustive visual mapping, and sitemap inclusion are covered by tests, TypeScript, and the launch audit.
 
 ### Phase 5 — basic blog
 
@@ -433,7 +357,7 @@ Create focused project skills using the repository's canonical docs:
 
 Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.md` and invoke shared scripts.
 
-Current progress: `micro-ui` and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. Both were pared down from the previous template, validated, and exercised on real code: the generated root Open Graph image and two route-local `/uses` feature animations. No graphics or animation dependency was added. The site-clone skill remains deliberately deferred.
+Current progress: `micro-ui` and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. Both were pared down from the previous template, validated, and exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. No graphics or animation dependency was added. `site-clone`, `technical-seo-review`, and `launch-review` remain deliberately deferred.
 
 ### Phase 7 — advanced content and LLM access
 

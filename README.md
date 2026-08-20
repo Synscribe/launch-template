@@ -43,7 +43,7 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 - shadcn/ui: configured with the `base-nova` style; only the Button, Card, and Badge primitives used by current pages are checked in.
 - PostHog: included through `src/instrumentation-client.ts`; add its token to activate it or delete the file and dependency.
 - Privacy and terms: safe noindex scaffolds only. They deliberately block production until replaced and reviewed.
-- Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented; adding a content file automatically adds its validated route and sitemap entry.
+- Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented. Heroes and capability rows share one validated `visualId` contract that resolves route-local React or project-owned images through `UseCaseVisual`; see `docs/recipes/use-cases.md`.
 - Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. The `.env.example` ID is temporarily Cyber Sierra's and must be replaced or the blog deleted for a client.
 - Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured.
 - Visual skills: `$micro-ui` and `$animated-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
@@ -60,7 +60,7 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 
 ## Project skills
 
-- `$micro-ui` builds small route-native interface visuals and generated social images without introducing a visual registry or unnecessary graphics stack.
+- `$micro-ui` builds route-native interface visuals, local use-case images, and generated social images. `/uses` output is registered in its bounded typed visual resolver instead of a site-wide block registry.
 - `$animated-ui` adds restrained route-local motion while keeping the server-rendered content visible and providing a reduced-motion fallback.
 
 The `.claude/skills/*` entries are symlinks to `.agents/skills/*`. Keep the names aligned and validate both the canonical skill and its symlink after changing one. The site-clone skill is intentionally deferred until the clone workflow is designed and tested separately.

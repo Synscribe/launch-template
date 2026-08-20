@@ -1,6 +1,6 @@
 ---
 name: micro-ui
-description: Create compact, marketing-ready product and process visuals inside this Next.js project. Use for feature illustrations, micro UI cards, product mockups, Open Graph images, visual explanations, or use-case graphics. Prefer route-native React/CSS or Next ImageResponse over disconnected assets, and preserve the project's design tokens, server-rendering boundary, feature-ID mapping, accessibility, and launch checks.
+description: Create compact, marketing-ready product and process visuals inside this Next.js project. Use for feature illustrations, micro UI cards, product mockups, Open Graph images, visual explanations, or use-case graphics. Prefer route-native React/CSS or Next ImageResponse over disconnected assets, and preserve the project's design tokens, server-rendering boundary, use-case visual-ID mapping, accessibility, and launch checks.
 ---
 
 # Micro UI
@@ -53,9 +53,11 @@ Shortlist three modes, then choose the one that communicates the claim most dire
 For route visuals:
 
 - keep the component server-renderable unless interaction truly needs a Client Component;
+- isolate an interactive `/uses` visual in its own `*.client.tsx` module; do not make the visual resolver a Client Component;
 - duplicate explanatory content should be `aria-hidden="true"`;
 - meaningful standalone imagery needs useful alternative text;
-- select repeated visuals through the existing feature ID, not serialized component props;
+- on `/uses`, select hero and capability visuals through the validated `visualId` and register the source in `use-case-visual.tsx`;
+- use a `kind: "component"` source for route-local React and a `kind: "image"` source for an approved local file;
 - keep copy in the content file or route, not inside a generic registry.
 
 For `ImageResponse`:
@@ -72,13 +74,13 @@ For `ImageResponse`:
 - render or open the consuming route;
 - inspect desktop and mobile crops;
 - inspect the generated OG endpoint at its final dimensions when applicable;
-- confirm all feature IDs still resolve;
+- confirm all visual IDs still resolve in both hero and capability placements;
 - check that core copy remains in server-rendered HTML;
 - run `pnpm check`, `pnpm build`, and the applicable launch audit.
 
 ## Guardrails
 
-- Do not add `site.json`, an image registry, serialized React props, or speculative visual variants.
+- Do not add `site.json`, a site-wide image/block registry, serialized React props, or speculative visual variants. The bounded `/uses` visual resolver is the only intentional ID-to-visual map.
 - Do not add unused example components to production code.
 - Do not use an external image when a small route-native diagram communicates the point better.
 - Do not put essential meaning only inside a decorative visual.

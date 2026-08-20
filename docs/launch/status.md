@@ -22,7 +22,7 @@ This file is the per-project record. Replace template entries with owners, evide
 | Phase 1 homepage   | Complete               | `src/app/(marketing)/page.tsx`, desktop and mobile review            |
 | Legal approval     | Blocked for production | `TODO_CLIENT_LEGAL_REVIEW` intentionally present                     |
 | Contact            | Complete               | SSR page/form, validated API, SMTP adapter, attribution, live test   |
-| Use cases          | Complete               | Grouped `/uses` hub and four JSON-backed detail pages                |
+| Use cases          | Complete               | Four JSON details; one typed hero/capability visual resolver         |
 | Blog               | Complete               | Wisp featured index, filters, article TOC/sharing, feed, and sitemap |
 | Visual skills      | Complete               | Shared Claude/Codex micro-UI and animated-UI skills; live samples    |
 
@@ -53,13 +53,14 @@ This file is the per-project record. Replace template entries with owners, evide
 
 ## P1 decisions
 
-| ID           | Decision                                               | Owner      | Evidence                                         |
-| ------------ | ------------------------------------------------------ | ---------- | ------------------------------------------------ |
-| SEO-08       | WebSite, BreadcrumbList, and Article schema where used | Unassigned | `src/lib/seo.ts`                                 |
-| SOCIAL-01    | Default and article source images implemented          | Unassigned | Generated fallback, Wisp images, audit passed    |
-| A11Y-01      | Non-blocking base review passed                        | Unassigned | Semantic snapshot, mobile layout, reduced motion |
-| ANALYTICS-01 | PostHog code included, token absent                    | Unassigned | `src/instrumentation-client.ts`                  |
-| MON-01       | Not assigned                                           | Unassigned | —                                                |
+| ID           | Decision                                               | Owner      | Evidence                                          |
+| ------------ | ------------------------------------------------------ | ---------- | ------------------------------------------------- |
+| SEO-08       | WebSite, BreadcrumbList, and Article schema where used | Unassigned | `src/lib/seo.ts`                                  |
+| SOCIAL-01    | Default and article source images implemented          | Unassigned | Generated fallback, Wisp images, audit passed     |
+| A11Y-01      | Non-blocking base review passed                        | Unassigned | Semantic snapshot, mobile layout, reduced motion  |
+| IMAGE-01     | Typed use-case React/local-image sources implemented   | Unassigned | `UseCaseVisual`, local SVG, desktop/mobile review |
+| ANALYTICS-01 | PostHog code included, token absent                    | Unassigned | `src/instrumentation-client.ts`                   |
+| MON-01       | Not assigned                                           | Unassigned | —                                                 |
 
 ## P2 decisions
 
@@ -95,6 +96,8 @@ None. Add the checklist ID, approver, reason, impact, follow-up owner, and due d
 | 2026-08-20 | Visual skills added          | Canonical `.agents` skills shared with Claude through symlinks     |
 | 2026-08-20 | Visual skill samples checked | OG and `/uses` reviewed; audit 792 pass, 5 warning, 0 failures     |
 | 2026-08-20 | Contact UI refined           | Desktop/mobile reviewed; audit 791 pass, 6 warning, 0 failures     |
+| 2026-08-20 | Uses visual contract unified | Hero/capability `visualId`; typed React and local-file resolver    |
+| 2026-08-20 | Uses resolver audited        | React/image heroes reviewed; audit 791 pass, 6 warning, 0 failures |
 
 ## Temporary template integrations
 

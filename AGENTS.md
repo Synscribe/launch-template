@@ -17,6 +17,7 @@ Do not create a second SEO guide or checklist. Add rationale, code references, a
 - Start components in the route's `_components` folder. Promote them only after a second real use.
 - Keep metadata and applicable structured-data builders in `src/lib/seo.ts`.
 - Do not add `site.json`, a marketing catch-all route, an SDUI renderer, a block registry, or schemas for serialized React props.
+- Use-case JSON may reference only validated `visualId` values. Add React or local-file sources through the bounded route-local `UseCaseVisual` resolver; do not put component names, paths, classes, or props in JSON.
 - PostHog, blog, and use cases are default deletable code. Do not add feature flags to turn them on or off. Remove their files, navigation, sitemap entries, tests, dependencies, and documentation when a project does not use them.
 - Do not install a CMS, docs framework, content sync, animation library, or component catalog until the current project requires it.
 

@@ -299,6 +299,23 @@ Nice to have and non-blocking in this template's priority system. Review semanti
 
 For animation work, use `.agents/skills/animated-ui` and verify both ordinary and `prefers-reduced-motion: reduce` states in a browser. Critical copy and links must remain present without client JavaScript.
 
+### IMAGE-01 — image sources and treatments are intentional
+
+Why it matters: an image can be technically optimized and still ship the wrong client, crop, claim, license, alternative text, or stale inherited asset.
+
+Check:
+
+- Every visible image belongs to the current project and has a known source or generation record.
+- Meaningful images have useful alt text; decorative or fully duplicated images use an empty alt. Do not turn filenames or nearby captions into repetitive alt text.
+- Width, height/aspect ratio, responsive sizes, crop, loading priority, and format fit the real placement at desktop and mobile sizes.
+- Above-the-fold images are deliberately prioritized; lower-page images remain lazy unless measurement shows otherwise.
+- Generated visuals use real project language and do not invent customers, metrics, integrations, or outcomes.
+- A JSON-backed page references only a validated visual ID. File paths, React component names, layout classes, and serialized props stay in code.
+
+Code: `next/image`, `public/media`, `src/app/opengraph-image.tsx`, and the bounded `/uses` resolver in `src/app/uses/[slug]/_components/use-case-visual.tsx`. Use `.agents/skills/micro-ui` to create or adapt a visual, then register it through the resolver when it belongs to a use-case hero or capability.
+
+Evidence: source/provenance note where needed, rendered desktop/mobile crops, inspected alt behavior, no layout shift, and a successful build/audit. For `/uses`, confirm every `hero.visualId` and `solution.items[].visualId` resolves to either an approved React component or local image source.
+
 ### ANALYTICS-01 — analytics is owned and privacy-aware
 
 PostHog is included by default but inactive without a token. Verify the production project, pageviews and named conversion events, internal/staff exclusions, consent behavior where required, session-replay policy, retention, and that sensitive form values are not captured. Delete `src/instrumentation-client.ts` and `posthog-js` if analytics is unused.

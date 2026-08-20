@@ -21,6 +21,8 @@ All six values are required. The form stays visibly unavailable when one is miss
 
 SMTP delivery lives in `src/lib/contact-delivery.ts`. Replace that adapter when a project uses a transactional email API or CRM, while keeping validation and the route contract stable.
 
+The included success state promises a reply within 1–3 working days. Keep that sentence only when the client has an owner and process that can meet it; otherwise replace it with an approved response expectation before production.
+
 ## Attribution kept by the default
 
 `src/lib/visitor-context.ts` uses local browser storage to retain:
@@ -48,7 +50,7 @@ The included rate limit is an in-memory, per-instance baseline. For high traffic
 
 1. Confirm the recipient and sender belong to the current project.
 2. Start from a URL with test UTMs, visit several same-site pages, then submit the form once.
-3. Confirm the success and failure states, reply path, delivered field values, first landing/UTMs, external referrer, and the final five clean page paths.
+3. Confirm the success and failure states, stated response time, reply path, delivered field values, first landing/UTMs, external referrer, and the final five clean page paths.
 4. Confirm the received message did not preserve unrelated or sensitive query values.
 5. If PostHog is configured, confirm `contact_form_submitted` arrives without names, emails, message text, URLs, or campaign values.
 6. Check keyboard behavior, visible focus, labels, field errors, mobile layout, and the form without a delivery configuration.
