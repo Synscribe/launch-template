@@ -35,21 +35,7 @@ export default async function UsesPage() {
 
       <section className={`${styles.hero} border-b border-ink/10`}>
         <div className="mx-auto w-full max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
-          <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
-            <ol className="flex items-center gap-2">
-              <li>
-                <Link className="transition-colors hover:text-ink" href="/">
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden="true" className="text-ink-faint">
-                /
-              </li>
-              <li aria-current="page">Uses</li>
-            </ol>
-          </nav>
-
-          <div className="mt-12 max-w-5xl">
+          <div className="max-w-5xl">
             <h1 className="max-w-4xl text-balance font-display text-[clamp(3.1rem,6.6vw,6rem)] leading-[0.94] tracking-[-0.04em]">
               Start with the job your website needs to do.
             </h1>
