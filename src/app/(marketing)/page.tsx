@@ -13,35 +13,35 @@ import {
 import styles from "./home.module.css";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Launch websites without inherited mistakes",
+  title: "A safer way to build and launch Next.js websites",
   description:
-    "A lean Next.js launch template for client migrations, rebuilds, and new startups—with technical SEO priorities, explicit pages, and evidence-based launch checks.",
+    "A practical Next.js template for migrations, rebuilds, and new websites. Keep SEO, redirects, analytics, and launch checks close to the code.",
   path: "/",
 });
 
 const signals = [
-  ["Identity", "No inherited brands"],
-  ["Routes", "No dead destinations"],
-  ["Search", "Canonical and crawlable"],
-  ["Migration", "Every old URL decided"],
-  ["Launch", "Evidence attached"],
+  ["Identity", "Client brand is set"],
+  ["Routes", "Every URL has a home"],
+  ["Search", "Pages can be crawled"],
+  ["Migration", "Old URLs are mapped"],
+  ["Launch", "Checks are recorded"],
 ];
 
 const principles = [
   {
     number: "01",
-    title: "Pages stay visible",
-    body: "Open a route and see its copy, composition, and metadata together. No registry, serialized block props, or catch-all renderer stands between an idea and the page.",
+    title: "Pages are easy to find",
+    body: "Open a route and see its copy, metadata, and layout. No catch-all renderer or hidden block registry.",
   },
   {
     number: "02",
-    title: "Defaults can leave",
-    body: "Blog, use cases, and PostHog are ordinary code—not a flag platform. Keep what the project needs. Delete the folder, link, and dependency when it does not.",
+    title: "Features are easy to remove",
+    body: "Blog, use cases, and PostHog are ordinary code. Delete the files and links when a project does not need them.",
   },
   {
     number: "03",
-    title: "Checks follow risk",
-    body: "Indexability, identity, routes, redirects, and conversion paths can block launch. Experimental extras stay optional, and every exception has an owner.",
+    title: "Important checks come first",
+    body: "Brand, indexability, routes, redirects, and forms can block launch. Nice-to-have experiments can wait.",
   },
 ];
 
@@ -50,22 +50,26 @@ const priorities = [
     tier: "P0",
     label: "Protect the launch",
     description:
-      "The failures that lose traffic, break trust, leak old defaults, or stop a user from converting.",
-    items: ["Brand and domain", "Indexability", "Routes and redirects"],
+      "Fix anything that can lose traffic, break trust, or stop a visitor from completing the main action.",
+    items: [
+      "Brand and production domain",
+      "Indexability",
+      "Routes and redirects",
+    ],
   },
   {
     tier: "P1",
-    label: "Raise the quality",
+    label: "Polish the experience",
     description:
-      "Professional polish and useful enhancements that matter, without pretending every preference is a blocker.",
+      "Improve the experience once the launch risks are under control.",
     items: ["Structured data", "Social previews", "Accessibility review"],
   },
   {
     tier: "P2",
-    label: "Extend with intent",
+    label: "Add what the project needs",
     description:
-      "Advanced discovery, richer content tooling, and experiments added after the core path is stable.",
-    items: [".md representations", "LLM discovery", "Experimentation"],
+      "Add advanced discovery and content tools only when there is a real use for them.",
+    items: [".md pages", "LLM discovery", "Experiments"],
   },
 ];
 
@@ -73,22 +77,22 @@ const workflow = [
   {
     number: "01",
     title: "Inventory",
-    body: "Understand the old URLs, search traffic, content, forms, tracking, and visual patterns before replacing any of them.",
+    body: "List the old URLs, traffic, content, forms, analytics, and design patterns before you replace them.",
   },
   {
     number: "02",
     title: "Build",
-    body: "Finish one explicit route at a time. Keep components local until two pages prove the same abstraction is useful.",
+    body: "Finish one route at a time. Keep its copy, metadata, links, and layout together.",
   },
   {
     number: "03",
     title: "Audit",
-    body: "Crawl the preview, compare the migration map, inspect the first 200 words, and attach evidence to every applicable P0 item.",
+    body: "Crawl the preview. Check the URL map, first 200 words, forms, analytics, and launch blockers.",
   },
   {
     number: "04",
     title: "Launch",
-    body: "Cut over with production configuration, redirects, rollback ownership, and post-launch search monitoring already assigned.",
+    body: "Switch to production with redirects, rollback ownership, and post-launch checks ready.",
   },
 ];
 
@@ -108,25 +112,22 @@ export default function HomePage() {
             <p
               className={`${styles.kicker} flex items-center gap-3 text-xs font-bold tracking-[0.2em] text-ink-muted uppercase`}
             >
-              Reusable discipline · bespoke websites
+              A practical Next.js launch template
             </p>
             <h1
               className={`${styles.displayTitle} mt-7 max-w-4xl font-display text-[clamp(3.6rem,8vw,7.4rem)] leading-[0.9] tracking-[-0.065em]`}
             >
-              Build the right site. Keep the old mistakes out.
+              Build the new site. Leave the old mistakes behind.
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-8 text-ink-muted sm:text-xl sm:leading-9">
-              A lean Next.js reference for client migrations, careful rebuilds,
-              and brand-new launches. It keeps technical SEO, URL decisions,
-              production identity, and launch evidence close to the code—while
-              leaving the page design completely open.
+              A practical Next.js template for migrations, rebuilds, and new
+              websites. It keeps SEO, redirects, analytics, and launch checks
+              close to the code. Your design stays custom.
             </p>
             <p className="mt-4 max-w-2xl leading-7 text-ink-muted">
-              The template gives a new developer a clear order of operations:
-              get the title and description right, make the H1 and first 200
-              words useful, preserve the URLs that matter, then prove the site
-              is ready. Blog, use cases, and PostHog are present as normal,
-              deletable code instead of a permanent module system.
+              Start with the title, description, H1, and first 200 words. Map
+              old URLs before changing routes. Keep the blog, use cases, and
+              PostHog only when the project needs them.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -137,7 +138,7 @@ export default function HomePage() {
                     "h-auto rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-paper hover:-translate-y-0.5 hover:bg-ink/85",
                 })}
               >
-                Explore the priorities
+                See launch priorities
               </Link>
               <Link
                 href="#principles"
@@ -148,7 +149,7 @@ export default function HomePage() {
                     "h-auto rounded-full border-ink/15 bg-paper/70 px-6 py-3.5 text-sm font-semibold hover:border-ink/30 hover:bg-paper",
                 })}
               >
-                See the architecture
+                See how it is built
               </Link>
             </div>
           </div>
@@ -193,8 +194,8 @@ export default function HomePage() {
             <div className="mt-5 grid grid-cols-3 gap-2">
               {[
                 ["0", "Dead links"],
-                ["3", "Priority tiers"],
-                ["1", "Source of truth"],
+                ["3", "Priority levels"],
+                ["1", "Launch checklist"],
               ].map(([value, label]) => (
                 <div className="rounded-2xl bg-white/6 p-3" key={label}>
                   <p className="font-display text-2xl text-paper">{value}</p>
@@ -213,18 +214,16 @@ export default function HomePage() {
           <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
             <div>
               <p className="text-xs font-bold tracking-[0.2em] text-signal uppercase">
-                The architecture
+                How it works
               </p>
               <h2 className="mt-5 max-w-lg font-display text-5xl leading-[0.98] tracking-[-0.045em] sm:text-6xl">
-                Opinionated about outcomes. Loose about design.
+                Clear rules. Flexible design.
               </h2>
             </div>
             <p className="max-w-2xl self-end text-lg leading-8 text-ink-muted">
-              The old template tried to make every page interchangeable. This
-              one makes the launch knowledge reusable instead. Routes stay
-              explicit, the checklist explains the SEO priorities in context,
-              and custom visual work can become as ambitious as the client needs
-              without changing the foundation.
+              Every route owns its copy and metadata. The launch checklist lives
+              in one place. You can change the design without rebuilding the
+              SEO, routing, and launch foundation.
             </p>
           </div>
 
@@ -259,10 +258,10 @@ export default function HomePage() {
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="max-w-3xl">
             <p className="text-xs font-bold tracking-[0.2em] text-signal uppercase">
-              Priority over accumulation
+              Start with the real risks
             </p>
             <h2 className="mt-5 font-display text-5xl leading-[0.98] tracking-[-0.045em] sm:text-6xl">
-              Know what blocks launch—and what can wait.
+              Know what must be fixed before launch.
             </h2>
           </div>
 
@@ -306,15 +305,14 @@ export default function HomePage() {
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div>
               <p className="text-xs font-bold tracking-[0.2em] text-mint uppercase">
-                One page at a time
+                Build one page at a time
               </p>
               <h2 className="mt-5 font-display text-5xl leading-[0.98] tracking-[-0.045em] sm:text-6xl">
-                A workflow the next developer can follow.
+                Four steps anyone can follow.
               </h2>
               <p className="mt-6 max-w-xl text-base leading-7 text-white/60">
-                Reuse the sequence, not a pile of UI. Each page leaves behind
-                code, evidence, and decisions that make the next page safer to
-                build.
+                Use the same order for every project. Each finished page leaves
+                behind code, decisions, and launch evidence.
               </p>
             </div>
 
@@ -342,16 +340,15 @@ export default function HomePage() {
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="text-xs font-bold tracking-[0.2em] text-signal uppercase">
-              Reference that stays concrete
+              A checklist that points to the work
             </p>
             <h2 className="mt-5 font-display text-5xl leading-[0.98] tracking-[-0.045em] sm:text-6xl">
-              Every rule should lead somewhere useful.
+              Every rule links to code or a check.
             </h2>
             <p className="mt-6 max-w-xl text-lg leading-8 text-ink-muted">
-              Checklist IDs point to code, commands, evidence, and the reason a
-              check matters. Another website can copy the document, compare its
-              implementation, and fix the highest-risk gaps without adopting
-              this site&apos;s visual design.
+              Checklist IDs point to the code, command, evidence, and reason
+              behind each check. Teams can copy the document and fix the
+              highest-risk gaps first.
             </p>
           </div>
 
