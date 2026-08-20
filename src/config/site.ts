@@ -20,7 +20,7 @@ export const siteConfig = Object.freeze({
     { label: "Principles", href: "/#principles" },
     { label: "Priorities", href: "/#priorities" },
     { label: "Workflow", href: "/#workflow" },
-    { label: "Use case", href: "/use-cases/website-migrations" },
+    { label: "Uses", href: "/uses" },
   ] satisfies NavigationItem[],
   socialLinks,
 });

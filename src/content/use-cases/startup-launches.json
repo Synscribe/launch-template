@@ -1,0 +1,176 @@
+{
+  "slug": "startup-launches",
+  "shortTitle": "Startup launches",
+  "groups": ["startup-launches", "growth-and-conversion"],
+  "seo": {
+    "title": "Startup websites that explain the product and drive action",
+    "description": "Launch a startup website with a clear message, useful proof, a focused conversion path, and measurement from day one."
+  },
+  "hero": {
+    "title": "Launch a startup site people understand quickly.",
+    "summary": "Turn a new product into a clear story, a focused website, and a launch you can measure.",
+    "fit": [
+      "Launching a new product or company",
+      "Moving beyond a temporary waitlist page",
+      "Preparing for a public launch or fundraising push"
+    ],
+    "primaryGoal": "Help the right people understand the product and take the next useful step.",
+    "brief": {
+      "label": "Launch brief",
+      "title": "Make the product easy to grasp",
+      "badge": "New venture"
+    }
+  },
+  "risks": {
+    "title": "A new product is already hard to explain.",
+    "introduction": "The website should remove confusion, not add another layer of it. We watch for three common launch problems.",
+    "items": [
+      {
+        "title": "The message tries to say everything",
+        "description": "A long list of features hides who the product is for and why anyone should care."
+      },
+      {
+        "title": "Claims arrive before proof",
+        "description": "Big promises sound weak when the site does not show the product, the process, or honest limits."
+      },
+      {
+        "title": "The launch cannot be measured",
+        "description": "Buttons, forms, and campaign visits go live without a simple event plan or a clear owner."
+      }
+    ]
+  },
+  "solution": {
+    "title": "Five things we settle before launch.",
+    "introduction": "The site starts small and specific. Every page and action earns its place.",
+    "items": [
+      {
+        "id": "offer-and-audience",
+        "category": "Set the message",
+        "title": "Say who the product is for and what it changes.",
+        "description": "We choose the main audience, the problem they feel, and the promise the product can support. Then we write it in plain language.",
+        "highlights": [
+          "Lead with one audience and one problem",
+          "Remove internal terms and vague claims",
+          "Check the H1 and opening copy with new readers"
+        ]
+      },
+      {
+        "id": "conversion-path",
+        "category": "Plan the journey",
+        "title": "Give every page one clear next step.",
+        "description": "We match the primary action to the stage of the product. Visitors can join, book, apply, or learn more without guessing.",
+        "highlights": [
+          "Choose one primary action",
+          "Keep supporting links useful and quiet",
+          "Test the full path on mobile and desktop"
+        ]
+      },
+      {
+        "id": "proof-and-trust",
+        "category": "Earn trust",
+        "title": "Show real proof without making things up.",
+        "description": "We use the product, team, process, and honest answers already available. Missing customer proof stays missing until it is real.",
+        "highlights": [
+          "Show the product or workflow",
+          "Use verified team and company facts",
+          "Answer the questions that slow people down"
+        ]
+      },
+      {
+        "id": "measurement-plan",
+        "category": "Measure the launch",
+        "title": "Track the actions that matter.",
+        "description": "We name the few events needed to understand the launch. Each event has a purpose, a trigger, and an owner.",
+        "highlights": [
+          "Track the primary conversion",
+          "Keep campaign attribution through the form",
+          "Test analytics in the production environment"
+        ]
+      },
+      {
+        "id": "release-gates",
+        "category": "Ship with care",
+        "title": "Check the real launch, not only the preview.",
+        "description": "We test the final domain, forms, metadata, analytics, robots, sitemap, and social preview before announcing the site.",
+        "highlights": [
+          "Verify the production domain and indexability",
+          "Submit and receive every form",
+          "Keep a rollback owner and launch record"
+        ]
+      }
+    ]
+  },
+  "method": {
+    "title": "A launch process that stays small.",
+    "introduction": "The first version should answer the main questions well. More pages can follow when there is evidence they are needed.",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Choose the audience",
+        "description": "Write down who the site is for, what they need, and what the product can prove."
+      },
+      {
+        "number": "02",
+        "title": "Build the core path",
+        "description": "Finish the homepage, key proof, primary action, and required legal pages."
+      },
+      {
+        "number": "03",
+        "title": "Wire the measurement",
+        "description": "Add the event plan, attribution, form delivery, and consent rules."
+      },
+      {
+        "number": "04",
+        "title": "Test and launch",
+        "description": "Review the live domain, complete the checklist, and watch the first visits."
+      }
+    ]
+  },
+  "outcomes": {
+    "title": "What you have on launch day.",
+    "items": [
+      {
+        "title": "A clear product story",
+        "description": "The homepage explains the audience, problem, product, and next step without a long pitch."
+      },
+      {
+        "title": "A working conversion path",
+        "description": "The primary action works end to end and keeps the context needed for follow-up."
+      },
+      {
+        "title": "A useful launch baseline",
+        "description": "The team can see what people viewed, what they tried, and what needs improvement."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Common questions.",
+    "introduction": "Straight answers for teams trying to launch without turning the website into a second product.",
+    "items": [
+      {
+        "question": "How many pages does a startup need at launch?",
+        "answer": "Only enough to explain the product, earn basic trust, and support the main action. Start with the core journey and add pages when real questions or search demand appear."
+      },
+      {
+        "question": "What if we do not have customer logos or testimonials?",
+        "answer": "Do not invent them. Show the product, the team, the problem, and how the work happens. Add customer proof after you have permission to use it."
+      },
+      {
+        "question": "Should we publish before the product is ready?",
+        "answer": "Yes, when the page has a real purpose such as collecting qualified interest. Be clear about what exists now and what happens after someone signs up."
+      },
+      {
+        "question": "Can the site grow after launch?",
+        "answer": "Yes. The route structure, tokens, metadata helpers, and launch checklist are designed to support new pages without rebuilding the foundation."
+      }
+    ]
+  },
+  "closing": {
+    "title": "Launch the clearest useful version first.",
+    "description": "Give people enough to understand the product, trust the team, and take the next step. Learn from the launch before adding more.",
+    "cta": {
+      "label": "See the launch workflow",
+      "href": "/#workflow"
+    }
+  }
+}

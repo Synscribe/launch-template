@@ -43,7 +43,7 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 - shadcn/ui: configured with the `base-nova` style; only the Button, Card, and Badge primitives used by current pages are checked in.
 - PostHog: included through `src/instrumentation-client.ts`; add its token to activate it or delete the file and dependency.
 - Privacy and terms: safe noindex scaffolds only. They deliberately block production until replaced and reviewed.
-- Use cases: the first deep JSON-backed detail page and group manifest are implemented; a grouped index follows after this direction is approved.
+- Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented; adding a content file automatically adds its validated route and sitemap entry.
 - Blog: planned as a default surface for its page-by-page phase; it will be a folder to delete, not a feature flag.
 
 ## Architecture rules

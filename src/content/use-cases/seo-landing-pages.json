@@ -1,0 +1,176 @@
+{
+  "slug": "seo-landing-pages",
+  "shortTitle": "SEO landing pages",
+  "groups": ["technical-seo", "growth-and-conversion"],
+  "seo": {
+    "title": "SEO landing pages built for real search intent",
+    "description": "Build focused landing pages with clear intent, useful copy, internal links, strong technical defaults, and a practical review process."
+  },
+  "hero": {
+    "title": "Build landing pages that answer real searches.",
+    "summary": "Turn useful search demand into focused pages people can understand, navigate, and act on.",
+    "fit": [
+      "Building use-case, industry, service, or comparison pages",
+      "Expanding a site around proven search demand",
+      "Replacing thin programmatic pages with useful content"
+    ],
+    "primaryGoal": "Create pages that answer one clear search need and connect naturally to the rest of the website.",
+    "brief": {
+      "label": "Content brief",
+      "title": "One page, one useful job",
+      "badge": "Search-led"
+    }
+  },
+  "risks": {
+    "title": "Scale makes weak pages easier to publish.",
+    "introduction": "A page template can save time, but it cannot create a reason to exist. These are the failures we prevent first.",
+    "items": [
+      {
+        "title": "Pages target the same intent",
+        "description": "Several URLs compete for the same question because their purpose was never separated."
+      },
+      {
+        "title": "The copy changes names, not meaning",
+        "description": "A repeated layout swaps a keyword while the examples, proof, and advice stay generic."
+      },
+      {
+        "title": "New pages sit on their own",
+        "description": "The site publishes landing pages without useful internal links, navigation paths, or sitemap checks."
+      }
+    ]
+  },
+  "solution": {
+    "title": "Five rules for useful landing pages.",
+    "introduction": "The page system handles the repeated checks. The content still has to earn the URL.",
+    "items": [
+      {
+        "id": "search-intent",
+        "category": "Choose the page",
+        "title": "Start with the question behind the search.",
+        "description": "We decide what the visitor wants to learn or do before choosing a page type. Similar intents are combined instead of split across weak URLs.",
+        "highlights": [
+          "Name the audience and task",
+          "Separate research from buying intent",
+          "Combine pages that would answer the same question"
+        ]
+      },
+      {
+        "id": "page-meaning",
+        "category": "Make it clear",
+        "title": "Put the page topic in the places that matter most.",
+        "description": "The title, description, H1, and opening copy agree on the page's job. The first 200 words help a new reader understand it quickly.",
+        "highlights": [
+          "Write a specific title and description",
+          "Use one clear H1",
+          "Answer the main question near the top"
+        ]
+      },
+      {
+        "id": "reusable-pages",
+        "category": "Repeat carefully",
+        "title": "Share the quality checks, not filler copy.",
+        "description": "Related landing pages can share composition and metadata rules. Examples, proof, objections, and links stay specific to each page.",
+        "highlights": [
+          "Use a real page family",
+          "Keep route content easy to review",
+          "Reject pages with no distinct value"
+        ]
+      },
+      {
+        "id": "internal-links",
+        "category": "Connect the site",
+        "title": "Link pages where the reader needs them.",
+        "description": "New landing pages receive links from relevant guides, product pages, and hubs. They also help visitors continue to the next useful answer.",
+        "highlights": [
+          "Link from established relevant pages",
+          "Use anchor text that describes the destination",
+          "Keep every public page reachable in HTML"
+        ]
+      },
+      {
+        "id": "measurement-plan",
+        "category": "Review the result",
+        "title": "Measure usefulness after publishing.",
+        "description": "We watch landing visits, meaningful actions, search queries, and page overlap. Weak pages are improved, combined, or removed.",
+        "highlights": [
+          "Track the primary page action",
+          "Review queries and landing-page performance",
+          "Improve or remove pages that add no value"
+        ]
+      }
+    ]
+  },
+  "method": {
+    "title": "Publish in small, reviewable batches.",
+    "introduction": "One strong page teaches more than fifty thin ones. Prove the content model before increasing volume.",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Group the demand",
+        "description": "Collect related searches and decide which ones need their own page."
+      },
+      {
+        "number": "02",
+        "title": "Write one complete page",
+        "description": "Answer the question with specific copy, proof, links, and a useful next step."
+      },
+      {
+        "number": "03",
+        "title": "Extract the repeated rules",
+        "description": "Keep stable composition and checks while leaving page meaning with the route."
+      },
+      {
+        "number": "04",
+        "title": "Publish, link, review",
+        "description": "Add sitemap and internal links, then watch queries, actions, and overlap."
+      }
+    ]
+  },
+  "outcomes": {
+    "title": "What a healthy page set gives you.",
+    "items": [
+      {
+        "title": "Clear search coverage",
+        "description": "Each page owns a useful question instead of competing with a near-duplicate."
+      },
+      {
+        "title": "Consistent technical basics",
+        "description": "Metadata, headings, canonicals, sitemap entries, and rendered links follow the same checks."
+      },
+      {
+        "title": "A smaller review burden",
+        "description": "The team can check new pages in batches and remove weak ideas before they spread."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Common questions.",
+    "introduction": "Short answers for teams deciding when a landing page deserves to exist.",
+    "items": [
+      {
+        "question": "How many landing pages should we publish?",
+        "answer": "Start with the number you can make genuinely useful and review. Add more only when the search need, page purpose, and supporting content are distinct."
+      },
+      {
+        "question": "Can every keyword become its own page?",
+        "answer": "No. Keywords that share the same intent usually belong on one stronger page. Separate them only when the visitor needs a meaningfully different answer."
+      },
+      {
+        "question": "Will these pages guarantee rankings?",
+        "answer": "No. Good pages and technical defaults remove avoidable problems, but search performance also depends on demand, competition, authority, and how useful the content is."
+      },
+      {
+        "question": "Should landing pages live outside the navigation?",
+        "answer": "They do not all need a main-navigation link, but every public page should have a useful path from relevant hubs or content and appear in the sitemap."
+      }
+    ]
+  },
+  "closing": {
+    "title": "Earn the first page before building the next fifty.",
+    "description": "Prove the intent, content, links, and conversion path on a real page. Then repeat only what makes the next page better.",
+    "cta": {
+      "label": "Review the launch priorities",
+      "href": "/#priorities"
+    }
+  }
+}

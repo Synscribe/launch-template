@@ -8,7 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const useCases = await getAllUseCases();
   const routes = [
     "/",
-    ...useCases.map((useCase) => `/use-cases/${useCase.slug}`),
+    "/uses",
+    ...useCases.map((useCase) => `/uses/${useCase.slug}`),
   ];
 
   if (!usesTemplateIdentity) routes.push("/privacy", "/terms");

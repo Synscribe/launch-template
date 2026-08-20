@@ -11,23 +11,38 @@ describe("use-case content", () => {
   it("loads every drop-in JSON file as validated content", async () => {
     const useCases = await getAllUseCases();
 
-    expect(useCases).toHaveLength(1);
-    expect(useCases[0]).toMatchObject({
+    expect(useCases).toHaveLength(4);
+    expect(useCases.map((useCase) => useCase.slug)).toEqual([
+      "saas-website-rebuilds",
+      "seo-landing-pages",
+      "startup-launches",
+      "website-migrations",
+    ]);
+
+    const websiteMigration = useCases.find(
+      (useCase) => useCase.slug === "website-migrations",
+    );
+    expect(websiteMigration).toMatchObject({
       slug: "website-migrations",
       shortTitle: "Website migrations",
       groups: ["migrations-and-rebuilds", "technical-seo"],
     });
-    expect(useCases[0]).not.toHaveProperty("order");
-    expect(useCases[0]?.solution.items).toHaveLength(5);
-    expect(useCases[0]?.solution.items.map((item) => item.id)).toEqual([
+    expect(websiteMigration).not.toHaveProperty("order");
+    expect(websiteMigration?.solution.items).toHaveLength(5);
+    expect(websiteMigration?.solution.items.map((item) => item.id)).toEqual([
       "url-inventory",
       "url-decisions",
       "page-meaning",
       "release-gates",
       "post-launch-monitoring",
     ]);
-    expect(useCases[0]?.solution.items[0]).not.toHaveProperty("evidence");
-    expect(useCases[0]?.faq.items).toHaveLength(4);
+    expect(websiteMigration?.solution.items[0]).not.toHaveProperty("evidence");
+    expect(websiteMigration?.faq.items).toHaveLength(4);
+
+    for (const useCase of useCases) {
+      expect(useCase.solution.items).toHaveLength(5);
+      expect(useCase.faq.items).toHaveLength(4);
+    }
   });
 
   it("uses the group manifest order and resolves group memberships", async () => {
@@ -36,6 +51,8 @@ describe("use-case content", () => {
 
     expect(groups.map((group) => group.slug)).toEqual([
       "migrations-and-rebuilds",
+      "startup-launches",
+      "growth-and-conversion",
       "technical-seo",
     ]);
     expect(
@@ -46,11 +63,23 @@ describe("use-case content", () => {
     ).toEqual([
       {
         slug: "migrations-and-rebuilds",
-        useCases: ["website-migrations"],
+        useCases: ["saas-website-rebuilds", "website-migrations"],
+      },
+      {
+        slug: "startup-launches",
+        useCases: ["startup-launches"],
+      },
+      {
+        slug: "growth-and-conversion",
+        useCases: [
+          "saas-website-rebuilds",
+          "seo-landing-pages",
+          "startup-launches",
+        ],
       },
       {
         slug: "technical-seo",
-        useCases: ["website-migrations"],
+        useCases: ["seo-landing-pages", "website-migrations"],
       },
     ]);
   });

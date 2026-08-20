@@ -42,7 +42,7 @@ export async function generateMetadata({
   return createPageMetadata({
     title: useCase.seo.title,
     description: useCase.seo.description,
-    path: `/use-cases/${useCase.slug}`,
+    path: `/uses/${useCase.slug}`,
   });
 }
 
@@ -51,9 +51,10 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
   const useCase = await getUseCaseBySlug(slug);
   if (!useCase) notFound();
 
-  const path = `/use-cases/${useCase.slug}`;
+  const path = `/uses/${useCase.slug}`;
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
+    { name: "Uses", path: "/uses" },
     { name: useCase.shortTitle, path },
   ]);
 
@@ -76,7 +77,17 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
               <li aria-hidden="true" className="text-ink-faint">
                 /
               </li>
-              <li aria-current="page">{useCase.shortTitle}</li>
+              <li>
+                <Link className="transition-colors hover:text-ink" href="/uses">
+                  Uses
+                </Link>
+              </li>
+              <li aria-hidden="true" className="text-ink-faint">
+                /
+              </li>
+              <li aria-current="page" className="truncate">
+                {useCase.shortTitle}
+              </li>
             </ol>
           </nav>
 

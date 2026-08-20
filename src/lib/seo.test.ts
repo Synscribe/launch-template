@@ -10,8 +10,8 @@ import {
 
 describe("SEO helpers", () => {
   it("builds absolute URLs from the configured origin", () => {
-    expect(absoluteUrl("/use-cases/example")).toBe(
-      "http://localhost:3000/use-cases/example",
+    expect(absoluteUrl("/uses/example")).toBe(
+      "http://localhost:3000/uses/example",
     );
   });
 
@@ -44,14 +44,14 @@ describe("SEO helpers", () => {
   it("builds ordered absolute breadcrumb items", () => {
     const breadcrumbs = buildBreadcrumbJsonLd([
       { name: "Home", path: "/" },
-      { name: "Website migrations", path: "/use-cases/website-migrations" },
+      { name: "Website migrations", path: "/uses/website-migrations" },
     ]);
 
     expect(breadcrumbs.itemListElement[1]).toEqual({
       "@type": "ListItem",
       position: 2,
       name: "Website migrations",
-      item: "http://localhost:3000/use-cases/website-migrations",
+      item: "http://localhost:3000/uses/website-migrations",
     });
   });
 

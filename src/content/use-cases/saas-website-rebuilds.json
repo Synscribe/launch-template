@@ -1,0 +1,176 @@
+{
+  "slug": "saas-website-rebuilds",
+  "shortTitle": "SaaS website rebuilds",
+  "groups": ["migrations-and-rebuilds", "growth-and-conversion"],
+  "seo": {
+    "title": "SaaS website rebuilds built around how customers buy",
+    "description": "Rebuild a SaaS marketing site with clearer buyer journeys, a simpler structure, reusable pages, and safer launch checks."
+  },
+  "hero": {
+    "title": "Rebuild your SaaS website around how people buy.",
+    "summary": "Turn a crowded marketing site into clear paths for learning, comparing, and taking action.",
+    "fit": [
+      "Replacing a SaaS site that has grown without a plan",
+      "Repositioning the product for a new market",
+      "Giving marketing a faster way to ship useful pages"
+    ],
+    "primaryGoal": "Help each buyer find the right answer without losing valuable pages during the rebuild.",
+    "brief": {
+      "label": "Rebuild brief",
+      "title": "Design around buyer questions",
+      "badge": "Growth site"
+    }
+  },
+  "risks": {
+    "title": "More pages do not always make a better website.",
+    "introduction": "SaaS sites often grow around team requests instead of buyer needs. A rebuild should remove that friction without losing what works.",
+    "items": [
+      {
+        "title": "The navigation mirrors the company",
+        "description": "Visitors must understand product teams and internal labels before they can find a useful answer."
+      },
+      {
+        "title": "Every page tells the same story",
+        "description": "Use cases, industries, and features repeat generic claims instead of answering different buyer questions."
+      },
+      {
+        "title": "The rebuild drops useful demand",
+        "description": "Old comparison pages, guides, and campaign URLs disappear because nobody mapped their value first."
+      }
+    ]
+  },
+  "solution": {
+    "title": "Five parts of a useful SaaS rebuild.",
+    "introduction": "We plan the buyer paths, page system, and launch together. The new design does not have to guess what the old site was doing.",
+    "items": [
+      {
+        "id": "buyer-journeys",
+        "category": "Understand the buyer",
+        "title": "Map the questions people ask before they buy.",
+        "description": "We separate first-time visitors, active evaluators, and ready buyers. Each group gets a shorter path to the information it needs.",
+        "highlights": [
+          "List the questions behind each visit",
+          "Match proof to the buyer's stage",
+          "Keep a clear route to the primary action"
+        ]
+      },
+      {
+        "id": "information-architecture",
+        "category": "Simplify the site",
+        "title": "Build the navigation around real decisions.",
+        "description": "We group pages by the jobs they do, not the team that requested them. Old and new routes are mapped before the structure changes.",
+        "highlights": [
+          "Reduce overlapping page categories",
+          "Use names a new visitor understands",
+          "Map every important old URL"
+        ]
+      },
+      {
+        "id": "reusable-pages",
+        "category": "Speed up publishing",
+        "title": "Reuse strong rules, not generic copy.",
+        "description": "Repeated page types share code, metadata rules, and quality checks. Their message and proof stay specific to the audience.",
+        "highlights": [
+          "Share layout rules across real page families",
+          "Keep route copy and metadata together",
+          "Avoid a catch-all page renderer"
+        ]
+      },
+      {
+        "id": "conversion-path",
+        "category": "Improve the journey",
+        "title": "Make the next step clear on every page.",
+        "description": "We decide what a visitor should do after each page. Product, pricing, demo, and contact paths are tested as one journey.",
+        "highlights": [
+          "Match the action to the page intent",
+          "Keep source context through forms",
+          "Test every conversion path end to end"
+        ]
+      },
+      {
+        "id": "release-gates",
+        "category": "Protect the launch",
+        "title": "Verify the rebuilt site before switching traffic.",
+        "description": "We crawl the final environment, compare it with the URL map, and test forms, analytics, canonicals, robots, and the sitemap.",
+        "highlights": [
+          "Check the final domain and redirects",
+          "Verify important pages and conversions",
+          "Record rollback and monitoring owners"
+        ]
+      }
+    ]
+  },
+  "method": {
+    "title": "Rebuild in the order risk appears.",
+    "introduction": "Content and routes come before component volume. That keeps the new system useful after the launch team leaves.",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Audit demand and content",
+        "description": "Review buyers, search demand, analytics, sales questions, and the current URL inventory."
+      },
+      {
+        "number": "02",
+        "title": "Plan paths and pages",
+        "description": "Set the navigation, URL map, page jobs, and conversion routes."
+      },
+      {
+        "number": "03",
+        "title": "Build real page families",
+        "description": "Finish representative product, use-case, and resource pages before extracting patterns."
+      },
+      {
+        "number": "04",
+        "title": "Switch and watch",
+        "description": "Test production, launch the redirects, and monitor landing pages and leads."
+      }
+    ]
+  },
+  "outcomes": {
+    "title": "What the rebuild leaves behind.",
+    "items": [
+      {
+        "title": "Clear buyer paths",
+        "description": "Visitors can move from a question to relevant proof and a useful next step."
+      },
+      {
+        "title": "A practical page system",
+        "description": "Marketing can add real page families without copying an entire site or using a block registry."
+      },
+      {
+        "title": "A safer switch",
+        "description": "Important URLs, metadata, forms, and analytics have been checked in the final environment."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Common questions.",
+    "introduction": "The choices that usually decide whether a SaaS rebuild stays useful after launch.",
+    "items": [
+      {
+        "question": "Should we redesign and rewrite at the same time?",
+        "answer": "Usually, yes, but not without an inventory. Keep useful demand and facts, then improve the message and experience around them."
+      },
+      {
+        "question": "Do we need a component for every marketing idea?",
+        "answer": "No. Start with route-local composition. Promote a component only after a second real page proves the pattern repeats."
+      },
+      {
+        "question": "How do we decide which old pages to keep?",
+        "answer": "Look at their audience, search demand, links, conversions, and role in the buyer journey. Every important URL gets an explicit decision."
+      },
+      {
+        "question": "Can marketing still move quickly without a page builder?",
+        "answer": "Yes. Reusable page families, clear tokens, and route-level composition can support fast publishing without turning the whole site into serialized UI."
+      }
+    ]
+  },
+  "closing": {
+    "title": "Make the site easier to buy from and easier to run.",
+    "description": "Plan the buyer journey and the URL map first. Then build a page system that stays clear as the company grows.",
+    "cta": {
+      "label": "See the migration approach",
+      "href": "/uses/website-migrations"
+    }
+  }
+}

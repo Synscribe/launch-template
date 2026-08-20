@@ -16,6 +16,15 @@ export const USE_CASE_FEATURE_IDS = [
   "page-meaning",
   "release-gates",
   "post-launch-monitoring",
+  "offer-and-audience",
+  "conversion-path",
+  "proof-and-trust",
+  "measurement-plan",
+  "buyer-journeys",
+  "information-architecture",
+  "reusable-pages",
+  "search-intent",
+  "internal-links",
 ] as const;
 
 export type UseCaseFeatureId = (typeof USE_CASE_FEATURE_IDS)[number];

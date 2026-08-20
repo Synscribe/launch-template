@@ -13,8 +13,8 @@
     3rem 3rem,
     3rem 3rem,
     auto;
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
 }
 
 .hero::after {

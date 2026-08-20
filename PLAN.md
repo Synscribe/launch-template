@@ -176,7 +176,7 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 │   │   ├── privacy/page.tsx
 │   │   ├── terms/page.tsx
 │   │   ├── contact/                 # add when selected
-│   │   ├── use-cases/               # included by default; delete if unused
+│   │   ├── uses/                    # included by default; delete if unused
 │   │   ├── blog/                    # included by default; delete if unused
 │   │   ├── error.tsx
 │   │   ├── globals.css
@@ -203,7 +203,7 @@ Important boundaries:
 - `src/config/site.ts` may hold brand identity, the canonical origin, locale, nav, footer links, and social profiles.
 - Each route owns its visible copy and route metadata.
 - A content collection may own repeated page data when a repeated page type actually exists. Prefer MDX/Markdown with validated frontmatter for editorial content and TypeScript for small curated datasets.
-- Do not introduce a catch-all marketing route. Dynamic routes such as `blog/[slug]` and `use-cases/[slug]` are normal and encouraged when they match a real content model.
+- Do not introduce a catch-all marketing route. Dynamic routes such as `blog/[slug]` and `uses/[slug]` are normal and encouraged when they match a real content model.
 - `src/components/ui` is not a showcase. If a primitive is unused, it should not be in the base template.
 
 ## 7. Priority model
@@ -405,7 +405,7 @@ Use cases are a default, deletable surface rather than a feature flag. Start wit
 
 Do not use the old Synscribe envelope or copy the old fixed section set unless the new content actually requires it.
 
-Current progress: one JSON-backed website-migrations detail page is implemented with risks, five capabilities, a method, outcomes, and FAQs. The copy uses short, direct sentences and the layout uses generous section spacing without a sticky jump bar. Each capability declares one validated feature ID that selects a route-owned visual; visual props and component structure do not live in JSON. Numeric page ordering has been removed. Each page references group IDs, while `src/content/use-cases/groups.json` owns hub labels and section order without becoming a component registry. The grouped index and a second JSON document are the next proof of automatic discovery and real repetition.
+Current progress: the server-rendered `/uses` hub groups and links four JSON-backed detail pages covering migrations, SaaS rebuilds, startup launches, and SEO landing pages. The copy uses short, direct sentences and the detail layout uses generous section spacing without a sticky jump bar. Each capability declares one validated feature ID that selects a route-owned visual; visual props and component structure do not live in JSON. Numeric page ordering has been removed. Each page references group IDs, while `src/content/use-cases/groups.json` owns hub labels and section order without becoming a component registry. Automatic discovery, grouping, static generation, and sitemap inclusion are covered by tests and the launch audit.
 
 ### Phase 5 — basic blog
 
@@ -585,4 +585,4 @@ These do not block the architecture plan, but should be decided when scaffolding
 
 ## 19. Recommended next action
 
-Review the expanded use-case detail page at `/use-cases/website-migrations`. If its content model and visual direction are approved, add the server-rendered grouped use-case index and a second drop-in JSON document to verify that the collection genuinely repeats. Keep legal approval as a production gate requiring real project facts; do not invent generic approvals to close Phase 2.
+Build the basic blog slice with one local Markdown/MDX article, a server-rendered index, article metadata, sitemap integration, and a feed. Keep legal approval as a production gate requiring real project facts; do not invent generic approvals to close Phase 2.

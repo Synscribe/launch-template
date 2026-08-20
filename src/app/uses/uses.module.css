@@ -1,0 +1,37 @@
+.hero {
+  background:
+    radial-gradient(
+      circle at 88% 8%,
+      rgba(191, 227, 209, 0.7),
+      transparent 24rem
+    ),
+    radial-gradient(
+      circle at 4% 100%,
+      rgba(223, 80, 40, 0.08),
+      transparent 26rem
+    ),
+    var(--canvas);
+}
+
+.useRow {
+  margin-inline: -1.25rem;
+  padding-inline: 1.25rem;
+  transition: background-color 180ms ease;
+}
+
+.useRow:hover {
+  background: rgba(191, 227, 209, 0.18);
+}
+
+.useRow:focus-visible {
+  border-radius: 0.75rem;
+  outline: 2px solid var(--signal);
+  outline-offset: 4px;
+}
+
+@media (max-width: 639px) {
+  .useRow {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
