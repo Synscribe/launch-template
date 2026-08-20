@@ -1,0 +1,176 @@
+{
+  "slug": "website-migrations",
+  "shortTitle": "Website migrations",
+  "groups": ["migrations-and-rebuilds", "technical-seo"],
+  "seo": {
+    "title": "Website migrations that protect SEO and working URLs",
+    "description": "Plan redirects, protect important pages, and test the new website before launch."
+  },
+  "hero": {
+    "title": "Move your website without losing what already works.",
+    "summary": "We protect important URLs, search traffic, and customer journeys while the new site is built.",
+    "fit": [
+      "Moving a marketing site to Next.js",
+      "Rebranding or changing the site structure",
+      "Replacing a CMS without losing useful content"
+    ],
+    "primaryGoal": "Ship the new site without breaking the paths people and search engines already trust.",
+    "brief": {
+      "label": "Migration plan",
+      "title": "Know every old URL",
+      "badge": "Launch-critical"
+    }
+  },
+  "risks": {
+    "title": "Most migration mistakes happen behind the scenes.",
+    "introduction": "A polished redesign can still lose traffic or break customer journeys. These are the three failures we guard against.",
+    "items": [
+      {
+        "title": "Old links stop working",
+        "description": "Useful pages vanish or redirect to the homepage. Visitors hit dead ends, and search engines lose the old page's context."
+      },
+      {
+        "title": "Important pages become generic",
+        "description": "Different pages get the same titles and vague opening copy. Their purpose becomes harder to understand."
+      },
+      {
+        "title": "Test settings go live",
+        "description": "A noindex rule, temporary domain, test analytics key, or old brand name slips into production."
+      }
+    ]
+  },
+  "solution": {
+    "title": "Five things we do before the switch.",
+    "introduction": "Each step leaves something concrete to review. No mystery. No last-minute SEO cleanup.",
+    "items": [
+      {
+        "id": "url-inventory",
+        "category": "Find what matters",
+        "title": "Build one list of the old site.",
+        "description": "We combine the sitemap, crawl, analytics, Search Console, CMS, and backlink data. This catches valuable pages that normal navigation misses.",
+        "highlights": [
+          "Find pages hidden from navigation",
+          "Mark pages with traffic, links, or leads",
+          "Include files, forms, and campaign URLs"
+        ]
+      },
+      {
+        "id": "url-decisions",
+        "category": "Plan the move",
+        "title": "Give every old URL a clear future.",
+        "description": "Each old path gets one outcome: keep, move, combine, or remove. Redirects go straight to the closest useful page.",
+        "highlights": [
+          "Keep, redirect, combine, or remove",
+          "Avoid redirect chains",
+          "Record the reason for each choice"
+        ]
+      },
+      {
+        "id": "page-meaning",
+        "category": "Protect the page",
+        "title": "Improve the page without losing its purpose.",
+        "description": "We keep the topic people came for, then improve the page. Titles, H1s, opening copy, and internal links are checked first.",
+        "highlights": [
+          "Keep each page's original intent",
+          "Review the title, description, H1, and opening",
+          "Carry over useful links and media"
+        ]
+      },
+      {
+        "id": "release-gates",
+        "category": "Test the launch",
+        "title": "Check the real site before it goes live.",
+        "description": "We crawl the final environment and compare it with the approved URL map. We also test forms, analytics, canonicals, robots, and the sitemap.",
+        "highlights": [
+          "Run the crawl against the final site",
+          "Check redirects, canonicals, robots, and sitemap",
+          "Test forms, analytics, 404s, and rollback"
+        ]
+      },
+      {
+        "id": "post-launch-monitoring",
+        "category": "Watch the move",
+        "title": "Catch problems early after launch.",
+        "description": "We check old and new URLs as soon as the site moves. Then we watch crawl errors, landing-page traffic, and conversions for the first few weeks.",
+        "highlights": [
+          "Check key routes in the first 24 hours",
+          "Compare traffic and conversions by landing page",
+          "Keep useful redirects for at least a year"
+        ]
+      }
+    ]
+  },
+  "method": {
+    "title": "A simple order of work.",
+    "introduction": "The design can be ambitious. The migration process should be easy to follow.",
+    "steps": [
+      {
+        "number": "01",
+        "title": "List the old site",
+        "description": "Gather URLs, traffic, links, forms, files, and campaign pages."
+      },
+      {
+        "number": "02",
+        "title": "Decide every URL",
+        "description": "Choose what stays, moves, combines, or goes away."
+      },
+      {
+        "number": "03",
+        "title": "Build one route at a time",
+        "description": "Keep each page's copy, metadata, links, and layout together."
+      },
+      {
+        "number": "04",
+        "title": "Test, launch, watch",
+        "description": "Crawl the final site, verify the map, then monitor the move."
+      }
+    ]
+  },
+  "outcomes": {
+    "title": "What you have before launch.",
+    "items": [
+      {
+        "title": "A finished URL map",
+        "description": "Every important old path has a clear destination or an intentional removal."
+      },
+      {
+        "title": "Pages that still make sense",
+        "description": "Key pages keep their topic, links, metadata, and useful content."
+      },
+      {
+        "title": "A launch record",
+        "description": "The team knows what passed, what needs an owner, and what to watch after launch."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Common questions.",
+    "introduction": "Short answers to the decisions that usually slow a migration down.",
+    "items": [
+      {
+        "question": "Can you promise rankings will not change?",
+        "answer": "No. Any major site change can affect search performance. We reduce avoidable risk, keep useful signals, and make problems easier to spot and fix."
+      },
+      {
+        "question": "Does every old URL need a redirect?",
+        "answer": "No. Every important URL needs a decision. Redirect it only when there is a relevant replacement. Otherwise, use a clear 404 or 410."
+      },
+      {
+        "question": "When should we start the URL map?",
+        "answer": "Before the new navigation and routes are final. Early mapping finds content gaps while the new structure is still easy to change."
+      },
+      {
+        "question": "How long should redirects stay?",
+        "answer": "At least a year. Keep them longer when old URLs still receive traffic or links."
+      }
+    ]
+  },
+  "closing": {
+    "title": "Start with the URL map. Then build.",
+    "description": "Understand the old site before changing its routes. That one step makes the redesign faster and the launch safer.",
+    "cta": {
+      "label": "See the launch workflow",
+      "href": "/#workflow"
+    }
+  }
+}

@@ -1,0 +1,2 @@
+old_url,source,priority,disposition,new_url,implementation_status,verification_status,notes
+https://old.example.com/,sitemap|analytics,high,preserve,https://new.example.com/,pending,pending,Replace or delete this example row before a migration

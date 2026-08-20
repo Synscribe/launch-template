@@ -1,0 +1,160 @@
+.hero {
+  background:
+    radial-gradient(
+      circle at 88% 10%,
+      rgba(223, 80, 40, 0.12),
+      transparent 24rem
+    ),
+    linear-gradient(rgba(23, 32, 31, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 32, 31, 0.045) 1px, transparent 1px),
+    var(--canvas);
+  background-size:
+    auto,
+    3rem 3rem,
+    3rem 3rem,
+    auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::after {
+  border: 1px solid rgba(23, 32, 31, 0.1);
+  border-radius: 999px;
+  content: "";
+  height: 28rem;
+  position: absolute;
+  right: -15rem;
+  top: 4rem;
+  width: 28rem;
+}
+
+.briefCard {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(191, 227, 209, 0.18),
+      transparent 32%
+    ),
+    #12201e;
+  box-shadow: 0 24px 64px rgba(18, 32, 30, 0.16);
+}
+
+.solution {
+  background:
+    linear-gradient(rgba(23, 32, 31, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 32, 31, 0.035) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(191, 227, 209, 0.2), transparent 36rem),
+    var(--canvas);
+  background-size:
+    3rem 3rem,
+    3rem 3rem,
+    auto,
+    auto;
+}
+
+.capabilityRow {
+  align-items: center;
+  display: grid;
+  gap: 3.5rem;
+}
+
+.capabilityCopy {
+  min-width: 0;
+}
+
+.method {
+  background:
+    radial-gradient(
+      circle at 12% 110%,
+      rgba(122, 185, 155, 0.16),
+      transparent 30rem
+    ),
+    #12201e;
+}
+
+.faq {
+  background:
+    radial-gradient(
+      circle at 8% 20%,
+      rgba(223, 80, 40, 0.08),
+      transparent 24rem
+    ),
+    var(--paper);
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--line);
+}
+
+.faqItem summary {
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary:focus-visible {
+  border-radius: 0.5rem;
+  outline: 2px solid var(--signal);
+  outline-offset: 4px;
+}
+
+.faqIcon {
+  transition: transform 180ms ease;
+}
+
+.faqItem[open] .faqIcon {
+  transform: rotate(45deg);
+}
+
+.closingCard {
+  background:
+    radial-gradient(
+      circle at 90% 15%,
+      rgba(255, 255, 255, 0.18),
+      transparent 18rem
+    ),
+    var(--signal-strong);
+  box-shadow: 0 28px 90px rgba(200, 63, 27, 0.2);
+}
+
+@media (min-width: 1024px) {
+  .capabilityRow {
+    gap: 7rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .capabilityRow:nth-child(even) .capabilityCopy {
+    order: 2;
+  }
+
+  .capabilityRow:nth-child(even) > :last-child {
+    order: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    background-size:
+      auto,
+      2rem 2rem,
+      2rem 2rem,
+      auto;
+  }
+
+  .solution {
+    background-size:
+      2rem 2rem,
+      2rem 2rem,
+      auto,
+      auto;
+  }
+
+  .hero::after {
+    height: 17rem;
+    right: -11rem;
+    top: 3rem;
+    width: 17rem;
+  }
+}

@@ -1,0 +1,178 @@
+.hero {
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::before {
+  background-image:
+    linear-gradient(rgba(23, 32, 31, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 32, 31, 0.055) 1px, transparent 1px);
+  background-size: 52px 52px;
+  content: "";
+  inset: 0;
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+  pointer-events: none;
+  position: absolute;
+  z-index: -2;
+}
+
+.hero::after {
+  background: #bfe3d1;
+  border-radius: 999px;
+  content: "";
+  filter: blur(4px);
+  height: 28rem;
+  opacity: 0.58;
+  position: absolute;
+  right: -14rem;
+  top: -13rem;
+  width: 28rem;
+  z-index: -1;
+}
+
+.kicker::before {
+  background: #df5028;
+  border-radius: 999px;
+  content: "";
+  height: 0.55rem;
+  width: 0.55rem;
+}
+
+.displayTitle {
+  text-wrap: balance;
+}
+
+.signalBoard {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(191, 227, 209, 0.18),
+      transparent 32%
+    ),
+    #12201e;
+  box-shadow: 0 38px 100px rgba(18, 32, 30, 0.23);
+  overflow: hidden;
+  position: relative;
+}
+
+.signalBoard::after {
+  border: 1px solid rgba(191, 227, 209, 0.2);
+  border-radius: 999px;
+  content: "";
+  height: 11rem;
+  position: absolute;
+  right: -5.5rem;
+  top: 5.5rem;
+  width: 11rem;
+}
+
+.pulse {
+  animation: pulse 2.4s ease-in-out infinite;
+  background: #8ed0ad;
+  border-radius: 999px;
+  box-shadow: 0 0 0 0 rgba(142, 208, 173, 0.45);
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.checkRow {
+  animation: rise 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.checkRow:nth-child(2) {
+  animation-delay: 90ms;
+}
+
+.checkRow:nth-child(3) {
+  animation-delay: 180ms;
+}
+
+.checkRow:nth-child(4) {
+  animation-delay: 270ms;
+}
+
+.checkRow:nth-child(5) {
+  animation-delay: 360ms;
+}
+
+.principleCard {
+  background: rgba(251, 250, 246, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.principleCard:hover {
+  box-shadow: 0 24px 70px rgba(29, 41, 38, 0.08);
+  transform: translateY(-4px);
+}
+
+.priorityCard {
+  min-height: 24rem;
+  position: relative;
+}
+
+.priorityCard::before {
+  border-radius: 999px;
+  content: "";
+  height: 0.65rem;
+  left: 1.75rem;
+  position: absolute;
+  top: 1.75rem;
+  width: 0.65rem;
+}
+
+.priorityCard:nth-child(1)::before {
+  background: #df5028;
+}
+
+.priorityCard:nth-child(2)::before {
+  background: #7ab99b;
+}
+
+.priorityCard:nth-child(3)::before {
+  background: #89908c;
+}
+
+.stepNumber {
+  -webkit-text-stroke: 1px rgba(245, 242, 234, 0.35);
+  color: transparent;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.codeWindow {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), #17201f;
+  background-size: 100% 2rem;
+  box-shadow: 0 34px 90px rgba(18, 32, 30, 0.18);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 8px rgba(142, 208, 173, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(142, 208, 173, 0);
+  }
+}
+
+@media (max-width: 767px) {
+  .priorityCard {
+    min-height: auto;
+  }
+}

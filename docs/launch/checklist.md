@@ -1,0 +1,316 @@
+# Launch checklist and technical SEO guide
+
+This is the single source of truth for launch readiness and technical SEO. It deliberately combines each requirement with its explanation, implementation reference, and evidence so a separate “SEO guide” cannot drift away from the checklist.
+
+## How to use this document
+
+- `P0` blocks launch when applicable.
+- `P1` is a non-blocking quality check or a feature-dependent expectation.
+- `P2` is an enhancement to add after the core is stable.
+- Mark evidence and exceptions in `docs/launch/status.md`, not in this reusable document.
+- “Not applicable” is valid only with a short reason and owner.
+- Automation is supporting evidence. It cannot decide whether copy, legal terms, redirects, or structured data are truthful.
+
+## P0 — every site
+
+### BRAND-01 — production identity is intentional
+
+Why it matters: inherited names, domains, keys, logos, or analytics can misdirect customers and data while still looking technically valid.
+
+Check:
+
+- Replace the template name, URL, description, package name, icon, and social-preview treatment.
+- Remove `TODO_CLIENT_*` values and forbidden legacy brands/domains.
+- Confirm analytics belongs to the client and production project.
+- Contact email and social accounts are optional. If the client does not publish them, omit them. If present, verify each destination.
+
+Code: `src/config/env.ts`, `src/config/site.ts`, `src/app/icon.svg`, `src/app/opengraph-image.tsx`, `package.json`.
+
+Evidence: production environment values, rendered header/footer, sharing preview, analytics project screenshot where used.
+
+### ROUTE-01 — every internal destination works
+
+Why it matters: a polished page can still ship dead navigation, inherited CTAs, or links to routes planned but never built.
+
+Check every header, footer, CTA, card, body, canonical, hreflang, and sitemap URL. It must return the intended 2xx page or a reviewed redirect. Links that require authentication or an external app still need an owner and production destination.
+
+Code: explicit `src/app/**/page.tsx` routes and `src/config/site.ts` navigation.
+
+Evidence: `pnpm launch:audit --url <preview>` plus manual checks for authenticated/external destinations.
+
+### ROUTE-02 — missing and removed URLs have honest status codes
+
+Why it matters: returning a generic 200 page for missing content creates soft 404s. Redirecting unrelated removed pages to home confuses users and search engines.
+
+Check:
+
+- Unknown routes return HTTP 404.
+- Intentionally removed content returns 404/410 or a relevant permanent redirect.
+- Redirects go directly to the final relevant destination.
+- Error and not-found experiences still help a human recover.
+
+Code: `src/app/not-found.tsx`, `src/app/error.tsx`, `src/config/redirects.ts`.
+
+### SEO-01 — production can be crawled and indexed
+
+Why it matters: a stray `noindex`, robots block, authentication wall, or preview header can erase every other SEO improvement.
+
+How crawling and indexing differ:
+
+- `robots.txt` controls crawler access; it is not a reliable way to remove an already known URL from an index.
+- `noindex` controls indexing but the crawler must be able to fetch the page to see it.
+- Preview/local environments should be blocked. Production must deliberately switch to the public policy.
+
+Check:
+
+- Representative production routes return 200 without authentication.
+- Production `robots.txt` permits intended public routes and points to the absolute sitemap.
+- Public pages do not emit `noindex` or an equivalent response header.
+- Preview/local deployments remain non-indexable.
+
+Code: `src/app/robots.ts`, route metadata, `src/config/env.ts`.
+
+Evidence: production audit plus Search Console URL Inspection after launch.
+
+### SEO-02 — page meaning is clear in the right order
+
+This is the main on-page priority order. Review each indexable page in exactly this sequence:
+
+1. **Meta title.** Unique, concise, descriptive, and aligned with what the page actually provides. Put the distinguishing topic before repetitive brand boilerplate.
+2. **Meta description.** A page-specific summary that earns the click and matches visible content. There is no arbitrary pass/fail character count; search engines may choose a different snippet.
+3. **H1.** The clear visible main heading. It should agree with the title without needing to be identical.
+4. **First 200 visible words.** State what the page is about, who it helps, and the useful substance early. Do not make crawlers or users cross animation, vague brand prose, or client-only rendering to discover the topic.
+5. **Published and updated dates.** When the content actually has these dates, show them accurately to readers and include `datePublished`/`dateModified` in the applicable JSON-LD. Never invent or automatically refresh a date merely to look current.
+
+Why this order: the title and description shape the search result, the H1 establishes the visible subject, and the opening copy confirms relevance. Dates help time-sensitive editorial content when they are real source data.
+
+Code: route `metadata`/`generateMetadata`, visible route copy, and `src/lib/seo.ts`.
+
+Evidence: rendered HTML and human copy review. The audit checks presence and consistency signals; a reviewer decides quality and intent.
+
+### SEO-03 — each indexable page declares a consistent canonical URL
+
+Why it matters: query variants, protocol/host variants, trailing-slash differences, and duplicated content can split signals or make the wrong URL appear in search.
+
+Check:
+
+- Use one HTTPS production origin and one URL style.
+- Canonical URLs are absolute, indexable, return 200, and match sitemap/internal-link destinations.
+- A canonical is not a substitute for redirecting an obsolete URL.
+- Local/preview hosts never appear in production metadata.
+
+Code: `src/lib/seo.ts`, `src/config/env.ts`, route metadata.
+
+### SEO-04 — robots policy points to the canonical sitemap
+
+Why it matters: `robots.txt` is a small file with site-wide consequences. Environment mistakes are common during cutovers.
+
+Check production returns 200 at `/robots.txt`, allows intended public routes, blocks only deliberate crawl paths, and includes an absolute `Sitemap:` URL. Do not use robots rules to hide secrets; protect them with authentication and authorization.
+
+Code: `src/app/robots.ts`.
+
+### SEO-05 — the sitemap lists canonical HTML pages
+
+Why it matters: a sitemap helps discovery and communicates which canonical URLs the site considers public. It is a hint, not a replacement for internal links.
+
+Check:
+
+- Include every canonical, indexable HTML route from every enabled content source.
+- Exclude redirects, errors, `noindex` pages, preview URLs, filtered/search-result URLs, and duplicate variants.
+- Use accurate `lastModified` only when the content source has a reliable value.
+- Do not add `priority` or `changeFrequency` for Google; Google ignores them.
+- Optional `.md` representations are non-blocking. Their presence, absence, or sitemap omission must never stop launch.
+
+Code: `src/app/sitemap.ts`; later blog and use-case content loaders.
+
+### SEO-06 — important content and links exist in rendered HTML
+
+Why it matters: search engines can render JavaScript, but server-rendered/prerendered content is faster and easier for users, crawlers, unfurlers, and other agents to consume.
+
+Check:
+
+- Core headings, opening copy, article text, list-page results, and navigation are present without a client-side fetch.
+- Important pages are reachable from another findable page through `<a href>`/`Link` elements.
+- Buttons are not used as navigation and click handlers are not the only source of a URL.
+- Filtered client interactions enhance an already useful server-rendered view.
+
+Code: Server Components under `src/app`; `src/components/site-header.tsx`, `site-footer.tsx`.
+
+### SEO-07 — URL policy is consistent
+
+Why it matters: paths are case-sensitive and multiple host/protocol/trailing-slash variants can create duplicates and unnecessary redirects.
+
+Decide and test:
+
+- `www` or apex host;
+- HTTPS enforcement;
+- lowercase, descriptive paths;
+- trailing-slash policy;
+- query parameter behavior;
+- direct final internal links without redirect hops.
+
+Code: deployment host settings, `next.config.ts`, `src/config/redirects.ts`.
+
+### PERF-01 — media and rendering do not sabotage the opening experience
+
+Why it matters: a technically indexable page can still lose users through slow or unstable rendering.
+
+Check:
+
+- The likely LCP image is intentionally sized and loaded; noncritical images are lazy.
+- Images/video reserve dimensions and do not cause layout shift.
+- Use modern formats and responsive sources where appropriate.
+- Fonts and third-party scripts do not block the page unnecessarily.
+- Critical content does not wait for a large animation or client bundle.
+
+Code: page media, `next/image`, `src/app/globals.css`, `src/instrumentation-client.ts`.
+
+### PERF-02 — representative mobile performance has no severe regression
+
+Why it matters: lab tests catch obvious regressions before launch; real-user Core Web Vitals require production traffic.
+
+Check representative homepage, listing, detail, and conversion routes on mobile. Investigate severe LCP, interaction latency/TBT, and CLS problems. Do not require a synthetic score of 100. Assign field monitoring after launch; current “good” Core Web Vitals targets are LCP ≤2.5s, INP ≤200ms, and CLS ≤0.1 at the 75th percentile.
+
+Evidence: saved lab runs before launch and field dashboard owner after launch.
+
+### SEC-01 — client data and production configuration are safe
+
+Check secrets are server-only and uncommitted, dependencies are reviewed, external scripts are intentional, security headers fit the deployment, and public environment values contain nothing confidential. A marketing site still needs an abuse model for forms and APIs.
+
+### LEGAL-01 — legal content describes the real site
+
+Why it matters: generic terms cannot truthfully describe the entity, service, data collection, processors, rights, or jurisdictions.
+
+Check privacy/terms/cookie disclosures as applicable, effective dates, company/contact identity, analytics and form data, subprocessors, retention, user rights, commercial terms, and recorded client/counsel approval. `TODO_CLIENT_LEGAL_REVIEW` blocks production.
+
+Code: `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`.
+
+### OPS-01 — the launch has owners and a rollback path
+
+Record the production domain, DNS/TLS owner, deployment target, environment variables, launch window, monitoring owner, backup/rollback procedure, and the person authorized to make the cutover decision.
+
+### QA-01 — preview passes before cutover
+
+Run formatting, lint, typecheck, tests, build, and the live preview audit. Test representative browsers/devices and primary user journeys. Resolve every applicable P0 failure or record an approved exception before production.
+
+Commands:
+
+```bash
+pnpm check
+pnpm build
+pnpm launch:audit --url https://preview.example.com --mode preview
+```
+
+## P0 — migration or rebuild only
+
+### MIG-01 — inventory the old surface
+
+Collect URLs from the old sitemap, a crawl, analytics landing pages, Search Console, CMS exports, backlinks, server logs where available, and important images/downloads. A crawl alone misses orphaned but valuable URLs.
+
+Evidence: `docs/launch/url-map.csv` with sources and priority.
+
+### MIG-02 — every old URL gets a disposition
+
+Choose one: preserve, permanent redirect to a relevant replacement, consolidate into a genuinely equivalent page, or intentionally return 404/410. Never leave the decision implicit.
+
+Code: `docs/launch/url-map.csv`, `src/config/redirects.ts` or hosting-level rules.
+
+### MIG-03 — redirects are direct and relevant
+
+Test high-traffic/backlinked URLs, host/protocol variants, query handling, loops, chains, and targets. Prefer server-side 301/308 redirects. Do not redirect many unrelated pages to home; that can behave like a soft 404.
+
+### MIG-04 — preserve valuable page signals intentionally
+
+Compare titles, descriptions, H1s, first 200 words, dates, copy, media, structured data, internal links, and conversion paths for pages with existing traffic. A redesign is not permission to erase the content users and search engines already value.
+
+### MIG-05 — all new annotations use final URLs
+
+Update canonicals, hreflang, sitemap URLs, navigation, body links, feeds, structured data, campaign URLs, profiles, and important external links where possible.
+
+### MIG-06 — remove migration-only blocks
+
+At cutover, remove temporary `noindex`, robots disallows, password protection, preview headers, and staging canonicals from production. Verify representative URLs with Search Console URL Inspection.
+
+### MIG-07 — retain and monitor redirects
+
+Keep permanent redirects for at least one year and preferably while they remain useful. Monitor old/new properties, crawl errors, redirect hits, index coverage, rankings, landing-page traffic, server capacity, and conversion events after launch.
+
+### MIG-08 — complete domain-move operations when applicable
+
+Verify old and new Search Console properties and host variants. Use Search Console Change of Address for an actual domain change, not a simple path or HTTP→HTTPS change. Submit the new sitemap and keep old infrastructure serving redirects.
+
+## P0 — selected conversion features
+
+### FORM-01 — the primary conversion path works end to end
+
+Test production delivery, recipient/CRM ownership, confirmation, failure handling, reply path, and monitoring. A form returning 200 is not enough if nobody receives the lead.
+
+### FORM-02 — form input and output are bounded
+
+Validate types and sensible lengths server-side, escape output, reject unexpected fields, avoid logging secrets/PII, and show safe useful errors.
+
+### FORM-03 — abuse and retention match the risk
+
+Choose spam controls, rate limits, retention, consent, access, and deletion processes appropriate to the traffic and data. Do not copy a CAPTCHA or legal basis automatically between clients.
+
+### FORM-04 — attribution is minimized
+
+Collect only useful attribution fields, document first/recent-page storage, avoid sensitive query values, and align analytics/storage with the privacy decision.
+
+## P1 — non-blocking quality and feature-dependent checks
+
+### SEO-08 — structured data is accurate and applicable
+
+Structured data sits inside SEO, not a separate checklist.
+
+Use only supported/applicable types such as Organization, Breadcrumb, Article, Product, or LocalBusiness. Follow the search engine's feature documentation, include required properties, reflect visible content, and validate the deployed result. More schema is not automatically better. Generic `WebPage` JSON-LD on every route is not a launch requirement.
+
+For articles with real source dates, include `datePublished` and `dateModified` as available. Do not invent dates. Keep builders with metadata in `src/lib/seo.ts`.
+
+### SOCIAL-01 — important pages unfurl correctly
+
+Review Open Graph and Twitter title, description, image, URL, crop, and brand treatment on representative routes. This affects sharing and messaging previews more directly than Google rankings.
+
+### A11Y-01 — accessibility review
+
+Nice to have and non-blocking in this template's priority system. Review semantic landmarks, keyboard navigation, focus visibility, labels/errors, contrast, alternatives, zoom/reflow, and reduced motion. Record serious user-impacting defects even when they do not block the formal launch gate.
+
+### ANALYTICS-01 — analytics is owned and privacy-aware
+
+PostHog is included by default but inactive without a token. Verify the production project, pageviews and named conversion events, internal/staff exclusions, consent behavior where required, session-replay policy, retention, and that sensitive form values are not captured. Delete `src/instrumentation-client.ts` and `posthog-js` if analytics is unused.
+
+### MON-01 — post-launch signals have owners
+
+Assign Search Console, analytics, uptime/error monitoring, and field performance dashboards. Record who checks them, when, and what triggers rollback or remediation.
+
+## P2 — later enhancements
+
+### LLM-01 — `llms.txt`
+
+Generate it from enabled content sources if the project benefits. Treat it as experimental discovery support, never as core Google SEO or an independently maintained content inventory.
+
+### LLM-02 — `.md` representations
+
+Optional and non-blocking. Generate selected `.md` routes from the same Markdown/MDX source as HTML, keep HTML canonical, define an indexing policy for the alternate representation, and exclude alternates from the main HTML sitemap.
+
+### INDEX-01 — IndexNow
+
+Add submission automation only when publishing frequency and target search engines justify the operational work. Never copy an old site's key.
+
+### CONTENT-01 — richer publishing tools
+
+Add blog tags, search, related content, feeds, and freshness workflows after the basic server-rendered blog index/article path works and enough content exists to use them.
+
+## Primary references
+
+- [Next.js Metadata and OG images](https://nextjs.org/docs/app/getting-started/metadata-and-og-images)
+- [Next.js production checklist](https://nextjs.org/docs/app/guides/production-checklist)
+- [Google developer SEO guide](https://developers.google.com/search/docs/fundamentals/get-started-developers)
+- [Google title-link guidance](https://developers.google.com/search/docs/appearance/title-link)
+- [Google snippet guidance](https://developers.google.com/search/docs/appearance/snippet)
+- [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap)
+- [Google canonical guidance](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls)
+- [Google JavaScript SEO basics](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics)
+- [Google site-move guidance](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes)
+- [Google structured-data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies)
+- [Core Web Vitals thresholds](https://web.dev/articles/defining-core-web-vitals-thresholds)

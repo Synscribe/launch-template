@@ -1,0 +1,12 @@
+[
+  {
+    "slug": "migrations-and-rebuilds",
+    "name": "Migrations & rebuilds",
+    "description": "Preserve useful history while changing the platform, brand, information architecture, or customer experience."
+  },
+  {
+    "slug": "technical-seo",
+    "name": "Technical SEO",
+    "description": "Make crawlability, page meaning, routing, and launch verification part of the implementation rather than a late review."
+  }
+]
