@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  addBlogHeadingAnchors,
   descriptionFromPost,
   estimateReadingMinutes,
   sanitizeBlogContent,
@@ -70,5 +71,28 @@ describe("blog content helpers", () => {
     );
 
     expect(html).toBe("Book a demo");
+  });
+
+  it("adds stable heading anchors and builds a nested table of contents", () => {
+    const result = addBlogHeadingAnchors(
+      "<h2>Start Here</h2><p>Body</p><h3>Useful &amp; Safe</h3><h2>Start Here</h2>",
+    );
+
+    expect(result.html).toContain('<h2 id="start-here">Start Here</h2>');
+    expect(result.html).toContain('<h2 id="start-here-2">Start Here</h2>');
+    expect(result.tableOfContents).toEqual([
+      { id: "start-here", level: 2, text: "Start Here" },
+      { id: "useful-and-safe", level: 3, text: "Useful & Safe" },
+      { id: "start-here-2", level: 2, text: "Start Here" },
+    ]);
+  });
+
+  it("preserves a CMS heading id when it is already present", () => {
+    const result = addBlogHeadingAnchors(
+      '<h2 id="existing-section">Existing section</h2>',
+    );
+
+    expect(result.html).toBe('<h2 id="existing-section">Existing section</h2>');
+    expect(result.tableOfContents[0]?.id).toBe("existing-section");
   });
 });

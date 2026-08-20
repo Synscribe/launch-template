@@ -2,8 +2,49 @@ import sanitizeHtml from "sanitize-html";
 
 export type BlogDate = Date | string;
 
+export type BlogTableOfContentsItem = {
+  id: string;
+  level: 2 | 3;
+  text: string;
+};
+
+const namedEntities: Record<string, string> = {
+  amp: "&",
+  apos: "'",
+  gt: ">",
+  hellip: "…",
+  ldquo: "“",
+  lsquo: "‘",
+  lt: "<",
+  mdash: "—",
+  nbsp: " ",
+  ndash: "–",
+  quot: '"',
+  rdquo: "”",
+  rsquo: "’",
+};
+
+function decodeHtmlEntities(value: string): string {
+  return value.replace(
+    /&(#x[\da-f]+|#\d+|[a-z]+);/gi,
+    (entity, code: string) => {
+      if (code.startsWith("#")) {
+        const codePoint = code.startsWith("#x")
+          ? Number.parseInt(code.slice(2), 16)
+          : Number.parseInt(code.slice(1), 10);
+        return Number.isInteger(codePoint) && codePoint <= 0x10ffff
+          ? String.fromCodePoint(codePoint)
+          : entity;
+      }
+      return namedEntities[code.toLowerCase()] ?? entity;
+    },
+  );
+}
+
 function textFromHtml(html: string): string {
-  return sanitizeHtml(html, { allowedTags: [], allowedAttributes: {} })
+  return decodeHtmlEntities(
+    sanitizeHtml(html, { allowedTags: [], allowedAttributes: {} }),
+  )
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -150,4 +191,47 @@ export function sanitizeBlogContent(
       },
     },
   });
+}
+
+function headingId(text: string): string {
+  return (
+    text
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/&/g, " and ")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "section"
+  );
+}
+
+export function addBlogHeadingAnchors(html: string): {
+  html: string;
+  tableOfContents: BlogTableOfContentsItem[];
+} {
+  const tableOfContents: BlogTableOfContentsItem[] = [];
+  const usedIds = new Map<string, number>();
+  const headingPattern = /<h([23])([^>]*)>([\s\S]*?)<\/h\1>/gi;
+
+  const anchoredHtml = html.replace(
+    headingPattern,
+    (heading, rawLevel: string, rawAttributes: string, innerHtml: string) => {
+      const text = textFromHtml(innerHtml);
+      if (!text) return heading;
+
+      const existingId = rawAttributes.match(/\bid="([^"]+)"/i)?.[1];
+      const baseId = existingId?.trim() || headingId(text);
+      const previousUses = usedIds.get(baseId) ?? 0;
+      const id = previousUses === 0 ? baseId : `${baseId}-${previousUses + 1}`;
+      usedIds.set(baseId, previousUses + 1);
+
+      const level = Number(rawLevel) as 2 | 3;
+      const attributesWithoutId = rawAttributes.replace(/\s*\bid="[^"]*"/i, "");
+      tableOfContents.push({ id, level, text });
+
+      return `<h${level}${attributesWithoutId} id="${id}">${innerHtml}</h${level}>`;
+    },
+  );
+
+  return { html: anchoredHtml, tableOfContents };
 }

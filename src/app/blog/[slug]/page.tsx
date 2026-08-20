@@ -1,10 +1,10 @@
-import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { env } from "@/config/env";
 import {
   getBlogPost,
@@ -12,6 +12,7 @@ import {
   type RelatedBlogPost,
 } from "@/lib/blog";
 import {
+  addBlogHeadingAnchors,
   descriptionFromPost,
   estimateReadingMinutes,
   formatBlogDate,
@@ -21,10 +22,13 @@ import {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
   createPageMetadata,
+  absoluteUrl,
   serializeJsonLd,
 } from "@/lib/seo";
 
+import { labelForBlogTags } from "../blog.config";
 import { PostCard } from "../_components/post-card";
+import { ArticleSidebar } from "./_components/article-sidebar";
 import styles from "./article.module.css";
 
 type BlogPostPageProps = {
@@ -59,11 +63,14 @@ async function Article({ params }: BlogPostPageProps) {
   const description = descriptionFromPost(post.description, post.content);
   const publishedAt = isoDate(post.publishedAt);
   const updatedAt = isoDate(post.updatedAt);
-  const content = sanitizeBlogContent(
+  const sanitizedContent = sanitizeBlogContent(
     post.content,
     post.image,
     env.wispContentOrigin,
   );
+  const { html: content, tableOfContents } =
+    addBlogHeadingAnchors(sanitizedContent);
+  const category = labelForBlogTags(post.tags);
   const articleJsonLd = buildArticleJsonLd({
     headline: post.title,
     description,
@@ -99,64 +106,78 @@ async function Article({ params }: BlogPostPageProps) {
 
       <article>
         <header className={`${styles.articleHero} border-b border-ink/10`}>
-          <div className="mx-auto w-full max-w-5xl px-5 py-14 sm:px-8 sm:py-20 lg:py-24">
-            <Link
-              className="inline-flex items-center gap-2 text-sm font-semibold text-signal-strong"
-              href="/blog"
-            >
-              <ArrowLeftIcon className="size-4" aria-hidden="true" />
-              All articles
-            </Link>
-
-            <h1 className="mt-8 max-w-4xl text-balance font-display text-[clamp(2.8rem,6vw,5.4rem)] leading-[0.96] tracking-[-0.04em]">
-              {post.title}
-            </h1>
-
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-ink-muted sm:text-xl sm:leading-9">
-              {description}
-            </p>
-
-            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink-muted">
-              {post.publishedAt ? (
-                <p>
-                  Published{" "}
-                  <time dateTime={publishedAt}>
-                    {formatBlogDate(post.publishedAt)}
-                  </time>
-                </p>
+          <div
+            className={`mx-auto grid w-full max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 sm:py-16 lg:gap-14 lg:py-20 ${post.image ? "lg:grid-cols-2" : ""}`}
+          >
+            <div>
+              {category ? (
+                <Badge className="bg-mint px-3 py-1 text-ink hover:bg-mint">
+                  {category}
+                </Badge>
               ) : null}
-              {post.author.name ? <p>By {post.author.name}</p> : null}
-              <p>{estimateReadingMinutes(post.content)} min read</p>
-              {publishedAt !== updatedAt ? (
-                <p>
-                  Updated{" "}
-                  <time dateTime={updatedAt}>
-                    {formatBlogDate(post.updatedAt)}
-                  </time>
-                </p>
-              ) : null}
+
+              <h1 className="mt-6 max-w-3xl text-balance font-display text-[clamp(2.4rem,3vw,3.25rem)] leading-[1.03] tracking-[-0.035em] text-paper">
+                {post.title}
+              </h1>
+
+              <div className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-paper/75">
+                {updatedAt ? (
+                  <p>
+                    Last updated:{" "}
+                    <time dateTime={updatedAt}>
+                      {formatBlogDate(post.updatedAt)}
+                    </time>
+                  </p>
+                ) : null}
+                {updatedAt ? (
+                  <span aria-hidden="true" className="text-paper/35">
+                    •
+                  </span>
+                ) : null}
+                <p>{estimateReadingMinutes(post.content)} min read</p>
+                {post.publishedAt ? (
+                  <>
+                    <span aria-hidden="true" className="text-paper/35">
+                      •
+                    </span>
+                    <p>
+                      Published:{" "}
+                      <time dateTime={publishedAt}>
+                        {formatBlogDate(post.publishedAt)}
+                      </time>
+                    </p>
+                  </>
+                ) : null}
+              </div>
             </div>
 
             {post.image ? (
-              <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-2xl bg-muted shadow-[var(--shadow-card)] sm:mt-12">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-muted shadow-[var(--shadow-card)]">
                 <Image
                   className="object-cover"
                   src={post.image}
                   alt=""
                   fill
                   priority
-                  sizes="(min-width: 1024px) 960px, 100vw"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
                 />
               </div>
             ) : null}
           </div>
         </header>
 
-        <div className="bg-paper py-16 sm:py-20 lg:py-24">
-          <div
-            className={`${styles.prose} mx-auto w-full max-w-3xl px-5 sm:px-8`}
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+        <div className="bg-paper py-14 sm:py-18 lg:py-20">
+          <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-5 sm:px-8 lg:grid-cols-12 lg:gap-14">
+            <ArticleSidebar
+              items={tableOfContents}
+              title={post.title}
+              url={absoluteUrl(path)}
+            />
+            <div
+              className={`${styles.prose} order-2 min-w-0 lg:order-1 lg:col-span-8`}
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </div>
         </div>
       </article>
 

@@ -309,13 +309,15 @@ Check:
 - Map each visible filter to a real Wisp tag. Remove a filter when the publication does not maintain that tag, and never invent a generic category for untagged posts.
 - Set `BLOG_FEATURED.heroSlug` to an approved lead article or `null`. Set `BLOG_FEATURED.tag` to the real featured tag or `null`. These are content choices, not feature flags.
 - Keep the default list, filters, search results, article links, and pagination in server-rendered HTML. Filters and pagination must use real links, while search must work as a normal GET form.
+- Build an article table of contents from sanitized source headings on the server. Heading IDs must be stable and unique, contents entries must be normal fragment links, and long lists must remain usable without JavaScript on mobile and desktop.
+- Build social-sharing destinations from the article's absolute canonical URL, not `window.location` or a preview host. Give each icon an accessible label and verify the production domain before launch.
 - Keep `/blog` canonical. Exclude search, filter, and pagination variants from the main sitemap unless a project deliberately promotes a stable archive page with unique value.
 - Avoid repeating a pinned article in the first result grid. Test page one, a middle and final page, every configured filter, an empty result, and a search with and without results.
 - When changing the CMS or tag model, update the route config and this project's evidence in `docs/launch/status.md`; do not create a second publishing or SEO checklist.
 
-Code: `src/app/blog/blog.config.ts`, `src/app/blog/page.tsx`, `src/app/blog/_components/blog-pagination.tsx`, `src/lib/blog.ts`.
+Code: `src/app/blog/blog.config.ts`, `src/app/blog/page.tsx`, `src/app/blog/_components/blog-pagination.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/blog/[slug]/_components/article-sidebar.tsx`, `src/lib/blog.ts`, `src/lib/blog-content.ts`.
 
-Evidence: raw server-rendered HTML for the default and filtered views, visible pagination URLs that preserve the current filter/search, CMS tag review, `/sitemap.xml`, and the page/production launch audits.
+Evidence: raw server-rendered HTML for the default, filtered, and article views; working heading fragments; share URLs using the production canonical origin; visible pagination URLs that preserve the current filter/search; CMS tag review; `/sitemap.xml`; and the page/production launch audits.
 
 ## Primary references
 

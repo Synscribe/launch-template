@@ -415,7 +415,7 @@ The blog is a default, deletable surface rather than a feature flag. The project
 2. server-side search and pagination;
 3. sanitized article HTML, visible dates, metadata, and Article JSON-LD;
 4. dynamic sitemap integration and an RSS feed;
-5. related and featured articles, plus optional filters backed by real source tags and numbered pagination.
+5. related and featured articles, optional filters backed by real source tags, numbered pagination, and server-built article contents/share links.
 
 `WISP_BLOG_ID` is server-only. Calls are direct, with no retry or application cache. Featured slugs and optional filters live in route-owned `src/app/blog/blog.config.ts`; filter/search/page variants remain server-rendered and canonical to `/blog`. The temporary Cyber Sierra publication must be replaced for a client project. `docs/recipes/blog.md` records configuration and the complete deletion path.
 
