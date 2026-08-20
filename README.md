@@ -46,6 +46,7 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 - Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented; adding a content file automatically adds its validated route and sitemap entry.
 - Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. The `.env.example` ID is temporarily Cyber Sierra's and must be replaced or the blog deleted for a client.
 - Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured.
+- Visual skills: `$micro-ui` and `$animated-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
 
 ## Architecture rules
 
@@ -56,6 +57,13 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 - Keep shadcn primitives in `src/components/ui`; add a component only when a current page uses it.
 - Never introduce `site.json`, a marketing catch-all renderer, or a block registry.
 - Do not ship plausible placeholder client details. Use loud sentinels that the audit can reject.
+
+## Project skills
+
+- `$micro-ui` builds small route-native interface visuals and generated social images without introducing a visual registry or unnecessary graphics stack.
+- `$animated-ui` adds restrained route-local motion while keeping the server-rendered content visible and providing a reduced-motion fallback.
+
+The `.claude/skills/*` entries are symlinks to `.agents/skills/*`. Keep the names aligned and validate both the canonical skill and its symlink after changing one. The site-clone skill is intentionally deferred until the clone workflow is designed and tested separately.
 
 ## Configuration
 

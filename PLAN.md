@@ -426,12 +426,14 @@ The blog is a default, deletable surface rather than a feature flag. The project
 Create focused project skills using the repository's canonical docs:
 
 - `site-clone`: inventory/capture, implement route by route, and visually compare approved sites;
-- `animated-section`: create route-local Next.js animation with reduced-motion, a11y, and performance checks;
-- `visual-generation`: create and optimize illustrations/graphics with asset, alt, and licensing/provenance notes;
+- `animated-ui`: create route-local Next.js animation with reduced-motion, a11y, and performance checks;
+- `micro-ui`: create route-native interface visuals and generated graphics without a standalone block or asset catalog;
 - `technical-seo-review`: work through relevant `SEO-*` and `MIG-*` requirements and point to evidence;
 - `launch-review`: run the launch audit, inspect non-automatable P0 items, and update status/evidence.
 
 Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.md` and invoke shared scripts.
+
+Current progress: `micro-ui` and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. Both were pared down from the previous template, validated, and exercised on real code: the generated root Open Graph image and two route-local `/uses` feature animations. No graphics or animation dependency was added. The site-clone skill remains deliberately deferred.
 
 ### Phase 7 — advanced content and LLM access
 
@@ -587,4 +589,4 @@ These do not block the architecture plan, but should be decided when scaffolding
 
 ## 19. Recommended next action
 
-Build the focused agent skills in Phase 6, starting with `technical-seo-review` and `launch-review` because their source material and audit paths now exist. Keep legal approval as a production gate requiring real project facts; do not invent generic approvals to close Phase 2.
+Complete Phase 6 with `technical-seo-review` and `launch-review`, because their source material and audit paths already exist. Design and test `site-clone` separately when clone work begins. Keep legal approval as a production gate requiring real project facts; do not invent generic approvals to close Phase 2.

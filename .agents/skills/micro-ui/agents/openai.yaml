@@ -1,0 +1,4 @@
+interface:
+  display_name: "Micro UI"
+  short_description: "Create route-native marketing feature visuals"
+  default_prompt: "Use $micro-ui to create a brand-matched feature visual for this page."
