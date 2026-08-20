@@ -20,6 +20,8 @@ import {
 
 import type { UseCaseFeatureId } from "@/lib/use-cases";
 
+import styles from "./feature-visuals.module.css";
+
 function VisualShell({
   label,
   children,
@@ -113,7 +115,9 @@ function UrlDecisionsVisual() {
             <span className="truncate font-mono text-xs text-ink-muted">
               {from}
             </span>
-            <ArrowRightIcon className="size-4 text-signal" />
+            <ArrowRightIcon
+              className={`${styles.handoffArrow} size-4 text-signal`}
+            />
             <div className="min-w-0 text-right">
               <p className="truncate font-mono text-xs text-ink">{to}</p>
               <p className="mt-1 text-[11px] font-bold text-ink-faint uppercase">
@@ -222,9 +226,12 @@ function MonitoringVisual() {
         <div className="flex h-28 items-end gap-3 border-b border-ink/10 px-2">
           {[44, 58, 52, 72, 66, 82, 88].map((height, index) => (
             <div
-              className="flex-1 rounded-t-md bg-mint-strong/70"
+              className={`${styles.monitorBar} flex-1 rounded-t-md bg-mint-strong/70`}
               key={`${height}-${index}`}
-              style={{ height: `${height}%` }}
+              style={{
+                animationDelay: `${180 + index * 65}ms`,
+                height: `${height}%`,
+              }}
             />
           ))}
         </div>

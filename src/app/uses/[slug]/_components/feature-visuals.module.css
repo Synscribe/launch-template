@@ -1,0 +1,41 @@
+.handoffArrow {
+  animation: handoff 520ms cubic-bezier(0.16, 1, 0.3, 1) 320ms 2 alternate;
+}
+
+.monitorBar {
+  animation: monitor-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: center bottom;
+}
+
+@keyframes handoff {
+  from {
+    opacity: 0.55;
+    transform: translateX(-2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+@keyframes monitor-in {
+  from {
+    opacity: 0.45;
+    transform: scaleY(0.28);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handoffArrow,
+  .monitorBar {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -291,9 +291,13 @@ For articles with real source dates, include `datePublished` and `dateModified` 
 
 Review Open Graph and Twitter title, description, image, URL, crop, and brand treatment on representative routes. This affects sharing and messaging previews more directly than Google rankings.
 
+Code: page metadata, `src/app/opengraph-image.tsx`. Use `.agents/skills/micro-ui` when a small code-native sharing visual is appropriate. Verify the rendered 1200×630 image directly; do not rely only on the component source.
+
 ### A11Y-01 — accessibility review
 
 Nice to have and non-blocking in this template's priority system. Review semantic landmarks, keyboard navigation, focus visibility, labels/errors, contrast, alternatives, zoom/reflow, and reduced motion. Record serious user-impacting defects even when they do not block the formal launch gate.
+
+For animation work, use `.agents/skills/animated-ui` and verify both ordinary and `prefers-reduced-motion: reduce` states in a browser. Critical copy and links must remain present without client JavaScript.
 
 ### ANALYTICS-01 — analytics is owned and privacy-aware
 
