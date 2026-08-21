@@ -20,6 +20,8 @@ import {
 
 import styles from "./use-case-visuals.module.css";
 
+// Placeholder visuals for the template's demo use cases. Replace or remove them before launch.
+
 function VisualShell({
   label,
   children,

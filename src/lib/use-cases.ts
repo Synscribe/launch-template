@@ -11,7 +11,7 @@ type MethodStep = ContentItem & {
 };
 
 export const USE_CASE_VISUAL_IDS = [
-  "website-migration-overview",
+  "placeholder-website-migration-overview",
   "saas-rebuild-overview",
   "startup-launch-overview",
   "seo-landing-page-overview",

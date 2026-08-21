@@ -14,8 +14,8 @@ describe("launch checklist", () => {
       JSON.parse(await readFile(CHECKLIST_JSON_PATH, "utf8")),
     );
 
-    expect(checklist.items).toHaveLength(38);
-    expect(new Set(checklist.items.map((item) => item.id)).size).toBe(38);
+    expect(checklist.items).toHaveLength(39);
+    expect(new Set(checklist.items.map((item) => item.id)).size).toBe(39);
     expect(checklist.items.find((item) => item.id === "SEO-02")?.priority).toBe(
       "P0",
     );

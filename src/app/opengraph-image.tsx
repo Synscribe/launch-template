@@ -12,7 +12,7 @@ const launchSteps = [
   ["03", "Check production", "Launch"],
 ] as const;
 
-export default function OpenGraphImage() {
+export default function PlaceholderOpenGraphImage() {
   return new ImageResponse(
     <div
       style={{

@@ -30,6 +30,22 @@ Check:
 
 Code: `src/config/env.ts`, `src/config/site.ts`, `src/app/icon.svg`, `src/app/opengraph-image.tsx`, `package.json`.
 
+### BRAND-02 — template placeholder visuals are removed
+
+- [ ] **Todo**
+
+Why it matters: template artwork can look finished enough to survive a rushed launch while still showing the wrong identity, language, or visual system.
+
+Check:
+
+- Replace the placeholder site icon and generated Open Graph image with client-approved work.
+- Replace or remove every file, visual ID, component, or SVG identity marked `placeholder`.
+- Remove unused placeholder files instead of leaving them hidden in `public` or route folders.
+- Render the final social image at 1200×630 and review its copy, crop, fonts, colors, and logo.
+- Review all visible feature and use-case visuals on desktop and mobile.
+
+Code: `src/app/icon.svg`, `src/app/opengraph-image.tsx`, `public/media`, and route-local visual components. The production launch audit fails while explicit placeholder filenames or markers remain.
+
 ### ROUTE-01 — every internal destination works
 
 - [ ] **Todo**

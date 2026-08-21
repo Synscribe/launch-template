@@ -36,7 +36,7 @@ There is no numeric page order. Use cases have a deterministic alphabetical fall
 `UseCaseVisual` is the route-local visual resolver. Both the hero and capability rows call it with only a validated `visualId`:
 
 - Renderer and typed source map: `src/app/uses/[slug]/_components/use-case-visual.tsx`
-- React visual implementations: `src/app/uses/[slug]/_components/use-case-visual-components.tsx`
+- Starter React visual implementations: `src/app/uses/[slug]/_components/placeholder-use-case-visual-components.tsx`
 - Visual CSS and reduced-motion rules: `src/app/uses/[slug]/_components/use-case-visuals.module.css`
 - Valid ID union and JSON validation: `src/lib/use-cases.ts`
 - Local visual files: `public/media/uses`
@@ -52,7 +52,7 @@ To add a visual:
 
 1. Use `$micro-ui` to identify the claim, visual mode, and smallest durable output.
 2. Add the new ID to `USE_CASE_VISUAL_IDS` in `src/lib/use-cases.ts`.
-3. For non-interactive React, add the implementation to `use-case-visual-components.tsx`, export it, import it into `use-case-visual.tsx`, and add a `kind: "component"` source. For interaction, create a focused `*.client.tsx` module under the same `_components` folder and register that component without moving the resolver across the client boundary.
+3. For non-interactive React, create `use-case-visual-components.tsx` for project-owned implementations, export the component, import it into `use-case-visual.tsx`, and add a `kind: "component"` source. For interaction, create a focused `*.client.tsx` module under the same `_components` folder and register that component without moving the resolver across the client boundary. Delete `placeholder-use-case-visual-components.tsx` after replacing its last registered visual.
 4. For an image, save the approved optimized file under `public/media/uses`, then add a `kind: "image"` source with the local path and intentional alt text. Use an empty alt only when the image is genuinely decorative and repeats adjacent text.
 5. Reference the new ID from `hero.visualId` or `solution.items[].visualId`.
 6. Run tests and inspect every placement at desktop and mobile sizes. An image or interactive component that works in a feature row must also survive the hero width if the ID is used there.
@@ -75,7 +75,7 @@ Do not pass visual props through JSON. If a visual needs its own internal labels
 - Hub composition: `src/app/uses/page.tsx`
 - Detail composition: `src/app/uses/[slug]/page.tsx`
 - Visual resolver: `src/app/uses/[slug]/_components/use-case-visual.tsx`
-- React visuals: `src/app/uses/[slug]/_components/use-case-visual-components.tsx`
+- Starter React visuals: `src/app/uses/[slug]/_components/placeholder-use-case-visual-components.tsx`
 - Local visual files: `public/media/uses`
 - Route-local styling: `src/app/uses/[slug]/use-case.module.css`
 - Discovery: `src/app/sitemap.ts` and `src/config/site.ts`

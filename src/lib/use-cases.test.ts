@@ -28,7 +28,9 @@ describe("use-case content", () => {
       groups: ["migrations-and-rebuilds", "technical-seo"],
     });
     expect(websiteMigration).not.toHaveProperty("order");
-    expect(websiteMigration?.hero.visualId).toBe("website-migration-overview");
+    expect(websiteMigration?.hero.visualId).toBe(
+      "placeholder-website-migration-overview",
+    );
     expect(websiteMigration?.solution.items).toHaveLength(5);
     expect(
       websiteMigration?.solution.items.map((item) => item.visualId),

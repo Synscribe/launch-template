@@ -300,6 +300,7 @@ async function staticAudit(): Promise<void> {
   const forbidden = ["reglyr", "trythrawn", "citationbench", "serp-sniper"];
   let sentinelCount = 0;
   let legacyCount = 0;
+  const placeholderSources = new Set<string>();
 
   for (const file of scannable) {
     const content = await readFile(file, "utf8");
@@ -326,6 +327,15 @@ async function staticAudit(): Promise<void> {
         `Forbidden legacy identity: ${matchedLegacy.join(", ")}`,
       );
     }
+
+    if (
+      path.basename(file).toLowerCase().includes("placeholder") ||
+      /\bplaceholder-[a-z0-9]|PlaceholderOpenGraphImage|TEMPLATE_PLACEHOLDER/i.test(
+        content,
+      )
+    ) {
+      placeholderSources.add(file);
+    }
   }
 
   if (sentinelCount === 0) {
@@ -333,6 +343,19 @@ async function staticAudit(): Promise<void> {
   }
   if (legacyCount === 0) {
     record("BRAND-01", "PASS", "source", "No known legacy identities found");
+  }
+
+  if (placeholderSources.size === 0) {
+    record("BRAND-02", "PASS", "source", "No template visual markers found");
+  } else {
+    for (const file of placeholderSources) {
+      record(
+        "BRAND-02",
+        mode === "production" ? "FAIL" : "INFO",
+        file,
+        "Replace or remove this template placeholder before launch",
+      );
+    }
   }
 
   const packageJson = JSON.parse(await readFile("package.json", "utf8")) as {
