@@ -7,14 +7,18 @@ export type BlogFilter = {
 // Optional filters map a stable URL value to a real Wisp tag. Remove an entry
 // when the publication does not use it; "All" is added by the page itself.
 export const BLOG_FILTERS = [
-  { label: "Press Release", value: "press-release", tag: "press-release" },
+  {
+    label: "Tips & Tricks",
+    value: "tips-and-tricks",
+    tag: "tips-and-tricks",
+  },
 ] satisfies BlogFilter[];
 
 // The hero is pinned by slug. The smaller cards are selected by a Wisp tag.
 // Either value can be null when a project does not want that surface.
 export const BLOG_FEATURED = {
-  heroSlug: "cyber-sierra-recognized-in-the-gartner-hype-cycle",
-  tag: "featured",
+  heroSlug: "the-healing-power-of-travel-finding-myself-again",
+  tag: "tips-and-tricks",
   limit: 3,
 } satisfies {
   heroSlug: string | null;

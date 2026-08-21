@@ -45,7 +45,7 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 - PostHog: included through `src/instrumentation-client.ts`; add its token to activate it or delete the file and dependency.
 - Privacy and terms: safe noindex scaffolds only. They deliberately block production until replaced and reviewed.
 - Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented. Heroes and capability rows share one validated `visualId` contract that resolves route-local React or project-owned images through `UseCaseVisual`; see `docs/recipes/use-cases.md`.
-- Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. The `.env.example` ID is temporarily Cyber Sierra's and must be replaced or the blog deleted for a client.
+- Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. Replace the demo publication ID or delete the blog for a client project.
 - Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured.
 - Project skills: `$site-clone`, `$micro-ui`, and `$animated-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
 

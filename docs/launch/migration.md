@@ -58,7 +58,7 @@ For a framework/content migration without a 1:1 design requirement, choose a rou
 - server-rendered HTML;
 - performance and third-party scripts.
 
-Use the result to define the next route. Do not create a generic block engine to account for every old template variation. Keep every exact old URL in `url-map.csv` even when repeated page archetypes are summarized as `/blog/*`, `/uses/*`, or another wildcard in the clone inventory.
+Use the result to define the next route. Do not create a generic block engine to account for every source-site layout variation. Keep every exact old URL in `url-map.csv` even when repeated page archetypes are summarized as `/blog/*`, `/uses/*`, or another wildcard in the clone inventory.
 
 ## 5. Implement redirects
 

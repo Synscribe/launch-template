@@ -56,18 +56,18 @@ describe("blog content helpers", () => {
     const html = sanitizeBlogContent(
       '<a href="/blog/another-post">Article</a><a href="/book-a-demo">Demo</a>',
       null,
-      "https://cybersierra.co",
+      "https://content.example.com",
     );
 
     expect(html).toContain('href="/blog/another-post"');
-    expect(html).toContain('href="https://cybersierra.co/book-a-demo"');
+    expect(html).toContain('href="https://content.example.com/book-a-demo"');
   });
 
   it("turns malformed local blog destinations into plain text", () => {
     const html = sanitizeBlogContent(
       '<a href="/blog/book a demo">Book a demo</a>',
       null,
-      "https://cybersierra.co",
+      "https://content.example.com",
     );
 
     expect(html).toBe("Book a demo");

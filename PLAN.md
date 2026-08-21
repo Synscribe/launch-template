@@ -1,8 +1,8 @@
-# Next.js Client Launch Template — Audit and Rebuild Plan
+# Next.js Client Launch Template — Architecture and Delivery Plan
 
 Status: foundation, homepage, contact, use cases, Wisp blog, and the first visual skills implemented. This document remains the architecture and phased roadmap.
 
-This plan is based on an audit of `../zero-to-rank-template` on 2026-08-20. It defines the new template's architecture, documentation contract, launch priorities, and page-by-page build order.
+This document defines the template's architecture, documentation contract, launch priorities, and page-by-page build order.
 
 ## 1. Intended outcome
 
@@ -24,9 +24,7 @@ The reusable value should **not** be a page-builder runtime, a large block catal
 
 ## 2. Executive decision
 
-Do not port the old SDUI architecture.
-
-The new template will use ordinary, explicit Next.js App Router pages. Page copy and composition will live in the route that renders it. Components begin route-local and move to shared folders only after a second real use.
+Use ordinary, explicit Next.js App Router pages. Page copy and composition live in the route that renders it. Components begin route-local and move to shared folders only after a second real use.
 
 There will be no:
 
@@ -40,76 +38,7 @@ There will be no:
 
 A small TypeScript config is still useful for truly global identity such as the production URL, brand name, default description, locale, navigation, and social links. It must never contain page layouts or page content.
 
-## 3. Previous-template audit
-
-### 3.1 Size and shape
-
-The old template currently contains approximately:
-
-- 15,802 lines of TypeScript/TSX under `src` and `scripts`;
-- 114 block files, including 41 block tests;
-- 29 runtime dependencies and 22 development dependencies;
-- 72 bundled documentation files;
-- 159 public assets;
-- a 600-line, 27 KB `src/content/site.json`;
-- 8 repository-local skills split between `.agents` and `.claude`.
-
-The source is not enormous for a product, but it is too broad for a launch template because every fork inherits several unrelated products and workflows.
-
-### 3.2 What is worth keeping conceptually
-
-| Old capability                                  | Reference                                                                                                       | Decision                                                                       |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| Next.js Metadata API with `metadataBase`        | `../zero-to-rank-template/src/app/layout.tsx`                                                                   | Keep, simplified.                                                              |
-| Route-specific metadata                         | `../zero-to-rank-template/src/app/[[...slug]]/page.tsx`                                                         | Keep on explicit routes.                                                       |
-| Generated `robots.txt` and sitemap              | `../zero-to-rank-template/src/app/robots.ts`, `../zero-to-rank-template/src/app/sitemap.ts`                     | Keep, but only include enabled/indexable routes.                               |
-| Server Components by default                    | `../zero-to-rank-template/src/app`, `../zero-to-rank-template/src/blocks`                                       | Keep as the default rendering model.                                           |
-| `next/image` and font conventions               | `../zero-to-rank-template/src/app/layout.tsx`, `../zero-to-rank-template/src/components/media-renderer.tsx`     | Keep.                                                                          |
-| Build-time content validation                   | `../zero-to-rank-template/src/lib/uses-loader.ts`, `../zero-to-rank-template/src/content/uses/schema.ts`        | Keep only at real content boundaries such as frontmatter or external API data. |
-| Contact attribution context                     | `../zero-to-rank-template/src/contexts/visitor-context.ts`                                                      | Keep as an opt-in recipe after privacy review.                                 |
-| Article metadata and structured data            | `../zero-to-rank-template/src/app/blog/[slug]/page.tsx`                                                         | Keep in the default blog until the blog is deleted.                            |
-| Local skills for repeatable visual work         | `../zero-to-rank-template/.agents/skills/animated-ui-skill`, `../zero-to-rank-template/.agents/skills/micro-ui` | Redesign for Next.js and this template's guardrails.                           |
-| Written SEO assertions plus an executable audit | `../zero-to-rank-template/doc/docs-seo-spec.md`, `../zero-to-rank-template/scripts/seo-test.ts`                 | Keep the pattern, rewrite the assertions.                                      |
-
-### 3.3 What caused the over-engineering
-
-1. **The template became a runtime product.** `src/engine`, the registry, schemas, resolver, catch-all route, and block catalog exist to interpret serialized UI. Client sites do not need that indirection.
-2. **The abstraction moved copy away from the page.** Understanding the homepage requires moving between `site.json`, schemas, a registry, and variant components.
-3. **Variants multiplied maintenance.** A new variant often required a component, schema change, registry entry, tests, and sometimes a new block type.
-4. **“Optional” features became mandatory dependencies.** Wisp, Fumadocs, Synscribe, PostHog, Nodemailer, Satori, and their supporting files are present even when a client does not need them.
-5. **Product content leaked into the template.** CitationBench content, Reglyr email fallbacks, a Thrawn image hostname, and Synscribe integration code coexist in a supposedly reusable repository.
-6. **The architecture solved slug collisions it had created.** Reserved-slug guards and route-coexistence ADRs are consequences of combining a catch-all page engine with explicit Next.js routes.
-7. **The block library became the module repo this new template should avoid.** Most client work needs bespoke composition with a few shared primitives, not every historical section variant.
-
-### 3.4 Launch-readiness failures found in the old template
-
-These are exactly the failures the new audit must prevent:
-
-- `src/app/api/contact-form/route.ts` falls back to `@reglyr.com` addresses and a `[Reglyr]` subject.
-- `next.config.ts` still permits `www.trythrawn.com` images.
-- `package.json` is still named `serp-sniper` while the visible site is CitationBench.
-- privacy and terms are explicitly marked `TBD` and placeholder content.
-- header/footer links point to missing internal routes including `/about`, `/platform`, `/solutions`, `/pricing`, `/login`, and `/signup`.
-- the blog index loads posts in a client effect, so its initial HTML has no post links.
-- the repository contains product-specific docs, use-case JSON, generated artwork, content-sync scripts, and vendor credentials that a new client could accidentally inherit.
-- the SEO audit treats several optional or unsupported signals as mandatory while omitting a general migration gate.
-
-The new template will prefer obvious `TODO_CLIENT_*` sentinel values that fail a launch audit over plausible-looking defaults that can silently ship.
-
-### 3.5 SEO guidance that should be corrected
-
-The untracked `../zero-to-rank-template/doc/seo-defaults.md` is a useful extraction, but its priorities need adjustment:
-
-- Keep unique, descriptive titles and page-specific descriptions; remove arbitrary hard failures based on exact character counts.
-- Do not emit `meta keywords`; Google states that it does not use them for indexing or ranking.
-- Do not store sitemap `priority` or `changeFrequency` by default; Google ignores both. Use accurate `lastModified` only when a reliable source exists.
-- Do not require JSON-LD on every page merely to make a test green. Add only accurate, applicable structured data with the properties required for the relevant search feature.
-- Treat `llms.txt`, `llms-full.txt`, IndexNow, `.md` representations, and experimental schema types as optional enhancements, not launch-critical Google SEO.
-- Keep semantic headings as an accessibility and content-quality convention; do not present “exactly one H1” as a universal ranking rule.
-- Require crawlable internal links and server-rendered critical content, but do not force every docs link into every docs page.
-- Give URL inventory, redirect mapping, and post-launch migration monitoring first-class P0 status.
-
-## 4. Design principles for the new template
+## 3. Design principles
 
 1. **Explicit over interpretive.** A page is a `page.tsx`, not a JSON object consumed by a renderer.
 2. **Colocate until reuse is proven.** Use `app/.../_components` first. Promote a component only when two pages genuinely share it.
@@ -122,9 +51,9 @@ The untracked `../zero-to-rank-template/doc/seo-defaults.md` is a useful extract
 9. **Measure outcomes.** Automation should verify status codes, metadata, links, redirects, indexability, and production behavior—not SEO folklore.
 10. **Make bespoke design easy.** The structure must allow a full design-system replacement and advanced animation without changing routing or SEO foundations.
 
-## 5. Canonical file map
+## 4. Canonical file map
 
-This is the most important part of the future repository. Other agents and client repositories should be able to start here.
+This is the repository map. Other agents and client repositories should be able to start here.
 
 | Planned path                 | Canonical responsibility                                                                                                                       | Copy/reference policy                                                      |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
@@ -148,7 +77,7 @@ This is the most important part of the future repository. Other agents and clien
 
 Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-01`, `MIG-01`, `A11Y-01`, `PERF-01`, `FORM-01`, `DATA-01`, and `OPS-01`. IDs let other repos cite a requirement without depending on heading text.
 
-## 6. Proposed application structure
+## 5. Proposed application structure
 
 ```text
 .
@@ -205,7 +134,7 @@ Important boundaries:
 - Do not introduce a catch-all marketing route. Dynamic routes such as `blog/[slug]` and `uses/[slug]` are normal and encouraged when they match a real content model.
 - `src/components/ui` is not a showcase. If a primitive is unused, it should not be in the base template.
 
-## 7. Priority model
+## 6. Priority model
 
 ### P0 — blocks launch
 
@@ -221,15 +150,15 @@ P2 items are enhancements or advanced capabilities: blog search, content tags, P
 
 Priority and default state are separate. A contact form can be P0 **if the project selects it**, while remaining deletable in projects that do not need a form.
 
-## 8. Launch-checklist contract
+## 7. Launch-checklist contract
 
 The reusable launch and technical SEO requirements and current project status live only in `docs/launch/checklist.json`. That file owns the stable IDs, priorities, rationale, checks, code references, optional recipe links, and `todo`/`done`/`not_applicable` state. `docs/launch/checklist.md` is generated from it. This plan defines the priority model and implementation sequence, but it must not restate the requirements.
 
-## 9. Feature-catalog contract
+## 8. Feature-catalog contract
 
 The current default, implementation status, priority, code location, and deletion/configuration path for every feature live in `docs/features.md` and `docs/recipes`. Do not maintain a second feature table in this plan.
 
-## 10. Design-system and animation boundary
+## 9. Design-system and animation boundary
 
 The template should be easy to reskin without touching the SEO and launch machinery.
 
@@ -254,7 +183,7 @@ Advanced animation is allowed, but every animated section must define:
 
 No animation component belongs in a global library merely because it might be reused someday.
 
-## 11. Migration and clone workflow
+## 10. Migration and clone workflow
 
 The migration path must begin before implementation:
 
@@ -271,7 +200,7 @@ The migration path must begin before implementation:
 
 For client-authorized 1:1 clones, the skill should reproduce the visual system and behavior in maintainable local code. It should not blindly copy analytics IDs, form endpoints, third-party secrets, cookie tooling, stale scripts, or inaccessible markup.
 
-## 12. Page-by-page implementation order
+## 11. Page-by-page implementation order
 
 Do not scaffold every nice-to-have route at once. Finish each stage before starting the next.
 
@@ -327,13 +256,11 @@ Current progress: complete. `/contact` server-renders its copy and initial form 
 
 Use cases are a default, deletable surface rather than a feature flag. Start with one index and one detail page. Establish the real repeated content model before adding more pages. The index must server-render links to all public details. Each detail owns unique copy, metadata, canonical, and relevant internal links.
 
-Do not use the old Synscribe envelope or copy the old fixed section set unless the new content actually requires it.
-
 Current progress: the server-rendered `/uses` hub groups and links four JSON-backed detail pages covering migrations, SaaS rebuilds, startup launches, and SEO landing pages. The copy uses short, direct sentences and the detail layout uses generous section spacing without a sticky jump bar. Heroes and capability rows use the same validated `visualId`; the route-local `UseCaseVisual` resolver maps each ID to either React or a project-owned local image without placing component props, paths, or layout in JSON. Numeric page ordering has been removed. Each page references group IDs, while `src/content/use-cases/groups.json` owns hub labels and section order without becoming a component registry. Automatic discovery, grouping, static generation, exhaustive visual mapping, and sitemap inclusion are covered by tests, TypeScript, and the launch audit.
 
 ### Phase 5 — basic blog
 
-The blog is a default, deletable surface rather than a feature flag. The project selected a direct Wisp connection instead of the originally proposed local Markdown/MDX source. It includes:
+The blog is a default, deletable surface rather than a feature flag. It connects directly to Wisp and includes:
 
 1. server-rendered article and index routes;
 2. server-side search and pagination;
@@ -341,7 +268,7 @@ The blog is a default, deletable surface rather than a feature flag. The project
 4. dynamic sitemap integration and an RSS feed;
 5. related and featured articles, optional filters backed by real source tags, numbered pagination, and server-built article contents/share links.
 
-`WISP_BLOG_ID` is server-only. Calls are direct, with no retry or application cache. Featured slugs and optional filters live in route-owned `src/app/blog/blog.config.ts`; filter/search/page variants remain server-rendered and canonical to `/blog`. The temporary Cyber Sierra publication must be replaced for a client project. `docs/recipes/blog.md` records configuration and the complete deletion path.
+`WISP_BLOG_ID` is server-only. Calls are direct, with no retry or application cache. Featured slugs and optional filters live in route-owned `src/app/blog/blog.config.ts`; filter/search/page variants remain server-rendered and canonical to `/blog`. Replace the demo publication ID for a client project. `docs/recipes/blog.md` records configuration and the complete deletion path.
 
 ### Phase 6 — agent skills
 
@@ -355,7 +282,7 @@ Create focused project skills using the repository's canonical docs:
 
 Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.json`, may link to the generated Markdown view, and invoke shared scripts.
 
-Current progress: `site-clone`, `micro-ui`, and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. `site-clone` includes recursive sitemap inventory, exact URL-map output, wildcard page-family grouping, customer-owned asset migration, agent-browser visual comparison, persistent homepage execution, and an approval gate before later routes. The visual skills were pared down from the previous template and exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. No graphics or animation dependency was added. `technical-seo-review` and `launch-review` remain deliberately deferred.
+Current progress: `site-clone`, `micro-ui`, and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. `site-clone` includes recursive sitemap inventory, exact URL-map output, wildcard page-family grouping, customer-owned asset migration, agent-browser visual comparison, persistent homepage execution, and an approval gate before later routes. The visual skills have been exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. No graphics or animation dependency was added. `technical-seo-review` and `launch-review` remain deliberately deferred.
 
 ### Phase 7 — advanced content and LLM access
 
@@ -370,7 +297,7 @@ Only after the preceding paths are stable:
 
 HTML remains canonical. Advanced machine-readable representations must not create a second hand-maintained content system.
 
-## 13. Per-page definition of done
+## 12. Per-page definition of done
 
 Every page is complete only when:
 
@@ -385,7 +312,7 @@ Every page is complete only when:
 9. build, typecheck, lint, focused tests, and launch audit pass;
 10. Every applicable checklist item has been set to `done`; unused feature checks are explicitly `not_applicable`.
 
-## 14. Automation and CI
+## 13. Automation and CI
 
 Prefer one understandable audit script over a collection of overlapping SEO scripts.
 
@@ -423,7 +350,7 @@ It should **not** fail a launch because:
 
 Browser-based visual and accessibility tests may be added for representative routes, but the base suite should stay fast enough to run on every pull request.
 
-## 15. Suggested first implementation milestones
+## 14. Implementation milestones
 
 ### Milestone A — usable skeleton
 
@@ -454,46 +381,7 @@ Browser-based visual and accessibility tests may be added for representative rou
 
 - Docs, `.md` routes, and LLM discovery files are generated from shared sources and remain optional.
 
-## 16. What to copy from the old repo during implementation
-
-Copy ideas and small reviewed helpers, not directories.
-
-Potentially adapt:
-
-- metadata, robots, and sitemap use of native Next.js APIs;
-- the small `VisitorContext` model after privacy/data-minimization changes;
-- HTML escaping and schema validation patterns from the contact handler;
-- `Article` structured-data typing;
-- animation reduced-motion patterns;
-- the audit reporter structure from `scripts/seo-test.ts`;
-- focused, currently used UI primitives.
-
-Do not copy:
-
-- `src/engine/**`;
-- `src/content/site.json`;
-- `src/blocks/**` as a directory;
-- the catch-all marketing route;
-- product content or public micro-UI collections;
-- Wisp/Fumadocs/Synscribe integrations by default;
-- the existing IndexNow key;
-- product-specific environment variables;
-- placeholder legal content or email fallbacks;
-- the old README/package identity.
-
-## 17. Assumptions to validate before implementation
-
-These do not block the architecture plan, but should be decided when scaffolding starts:
-
-- package manager and deployment platform;
-- whether the base example should include a working contact form or only its recipe;
-- preferred UI primitive baseline, if any;
-- whether each client keeps Wisp, selects another content source, or deletes the blog;
-- whether skills should target Codex only or also be mirrored for other agent formats;
-- which real client migration will serve as the validation case;
-- the expected legal/privacy review process for Singapore and each client's operating markets.
-
-## 18. Primary references used to set priorities
+## 15. Primary references used to set priorities
 
 - [Next.js Metadata and OG images](https://nextjs.org/docs/app/getting-started/metadata-and-og-images)
 - [Next.js `generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
@@ -509,6 +397,6 @@ These do not block the architecture plan, but should be decided when scaffolding
 - [Google: structured-data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies)
 - [web.dev: Core Web Vitals thresholds](https://web.dev/articles/defining-core-web-vitals-thresholds)
 
-## 19. Recommended next action
+## 16. Recommended next action
 
-Complete Phase 6 with `technical-seo-review` and `launch-review`, because their source material and audit paths already exist. Design and test `site-clone` separately when clone work begins. Keep legal approval as a production gate requiring real project facts; do not invent generic approvals to close Phase 2.
+Complete Phase 6 with `technical-seo-review` and `launch-review`, because their source material and audit paths already exist. Keep legal approval as a production gate requiring real project facts; do not invent generic approvals to close Phase 2.

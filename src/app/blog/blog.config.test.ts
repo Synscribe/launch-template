@@ -18,8 +18,10 @@ describe("blog index configuration", () => {
   });
 
   it("maps configured values and tags to their public label", () => {
-    expect(getBlogFilter("press-release")?.tag).toBe("press-release");
-    expect(labelForBlogTags([{ name: "press-release" }])).toBe("Press Release");
+    expect(getBlogFilter("tips-and-tricks")?.tag).toBe("tips-and-tricks");
+    expect(labelForBlogTags([{ name: "tips-and-tricks" }])).toBe(
+      "Tips & Tricks",
+    );
   });
 
   it("uses real unconfigured tag names and omits missing tags", () => {
@@ -29,6 +31,6 @@ describe("blog index configuration", () => {
 
   it("keeps optional featured settings explicit", () => {
     expect(BLOG_FEATURED.limit).toBeGreaterThan(0);
-    expect(BLOG_FEATURED.tag).toBe("featured");
+    expect(BLOG_FEATURED.tag).toBe("tips-and-tricks");
   });
 });
