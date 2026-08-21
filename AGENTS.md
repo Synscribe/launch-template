@@ -32,7 +32,7 @@ Do not edit `docs/launch/checklist.md` directly or create a second SEO guide or 
 ## UI work
 
 - Bespoke page composition is expected.
-- For an authorized 1:1 website clone, use `.agents/skills/site-clone`: inventory URLs before implementation, compare with agent-browser, and stop after the homepage for user approval.
+- For an authorized 1:1 website clone, use `.agents/skills/site-clone`: inventory URLs and visible widgets before implementation, keep `docs/launch/clone-journal.md` current, compare with agent-browser, and stop after the homepage for user approval.
 - Preserve the token boundary in `src/app/globals.css` when importing a client design system.
 - Keep critical copy and links in server-rendered HTML.
 - Animation must retain visible content without JavaScript and handle `prefers-reduced-motion`.

@@ -280,9 +280,9 @@ Create focused project skills using the repository's canonical docs:
 - `technical-seo-review`: work through relevant `SEO-*` and `MIG-*` requirements;
 - `launch-review`: run the launch audit, inspect non-automatable P0 items, and update checklist status.
 
-Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.json`, may link to the generated Markdown view, and invoke shared scripts.
+Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.json`, add client-specific gates to `projectItems`, may keep non-status evidence such as a clone implementation journal, may link to the generated Markdown view, and invoke shared scripts.
 
-Current progress: `site-clone`, `micro-ui`, and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. `site-clone` includes recursive sitemap inventory, exact URL-map output, wildcard page-family grouping, customer-owned asset migration, agent-browser visual comparison, persistent homepage execution, and an approval gate before later routes. The visual skills have been exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. No graphics or animation dependency was added. `technical-seo-review` and `launch-review` remain deliberately deferred.
+Current progress: `site-clone`, `micro-ui`, and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. `site-clone` includes recursive sitemap inventory, exact URL-map output, wildcard page-family grouping, customer-owned asset migration, visible widget reproduction, implementation journaling with checklist escalation, agent-browser visual comparison, persistent homepage execution, and an approval gate before later routes. The visual skills have been exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. No graphics or animation dependency was added. `technical-seo-review` and `launch-review` remain deliberately deferred.
 
 ### Phase 7 — advanced content and LLM access
 

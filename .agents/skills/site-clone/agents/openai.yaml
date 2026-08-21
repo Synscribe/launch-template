@@ -1,4 +1,4 @@
 interface:
   display_name: "Site Clone"
-  short_description: "Clone and migrate websites pixel accurately"
-  default_prompt: "Use $site-clone to inventory this website and clone it route by route with visual comparisons."
+  short_description: "Clone sites and widgets with launch-gap tracking"
+  default_prompt: "Use $site-clone to inventory and clone this website route by route, including visible widgets and explicit launch-gap tracking."

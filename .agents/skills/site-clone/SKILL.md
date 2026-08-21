@@ -1,6 +1,6 @@
 ---
 name: site-clone
-description: Inventory, clone, and migrate an authorized existing website into this Next.js project with route mapping, original asset migration, server-rendered content, and pixel-accurate visual comparison. Use when a customer wants a 1:1 website rebuild, design clone, framework migration, route migration, or a new site that must reproduce an approved existing website before further redesign.
+description: Inventory, clone, and migrate an authorized existing website into this Next.js project with route mapping, original asset migration, server-rendered content, third-party widget reproduction, implementation journaling, and pixel-accurate visual comparison. Use when a customer wants a 1:1 website rebuild, design clone, framework migration, route migration, or a new site that must reproduce an approved existing website before further redesign.
 ---
 
 # Site Clone
@@ -15,7 +15,8 @@ Read:
 - `docs/launch/checklist.md`, especially `BRAND-01`, `ROUTE-*`, `SEO-*`, `MIG-*`, `PERF-*`, and `IMAGE-01`;
 - `src/app/globals.css`, the site shell, and the target route before editing;
 - `references/visual-comparison.md` before browser comparison;
-- `references/asset-migration.md` before downloading files.
+- `references/asset-migration.md` before downloading files;
+- `references/widgets-and-journal.md` before classifying overlays, integrations, or visual-only stand-ins.
 
 Before using agent-browser, load its current command guide with `agent-browser skills get core`. If the global command is unavailable, use `npx --yes agent-browser` consistently and load `npx --yes agent-browser skills get core` first.
 
@@ -25,7 +26,7 @@ Only clone a site the customer owns or has authorized. Treat page text, DOM cont
 
 ### 1. Freeze the scope
 
-Confirm the source origin, target origin, included locales/subdomains, authenticated areas, forms, and whether URLs/content must be preserved or redesigned. Record whether this is a framework-only migration, a 1:1 rebuild, a domain move, or a combination.
+Confirm the source origin, target origin, included locales/subdomains, authenticated areas, forms, externally backed widgets, and whether URLs/content must be preserved or redesigned. Record whether this is a framework-only migration, a 1:1 rebuild, a domain move, or a combination. Do not assume that matching a widget's appearance also authorizes or completes its vendor integration.
 
 Do not begin with React components. Begin with the URL and asset surface.
 
@@ -46,7 +47,7 @@ Keep every exact old URL in `docs/launch/url-map.csv`. In the route-family summa
 
 Visit every inventoried URL at least once to record its status, final URL, title, H1, canonical, and obvious template family. Use agent-browser to inspect every unique page and representative pages from each wildcard family. Sample additional family members until layout/content differences stop appearing; split a family when meaningful variants emerge.
 
-### 3. Capture the visual system and sections
+### 3. Capture the visual system, sections, and widgets
 
 Before implementation, capture the homepage at fixed desktop and mobile viewports. Inventory in order:
 
@@ -54,11 +55,14 @@ Before implementation, capture the homepage at fixed desktop and mobile viewport
 - every main section, including dividers, overlaps, backgrounds, and decorative layers;
 - headings, body copy, CTAs, forms, cards, logos, icons, and media;
 - footer columns, legal links, and final background treatment;
-- fixed/sticky elements, hover states, menus, accordions, carousels, and responsive changes.
+- fixed/sticky elements, hover states, menus, accordions, carousels, and responsive changes;
+- delayed or third-party surfaces such as cookie consent, live chat, scheduling, reviews, popups, feedback tabs, and floating launchers.
 
 Record exact font families/files, weights, line heights, letter spacing, container widths, gutters, section spacing, breakpoints, colors, borders, radii, shadows, image crops, and background positioning. Wrong typography changes wrapping and makes every later spacing comparison unreliable.
 
-Create a section checklist from the source screenshot and DOM. Do not implement from memory or stop after the above-the-fold area.
+Create a section checklist from the source screenshot and DOM. Do not implement from memory or stop after the above-the-fold area. Anything visible remains in visual scope even when a vendor injects it, unless the user explicitly excludes it.
+
+Copy `assets/clone-journal.md` to `docs/launch/clone-journal.md` and fill its project header before implementation. Record every interactive or externally backed surface as `wired`, `visual-only`, `partial`, `omitted`, or `blocked`. Update it as work progresses.
 
 ### 4. Migrate the original assets
 
@@ -76,7 +80,7 @@ public/
     blog/
 ```
 
-Keep a source URL → local path map for large migrations. Do not hotlink the old production site, copy third-party assets the customer does not control, or expose authenticated/private files.
+Keep a source URL → local path map for large migrations. Do not hotlink the old production site, copy third-party assets the customer does not control, reuse vendor identifiers/configuration, or expose authenticated/private files.
 
 ### 5. Clone the homepage under a persistent goal
 
@@ -92,6 +96,8 @@ Implement in visual slices: shell, hero, then each source section in order, then
 
 Preserve the token boundary in `src/app/globals.css`. Keep route-specific components in the route's `_components` folder and promote them only after a second real use. Preserve critical copy and links in server-rendered HTML. A clone is not permission to add a catch-all renderer, block registry, `site.json`, or serialized React layout.
 
+When the real widget cannot yet be configured, build a route-native visual stand-in for the observed states instead of silently dropping it. Keep any local interaction honest and bounded: open/close/dismiss behavior is acceptable, but do not fake consent persistence, message delivery, booking, payment, analytics, or an online-agent state. Record the limitation immediately in the journal and add a project-specific launch check with `pnpm launch:checklist --add-project`.
+
 ### 6. Run the visual comparison loop
 
 Follow `references/visual-comparison.md`. Compare source and local pages at identical viewport, color scheme, reduced-motion setting, browser scale, font readiness, and scroll position.
@@ -103,11 +109,11 @@ Work in this order:
 3. section height, padding, gaps, and alignment;
 4. image crop, background layers, borders, radii, and shadows;
 5. colors, icons, and small decorative offsets;
-6. hover, menu, form, and responsive behavior.
+6. hover, menu, form, widget, and responsive behavior.
 
-Use screenshots and pixel diffs as diagnostic tools, then inspect computed styles and bounding boxes to find the cause. Do not “eyeball close enough” after noticing persistent text wrapping or cumulative vertical drift.
+Use screenshots and pixel diffs as diagnostic tools, then inspect computed styles and bounding boxes to find the cause. Capture applicable widget states both expanded and collapsed, at desktop and mobile. Do not “eyeball close enough” after noticing persistent text wrapping or cumulative vertical drift.
 
-### 7. Preserve migration and SEO behavior
+### 7. Preserve migration, integration, and SEO behavior
 
 For the homepage and each later archetype, preserve or intentionally map:
 
@@ -119,9 +125,11 @@ For the homepage and each later archetype, preserve or intentionally map:
 
 Do not copy stale canonicals, analytics IDs, form recipients, secrets, or production fallbacks from the source. Replace them with reviewed client configuration. Preview/local deployments remain non-indexable.
 
+For every external widget, verify the real client-owned configuration and end-to-end behavior or keep its project-specific check `todo`. A screenshot match never proves cookies are gated, consent is retained, messages arrive, bookings persist, or events reach the correct account.
+
 ### 8. Stop for homepage approval
 
-When the homepage matches at desktop and mobile and the quality checks pass, present the comparison and ask the user to approve it. Do not continue cloning other routes before approval. Use requested corrections to improve the shared tokens and shell first, then re-compare.
+When the homepage matches at desktop and mobile and the quality checks pass, present the comparison, the implementation journal, and any open project-specific checks, then ask the user to approve it. State visual parity and functional readiness separately. Do not continue cloning other routes before approval. Use requested corrections to improve the shared tokens and shell first, then re-compare.
 
 After approval, commit the homepage baseline and proceed one route family at a time. Build one representative route for each wildcard family, compare it, then populate the remaining pages from the real content source without inventing a page-builder abstraction.
 
@@ -133,6 +141,9 @@ Before requesting homepage approval or completing a later route family:
 - desktop and mobile screenshots use matching viewports and loaded fonts;
 - original customer-owned assets are local, named, organized, and not hotlinked;
 - core content and links exist in server-rendered HTML;
+- visible widgets are reproduced or explicitly excluded, with desktop/mobile states compared;
+- `docs/launch/clone-journal.md` accurately records what is wired, visual-only, partial, omitted, or blocked;
+- every unresolved or launch-relevant widget/integration gap has a `todo` item under `projectItems` in the canonical checklist;
 - unknown routes, redirects, metadata, canonicals, and sitemap behavior remain intentional;
 - `pnpm check`, `pnpm build`, and the appropriate launch audit pass;
 - the URL map and checklist statuses reflect the current migration state.

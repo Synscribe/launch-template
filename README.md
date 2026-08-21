@@ -63,7 +63,7 @@ pnpm launch:audit --url https://example.com --mode production
 
 ## Project skills
 
-- `$site-clone` inventories an authorized source site, maps exact URLs and wildcard page families, migrates original assets, and drives a screenshot/diff loop through homepage approval before other routes.
+- `$site-clone` inventories an authorized source site, maps exact URLs and wildcard page families, migrates original assets, reproduces visible widgets, journals functional gaps, and drives a screenshot/diff loop through homepage approval before other routes.
 - `$micro-ui` builds route-native interface visuals, local use-case images, and generated social images. `/uses` output is registered in its bounded typed visual resolver instead of a site-wide block registry.
 - `$animated-ui` adds restrained route-local motion while keeping the server-rendered content visible and providing a reduced-motion fallback.
 
