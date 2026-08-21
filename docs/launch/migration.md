@@ -42,9 +42,11 @@ Allowed dispositions:
 
 For each URL, record traffic/backlink priority, new destination, implementation status, verification result, and notes. Do not mass-map unresolved rows to `/`.
 
-## 4. Build one representative route first
+## 4. Build the homepage or one representative route first
 
-Choose a route that exercises the real page model without being the riskiest page. Compare:
+For an authorized 1:1 design clone, use `$site-clone` from `.agents/skills/site-clone`. It adds the technical workflow for recursive sitemap inventory, wildcard route families, original asset migration, agent-browser screenshot/diff comparison, and the required homepage approval gate. Clone and approve the homepage first.
+
+For a framework/content migration without a 1:1 design requirement, choose a route that exercises the real page model without being the riskiest page. Compare:
 
 - status and final URL;
 - title, description, H1, and first 200 words;
@@ -56,7 +58,7 @@ Choose a route that exercises the real page model without being the riskiest pag
 - server-rendered HTML;
 - performance and third-party scripts.
 
-Use the result to define the next route. Do not create a generic block engine to account for every old template variation.
+Use the result to define the next route. Do not create a generic block engine to account for every old template variation. Keep every exact old URL in `url-map.csv` even when repeated page archetypes are summarized as `/blog/*`, `/uses/*`, or another wildcard in the clone inventory.
 
 ## 5. Implement redirects
 
@@ -91,13 +93,13 @@ The comparison should report:
 Before DNS or route activation:
 
 - production environment and domain are final;
-- temporary authentication/noindex/robots blocks have a named remover;
+- temporary authentication/noindex/robots blocks are removed and verified;
 - redirects are deployed and tested;
 - new canonical sitemap is ready;
 - Search Console properties are verified;
 - analytics events and form delivery work;
 - server capacity, error monitoring, backup, and rollback are ready;
-- client and technical owners share the launch window.
+- the cutover window and rollback decision are clear.
 
 ## 8. Monitor
 

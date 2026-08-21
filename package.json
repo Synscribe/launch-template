@@ -13,9 +13,10 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "pnpm format:check && pnpm launch:checklist --check && pnpm lint && pnpm typecheck && pnpm test",
+    "check": "pnpm format:check && pnpm launch:checklist --check && pnpm skills:check && pnpm lint && pnpm typecheck && pnpm test",
     "launch:checklist": "tsx scripts/launch-checklist.ts",
     "launch:audit": "tsx scripts/launch-audit.ts",
+    "skills:check": "node --test .agents/skills/site-clone/scripts/inventory-sitemap.test.mjs",
     "prepush": "pnpm check && pnpm build"
   },
   "dependencies": {

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Site Clone"
+  short_description: "Clone and migrate websites pixel accurately"
+  default_prompt: "Use $site-clone to inventory this website and clone it route by route with visual comparisons."
