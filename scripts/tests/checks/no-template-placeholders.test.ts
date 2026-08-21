@@ -4,11 +4,9 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { ChecklistItem } from "./launch-checklist";
-import {
-  checkNoTemplatePlaceholders,
-  runAutomatedCheck,
-} from "./automated-checks";
+import { runAutomatedCheck } from "../../checks";
+import { checkNoTemplatePlaceholders } from "../../checks/no-template-placeholders";
+import type { ChecklistItem } from "../../launch-checklist";
 
 const temporaryDirectories: string[] = [];
 

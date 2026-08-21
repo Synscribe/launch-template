@@ -1,7 +1,4 @@
-import {
-  runAutomatedChecks,
-  validateAutomatedChecks,
-} from "./automated-checks";
+import { runAutomatedChecks, validateAutomatedChecks } from "./checks";
 import { loadChecklist } from "./launch-checklist";
 
 async function main(): Promise<void> {

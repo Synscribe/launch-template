@@ -72,7 +72,9 @@ This is the repository map. Other agents and client repositories should be able 
 | `src/lib/seo.ts`             | Metadata, URL normalization, and typed builders for applicable structured data.                                                                | One SEO implementation boundary; no arbitrary JSON blobs in content files. |
 | `src/app/robots.ts`          | Environment-aware crawl policy and sitemap URL.                                                                                                | Production and preview behavior must be tested.                            |
 | `src/app/sitemap.ts`         | Enabled, canonical, indexable routes only.                                                                                                     | Derived from actual content sources.                                       |
-| `scripts/launch-audit.ts`    | Static plus live launch checks keyed to checklist IDs.                                                                                         | Single executable audit entry point.                                       |
+| `scripts/launch-*.ts`        | Pnpm command entry points for checklist management, automatic verification, and live auditing.                                                 | Keep helper modules and tests out of the scripts root.                     |
+| `scripts/checks/*.ts`        | Named automated-check registry and one focused implementation per check.                                                                       | Checklist `check` values must map to this explicit registry.               |
+| `scripts/tests/**/*.test.ts` | Tests for checklist parsing, registry dispatch, and individual automated checks.                                                               | Each automated check needs passing and failing fixtures.                   |
 | `.agents/skills/*/SKILL.md`  | Focused workflows for cloning, animation, visuals, SEO review, and launch review.                                                              | Skills point back to canonical docs instead of copying them.               |
 
 Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-01`, `MIG-01`, `A11Y-01`, `PERF-01`, `FORM-01`, `DATA-01`, and `OPS-01`. IDs let other repos cite a requirement without depending on heading text.
@@ -95,7 +97,14 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 ├── public/
 │   └── media/                       # only assets used by the current site
 ├── scripts/
-│   └── launch-audit.ts
+│   ├── checks/
+│   │   ├── index.ts              # explicit named-check registry
+│   │   └── *.ts                  # one focused implementation per check
+│   ├── tests/
+│   │   └── **/*.test.ts
+│   ├── launch-audit.ts
+│   ├── launch-checklist.ts
+│   └── launch-verify.ts
 ├── src/
 │   ├── app/
 │   │   ├── (marketing)/

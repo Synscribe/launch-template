@@ -30,6 +30,14 @@ pnpm build
 pnpm launch:audit --url http://localhost:3000 --mode template
 ```
 
+Launch commands have separate jobs:
+
+- `pnpm launch:checklist` displays manual progress and identifies automated items. Its `--set`, `--add-project`, `--write`, and `--check` options manage or validate the canonical checklist.
+- `pnpm launch:verify` executes every named check whose checklist status is `auto`. It needs no running website and exits non-zero when a check fails.
+- `pnpm launch:audit` runs those automated checks plus live crawling, route, metadata, indexability, sitemap, and production-safety checks against a URL.
+
+`pnpm check` includes `pnpm launch:checklist --check` so invalid checklist data or stale generated Markdown fails normal CI. It does not run `pnpm launch:verify`, because the base template intentionally contains marked placeholders until a client replaces them.
+
 Before production, configure the real identity and run:
 
 ```bash

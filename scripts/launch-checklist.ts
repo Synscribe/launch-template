@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { format } from "prettier";
 
-import { validateAutomatedChecks } from "./automated-checks";
+import { validateAutomatedChecks } from "./checks";
 
 export const CHECKLIST_JSON_PATH = "docs/launch/checklist.json";
 export const CHECKLIST_MARKDOWN_PATH = "docs/launch/checklist.md";

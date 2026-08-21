@@ -1,24 +1,8 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 
-import type { ChecklistItem, LaunchChecklist } from "./launch-checklist";
-
-export type AutomatedCheckFinding = {
-  subject: string;
-  message: string;
-};
-
-export type AutomatedCheckResult = {
-  id: string;
-  check: string;
-  passed: boolean;
-  findings: AutomatedCheckFinding[];
-};
-
-type AutomatedCheck = (
-  item: ChecklistItem,
-  cwd: string,
-) => Promise<AutomatedCheckFinding[]>;
+import type { ChecklistItem } from "../launch-checklist";
+import type { AutomatedCheckFinding } from "./types";
 
 const PLACEHOLDER_MARKER =
   /\bplaceholder-[a-z0-9]|PlaceholderOpenGraphImage|TEMPLATE_PLACEHOLDER/i;
@@ -88,55 +72,4 @@ export async function checkNoTemplatePlaceholders(
   }
 
   return findings;
-}
-
-export const AUTOMATED_CHECKS = {
-  "no-template-placeholders": checkNoTemplatePlaceholders,
-} satisfies Record<string, AutomatedCheck>;
-
-export function isAutomatedCheckName(
-  value: string,
-): value is keyof typeof AUTOMATED_CHECKS {
-  return value in AUTOMATED_CHECKS;
-}
-
-export async function runAutomatedCheck(
-  item: ChecklistItem,
-  cwd = process.cwd(),
-): Promise<AutomatedCheckResult> {
-  if (!item.check || !isAutomatedCheckName(item.check)) {
-    throw new Error(
-      `${item.id} references unknown automated check: ${item.check ?? "none"}`,
-    );
-  }
-
-  const findings = await AUTOMATED_CHECKS[item.check](item, cwd);
-  return {
-    id: item.id,
-    check: item.check,
-    passed: findings.length === 0,
-    findings,
-  };
-}
-
-export async function runAutomatedChecks(
-  checklist: LaunchChecklist,
-  cwd = process.cwd(),
-): Promise<AutomatedCheckResult[]> {
-  const automatedItems = [...checklist.items, ...checklist.projectItems].filter(
-    (item) => item.status === "auto",
-  );
-  return Promise.all(
-    automatedItems.map((item) => runAutomatedCheck(item, cwd)),
-  );
-}
-
-export function validateAutomatedChecks(checklist: LaunchChecklist): void {
-  for (const item of [...checklist.items, ...checklist.projectItems]) {
-    if (item.check && !isAutomatedCheckName(item.check)) {
-      throw new Error(
-        `${item.id} references unknown automated check: ${item.check}`,
-      );
-    }
-  }
 }

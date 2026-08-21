@@ -1,10 +1,7 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import {
-  runAutomatedChecks,
-  validateAutomatedChecks,
-} from "./automated-checks";
+import { runAutomatedChecks, validateAutomatedChecks } from "./checks";
 import {
   allChecklistItems,
   loadChecklist,

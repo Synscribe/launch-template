@@ -8,7 +8,7 @@ import {
   parseChecklist,
   projectChecklistItemFromArgs,
   renderChecklist,
-} from "./launch-checklist";
+} from "../launch-checklist";
 
 describe("launch checklist", () => {
   it("loads every canonical checklist item once", async () => {
