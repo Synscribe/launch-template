@@ -1,6 +1,8 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { loadChecklist, type LaunchChecklist } from "./launch-checklist";
+
 type Mode = "template" | "preview" | "production";
 type Level = "PASS" | "FAIL" | "WARN" | "INFO";
 
@@ -16,6 +18,14 @@ type Page = {
   finalUrl: string;
   status: number;
   html: string;
+};
+
+type ChecklistSummary = {
+  total: number;
+  todo: number;
+  done: number;
+  notApplicable: number;
+  p0TodoIds: string[];
 };
 
 const args = process.argv.slice(2);
@@ -53,6 +63,48 @@ function record(
   message: string,
 ): void {
   results.push({ id, level, subject, message });
+}
+
+function auditChecklist(checklist: LaunchChecklist): ChecklistSummary {
+  const summary = {
+    total: checklist.items.length,
+    todo: checklist.items.filter((item) => item.status === "todo").length,
+    done: checklist.items.filter((item) => item.status === "done").length,
+    notApplicable: checklist.items.filter(
+      (item) => item.status === "not_applicable",
+    ).length,
+    p0TodoIds: checklist.items
+      .filter((item) => item.priority === "P0" && item.status === "todo")
+      .map((item) => item.id),
+  };
+
+  if (summary.p0TodoIds.length === 0) {
+    record("QA-01", "PASS", "checklist", "Every P0 item is resolved");
+  } else {
+    record(
+      "QA-01",
+      mode === "production" ? "FAIL" : "INFO",
+      "checklist",
+      `${summary.p0TodoIds.length} P0 item(s) still todo: ${summary.p0TodoIds.join(", ")}`,
+    );
+  }
+
+  return summary;
+}
+
+function validateAuditIds(checklist: LaunchChecklist): void {
+  const checklistIds = new Set(checklist.items.map((item) => item.id));
+  const unknownIds = [
+    ...new Set(
+      results.map((result) => result.id).filter((id) => !checklistIds.has(id)),
+    ),
+  ];
+
+  if (unknownIds.length > 0) {
+    throw new Error(
+      `Launch audit uses unknown checklist IDs: ${unknownIds.join(", ")}`,
+    );
+  }
 }
 
 function attr(tag: string, name: string): string | undefined {
@@ -601,7 +653,7 @@ function printResults(): void {
   );
 }
 
-async function saveReport(): Promise<void> {
+async function saveReport(checklist: ChecklistSummary): Promise<void> {
   await mkdir("artifacts", { recursive: true });
   await writeFile(
     "artifacts/launch-audit.json",
@@ -610,6 +662,7 @@ async function saveReport(): Promise<void> {
         generatedAt: new Date().toISOString(),
         baseUrl,
         mode,
+        checklist,
         results,
       },
       null,
@@ -619,10 +672,13 @@ async function saveReport(): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  const checklist = await loadChecklist();
+  const checklistSummary = auditChecklist(checklist);
   await staticAudit();
   await liveAudit();
+  validateAuditIds(checklist);
   printResults();
-  await saveReport();
+  await saveReport(checklistSummary);
   if (results.some((result) => result.level === "FAIL")) process.exitCode = 1;
 }
 
