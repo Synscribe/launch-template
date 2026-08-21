@@ -41,7 +41,7 @@ export default async function UsesPage() {
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-muted sm:text-xl sm:leading-9">
               Choose the project closest to yours. Each use case shows the
-              risks, the work, and what should be ready before launch.
+              problems, the work, and what should be ready before launch.
             </p>
             <Link
               href="#all-uses"
@@ -77,14 +77,17 @@ export default async function UsesPage() {
 
               <ul className="border-t border-ink/15">
                 {group.useCases.map((useCase) => (
-                  <li className="border-b border-ink/15" key={useCase.slug}>
+                  <li
+                    className="border-b border-ink/15"
+                    key={useCase.metadata.slug}
+                  >
                     <Link
                       className={`${styles.useRow} group grid gap-5 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:px-5 sm:py-8`}
-                      href={`/uses/${useCase.slug}`}
+                      href={`/uses/${useCase.metadata.slug}`}
                     >
                       <article>
                         <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                          {useCase.shortTitle}
+                          {useCase.metadata.anchor}
                         </h3>
                         <p className="mt-3 max-w-2xl text-sm leading-7 text-ink-muted sm:text-base">
                           {useCase.hero.summary}

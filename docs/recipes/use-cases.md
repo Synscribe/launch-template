@@ -1,35 +1,36 @@
 # Use cases: structure, visuals, add, or remove
 
-Use cases are ordinary, deletable content and routes. Each detail page comes from one validated JSON document. The JSON owns content, SEO, group membership, and `visualId` references; `page.tsx` owns the React composition. Do not put component names, file paths, Tailwind classes, or serialized React props in the content format.
+Use cases are ordinary, deletable content and routes. Each detail page comes from one validated JSON document. The JSON owns content, metadata, one group membership, and `visualId` references; `page.tsx` owns the React composition. Do not put component names, file paths, Tailwind classes, or serialized React props in the content format.
 
 ## Detail-page structure
 
 Every JSON-backed detail page uses the same route composition, in this order:
 
 1. **Hero:** one H1, one summary, one primary action, and one `UseCaseVisual` selected by `hero.visualId`.
-2. **Risks:** a short introduction and three problems the work should prevent.
+2. **Problem:** a short introduction and three problems the work should prevent.
 3. **Solution:** three to five capability rows. Each row has a category, title, short explanation, highlights, and one visual selected by `visualId`.
 4. **Method:** a short ordered sequence explaining how the work proceeds.
 5. **Outcomes:** concrete deliverables or states the client should have before launch.
 6. **FAQ:** native, server-rendered disclosures for real buying or delivery questions.
-7. **Closing:** one final action with a real internal destination.
+7. **CTA:** one final action. Its optional `href` overrides the default `/contact` destination.
 
 The structure lives in `src/app/uses/[slug]/page.tsx`; it is not configurable per JSON file. If a client needs a materially different page type, build an explicit route or intentionally change the shared composition. Do not add section flags or turn the JSON into a page builder.
 
 ## Add a use case
 
 1. Copy `src/content/use-cases/website-migrations.json` to a lowercase, hyphenated filename.
-2. Give the document a matching unique `slug`, a short hub title, and one or more `groups` IDs from `src/content/use-cases/groups.json`.
-3. Replace every SEO, hero, risk, capability, method, outcome, FAQ, and closing field with project-appropriate copy. Do not keep claims, outcomes, audiences, or response promises that are not true for the client.
+2. Set `metadata.slug` to the filename, `metadata.anchor` to the short hub title, and `metadata.group` to exactly one ID from `src/content/use-cases/groups.json`. Keep the page title and description in the same `metadata` object.
+3. Replace every metadata, hero, problem, capability, method, outcome, FAQ, and CTA field with project-appropriate copy. Do not keep claims, outcomes, audiences, or response promises that are not true for the client.
 4. Choose one supported `visualId` for the hero and for each capability. The same field always selects the visual; the JSON never describes how it is rendered.
 5. If none of the current IDs fits, add a new visual through the resolver workflow below before referencing it in JSON.
-6. Run `pnpm check`. The content loader rejects malformed JSON, missing fields, filename/slug mismatches, duplicate slugs or capability visual IDs, unsupported visual IDs, unknown/duplicate group IDs, and external CTA paths.
-7. Run `pnpm build`. `generateStaticParams` should list the new `/uses/<slug>` route.
-8. Confirm the route is linked from the grouped `/uses` hub and appears in `/sitemap.xml`.
-9. Review `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, and `IMAGE-01` in the generated `docs/launch/checklist.md`.
-10. Run the live launch audit, then update those checks in `docs/launch/checklist.json`.
+6. Leave `cta.href` out to use `/contact`. Add it only when the use case needs a different internal destination.
+7. Run `pnpm check`. The content loader rejects malformed JSON, missing fields, filename/slug mismatches, duplicate slugs or capability visual IDs, unsupported visual IDs, unknown group IDs, and external CTA paths.
+8. Run `pnpm build`. `generateStaticParams` should list the new `/uses/<slug>` route.
+9. Confirm the route is linked from the grouped `/uses` hub and appears in `/sitemap.xml`.
+10. Review `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, and `IMAGE-01` in the generated `docs/launch/checklist.md`.
+11. Run the live launch audit, then update those checks in `docs/launch/checklist.json`.
 
-There is no numeric page order. Use cases have a deterministic alphabetical fallback, while the array order in `groups.json` controls the hub-section order. A use case with multiple group IDs appears in multiple relevant hub sections. Add a group definition only when the project has a real grouping to show; do not create empty speculative groups.
+There is no numeric page order. Use cases sort alphabetically by `metadata.anchor`, while the array order in `groups.json` controls the hub-section order. Each use case belongs to one group and appears once on the hub. Add a group definition only when the project has a real grouping to show; do not create empty speculative groups.
 
 ## The visual resolver
 

@@ -1,8 +1,8 @@
 {
-  "slug": "website-migrations",
-  "shortTitle": "Website migrations",
-  "groups": ["migrations-and-rebuilds", "technical-seo"],
-  "seo": {
+  "metadata": {
+    "slug": "website-migrations",
+    "anchor": "Website migrations",
+    "group": "migrations-and-rebuilds",
     "title": "Website migrations that protect SEO and working URLs",
     "description": "Plan redirects, protect important pages, and test the new website before launch."
   },
@@ -11,7 +11,7 @@
     "summary": "We protect important URLs, search traffic, and customer journeys while the new site is built.",
     "visualId": "placeholder-website-migration-overview"
   },
-  "risks": {
+  "problem": {
     "title": "Most migration mistakes happen behind the scenes.",
     "introduction": "A polished redesign can still lose traffic or break customer journeys. These are the three failures we guard against.",
     "items": [
@@ -155,12 +155,9 @@
       }
     ]
   },
-  "closing": {
+  "cta": {
     "title": "Start with the URL map. Then build.",
     "description": "Understand the old site before changing its routes. That one step makes the redesign faster and the launch safer.",
-    "cta": {
-      "label": "See the launch workflow",
-      "href": "/#workflow"
-    }
+    "label": "See the launch workflow"
   }
 }

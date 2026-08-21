@@ -28,7 +28,7 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const useCases = await getAllUseCases();
-  return useCases.map((useCase) => ({ slug: useCase.slug }));
+  return useCases.map((useCase) => ({ slug: useCase.metadata.slug }));
 }
 
 export async function generateMetadata({
@@ -39,9 +39,9 @@ export async function generateMetadata({
   if (!useCase) notFound();
 
   return createPageMetadata({
-    title: useCase.seo.title,
-    description: useCase.seo.description,
-    path: `/uses/${useCase.slug}`,
+    title: useCase.metadata.title,
+    description: useCase.metadata.description,
+    path: `/uses/${useCase.metadata.slug}`,
   });
 }
 
@@ -50,11 +50,11 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
   const useCase = await getUseCaseBySlug(slug);
   if (!useCase) notFound();
 
-  const path = `/uses/${useCase.slug}`;
+  const path = `/uses/${useCase.metadata.slug}`;
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Uses", path: "/uses" },
-    { name: useCase.shortTitle, path },
+    { name: useCase.metadata.anchor, path },
   ]);
 
   return (
@@ -95,21 +95,21 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
         </div>
       </section>
 
-      <section id="risks" className="scroll-mt-24 bg-paper py-24 sm:py-32">
+      <section id="problem" className="scroll-mt-24 bg-paper py-24 sm:py-32">
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-24">
             <div>
               <h2 className="max-w-xl text-balance font-display text-4xl leading-[1] tracking-[-0.035em] sm:text-5xl">
-                {useCase.risks.title}
+                {useCase.problem.title}
               </h2>
             </div>
             <p className="max-w-2xl self-end text-lg leading-8 text-ink-muted">
-              {useCase.risks.introduction}
+              {useCase.problem.introduction}
             </p>
           </div>
 
           <div className="mt-16 grid border-y border-ink/10 md:grid-cols-3">
-            {useCase.risks.items.map((item) => (
+            {useCase.problem.items.map((item) => (
               <article
                 className="border-b border-ink/10 py-8 last:border-b-0 md:border-r md:border-b-0 md:px-8 md:py-10 md:last:border-r-0 md:first:pl-0"
                 key={item.title}
@@ -285,21 +285,21 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
             <CardContent className="grid gap-10 px-0 lg:grid-cols-[1fr_auto] lg:items-end">
               <div>
                 <h2 className="max-w-4xl text-balance font-display text-3xl leading-[1.02] tracking-[-0.035em] sm:text-5xl">
-                  {useCase.closing.title}
+                  {useCase.cta.title}
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-7 text-white">
-                  {useCase.closing.description}
+                  {useCase.cta.description}
                 </p>
               </div>
               <Link
-                href={useCase.closing.cta.href}
+                href={useCase.cta.href ?? "/contact"}
                 className={buttonVariants({
                   size: "lg",
                   className:
                     "h-auto rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-signal-strong hover:-translate-y-0.5 hover:bg-white/90",
                 })}
               >
-                {useCase.closing.cta.label}
+                {useCase.cta.label}
                 <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
               </Link>
             </CardContent>

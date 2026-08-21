@@ -10,11 +10,6 @@
     "description": "Explain a new product, earn trust, and measure the first useful version of the website."
   },
   {
-    "slug": "growth-and-conversion",
-    "name": "Growth & conversion",
-    "description": "Help the right visitors find an answer and take a clear next step."
-  },
-  {
     "slug": "technical-seo",
     "name": "Technical SEO",
     "description": "Build page meaning, crawlability, routing, and verification into the work from the start."

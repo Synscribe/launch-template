@@ -1,8 +1,8 @@
 {
-  "slug": "startup-launches",
-  "shortTitle": "Startup launches",
-  "groups": ["startup-launches", "growth-and-conversion"],
-  "seo": {
+  "metadata": {
+    "slug": "startup-launches",
+    "anchor": "Startup launches",
+    "group": "startup-launches",
     "title": "Startup websites that explain the product and drive action",
     "description": "Launch a startup website with a clear message, useful proof, a focused conversion path, and measurement from day one."
   },
@@ -11,7 +11,7 @@
     "summary": "Turn a new product into a clear story, a focused website, and a launch you can measure.",
     "visualId": "startup-launch-overview"
   },
-  "risks": {
+  "problem": {
     "title": "A new product is already hard to explain.",
     "introduction": "The website should remove confusion, not add another layer of it. We watch for three common launch problems.",
     "items": [
@@ -155,12 +155,9 @@
       }
     ]
   },
-  "closing": {
+  "cta": {
     "title": "Launch the clearest useful version first.",
     "description": "Give people enough to understand the product, trust the team, and take the next step. Learn from the launch before adding more.",
-    "cta": {
-      "label": "See the launch workflow",
-      "href": "/#workflow"
-    }
+    "label": "See the launch workflow"
   }
 }
