@@ -15,7 +15,7 @@ export function LegalTemplate({
 }: LegalTemplateProps) {
   return (
     <main id="main-content" className="bg-paper">
-      <article className="mx-auto w-full max-w-3xl px-5 py-20 sm:px-8 sm:py-28">
+      <article className="mx-auto w-full max-w-3xl px-5 pt-14 pb-20 sm:px-8 sm:pt-16 sm:pb-28 lg:pt-20">
         <p className="text-xs font-bold tracking-[0.2em] text-signal uppercase">
           {eyebrow}
         </p>

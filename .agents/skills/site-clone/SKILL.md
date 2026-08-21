@@ -84,7 +84,7 @@ Keep a source URL → local path map for large migrations. Do not hotlink the ol
 
 ### 5. Clone the homepage under a persistent goal
 
-Start the agent's persistent goal command before implementation: use `/goal` in Codex or `/gol` in Claude. Give it a bounded objective: clone the homepage 1:1, compare it at fixed viewports, pass repository checks, and stop for customer approval. If that command is unavailable in the current host, keep the same acceptance criteria in the active task plan.
+Start the agent's persistent goal command before implementation: use `/goal` in Codex or Claude Code. Give it a bounded objective: clone the homepage 1:1, compare it at fixed viewports, pass repository checks, and stop for customer approval. If that command is unavailable in the current host, keep the same acceptance criteria in the active task plan.
 
 Implement in visual slices: shell, hero, then each source section in order, then footer and responsive states. After each slice:
 

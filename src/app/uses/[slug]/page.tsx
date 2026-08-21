@@ -65,7 +65,7 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
       />
 
       <section className={`${styles.hero} border-b border-ink/10`}>
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pt-16 pb-24 sm:px-8 sm:pt-20 sm:pb-28">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pt-14 pb-24 sm:px-8 sm:pt-16 sm:pb-28 lg:pt-20">
           <div className="grid items-start gap-14 lg:grid-cols-[1.18fr_0.82fr] lg:gap-20">
             <div>
               <h1 className="max-w-4xl text-balance font-display text-[clamp(3rem,5.6vw,5.5rem)] leading-[0.94] tracking-[-0.04em]">

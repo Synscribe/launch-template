@@ -107,7 +107,7 @@ async function Article({ params }: BlogPostPageProps) {
       <article>
         <header className={`${styles.articleHero} border-b border-ink/10`}>
           <div
-            className={`mx-auto grid w-full max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 sm:py-16 lg:gap-14 lg:py-20 ${post.image ? "lg:grid-cols-2" : ""}`}
+            className={`mx-auto grid w-full max-w-7xl items-start gap-10 px-5 pt-14 pb-14 sm:px-8 sm:pt-16 sm:pb-16 lg:gap-14 lg:pt-20 lg:pb-20 ${post.image ? "lg:grid-cols-2" : ""}`}
           >
             <div>
               {category ? (

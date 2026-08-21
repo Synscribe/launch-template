@@ -107,7 +107,7 @@ export default function HomePage() {
       />
 
       <section className={`${styles.hero} border-b border-ink/10`}>
-        <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl items-center gap-14 px-5 py-20 sm:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:py-24">
+        <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl items-start gap-14 px-5 pt-14 pb-20 sm:px-8 sm:pt-16 lg:grid-cols-[1.08fr_0.92fr] lg:pt-20 lg:pb-24">
           <div>
             <p
               className={`${styles.kicker} flex items-center gap-3 text-xs font-bold tracking-[0.2em] text-ink-muted uppercase`}

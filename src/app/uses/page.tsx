@@ -34,7 +34,7 @@ export default async function UsesPage() {
       />
 
       <section className={`${styles.hero} border-b border-ink/10`}>
-        <div className="mx-auto w-full max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
+        <div className="mx-auto w-full max-w-7xl px-5 pt-14 pb-16 sm:px-8 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24">
           <div className="max-w-5xl">
             <h1 className="max-w-4xl text-balance font-display text-[clamp(3.1rem,6.6vw,6rem)] leading-[0.94] tracking-[-0.04em]">
               Start with the job your website needs to do.
