@@ -152,7 +152,7 @@ Priority and default state are separate. A contact form can be P0 **if the proje
 
 ## 7. Launch-checklist contract
 
-The reusable launch and technical SEO requirements and current project status live only in `docs/launch/checklist.json`. That file owns the stable IDs, priorities, rationale, checks, code references, optional recipe links, and `todo`/`done`/`not_applicable` state. `docs/launch/checklist.md` is generated from it. This plan defines the priority model and implementation sequence, but it must not restate the requirements.
+The reusable launch and technical SEO requirements and current project status live only in `docs/launch/checklist.json`. Reusable template rules live in `items`; requirements discovered for a specific client or implementation live in `projectItems`. The file owns all IDs, priorities, rationale, related files, named automated checks, optional recipe links, and manual or derived status. `docs/launch/checklist.md` is generated from it. This plan defines the priority model and implementation sequence, but it must not restate the requirements.
 
 ## 8. Feature-catalog contract
 

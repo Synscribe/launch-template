@@ -8,7 +8,8 @@ A lean starting point for client migrations, rebuilds, and new startup sites. Th
 2. Use [`docs/features.md`](docs/features.md) during project kickoff. Default features are normal code: delete them when unused instead of adding flags.
 3. For an existing site, begin with [`docs/launch/migration.md`](docs/launch/migration.md) and [`docs/launch/url-map.csv`](docs/launch/url-map.csv).
 4. Update a check with `pnpm launch:checklist --set <ID> <todo|done|not_applicable>`.
-5. Keep [`PLAN.md`](PLAN.md) for the architecture audit and page-by-page roadmap.
+5. Add a client-specific check with `pnpm launch:checklist --add-project <ID> <P0|P1|P2> <title> --detail <Markdown>`.
+6. Keep [`PLAN.md`](PLAN.md) for the architecture audit and page-by-page roadmap.
 
 ## Development
 
@@ -32,10 +33,11 @@ pnpm launch:audit --url http://localhost:3000 --mode template
 Before production, configure the real identity and run:
 
 ```bash
+pnpm launch:verify
 pnpm launch:audit --url https://example.com --mode production
 ```
 
-The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sentinels, inherited legacy brands, broken internal links, production crawl blocks, sitemap drift, and missing priority metadata. It also fails while any P0 checklist item remains `todo`.
+`pnpm launch:verify` runs every checklist item whose status is `auto`; it exits non-zero while any named check fails. The production audit runs those functions alongside live route, metadata, indexability, and sitemap checks. It also fails while any manual P0 item remains `todo`.
 
 ## Current implementation
 

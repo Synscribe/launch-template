@@ -6,18 +6,26 @@ The single source of truth for launch readiness and technical SEO is `docs/launc
 
 ## How to use this document
 
-- Edit `docs/launch/checklist.json`, or run `pnpm launch:checklist --set <ID> <todo|done|not_applicable>`.
+- Edit `docs/launch/checklist.json`, or run `pnpm launch:checklist --set <ID> <todo|done|not_applicable|auto>`.
+- Keep reusable template checks in `items`; keep requirements discovered for this client/project in `projectItems`.
+- Add a project check with `pnpm launch:checklist --add-project <ID> <P0|P1|P2> <title> --detail <Markdown>`; repeat `--detail` for multiple lines.
 - `P0` blocks launch when applicable.
 - `P1` is a non-blocking quality check or a feature-dependent expectation.
 - `P2` is an enhancement to add after the core is stable.
 - Use `not_applicable` explicitly when a conditional check does not belong to the project.
-- Automation reports useful signals; it does not edit checklist status.
+- `auto` items are resolved by named checks. Run `pnpm launch:verify` for file-level checks and `pnpm launch:audit` for the complete live audit.
 
 ## P0 — every site
 
 ### BRAND-01 — production identity is intentional
 
 - [ ] **Todo**
+- Files:
+  - `src/config/env.ts`
+  - `src/config/site.ts`
+  - `src/app/icon.svg`
+  - `src/app/opengraph-image.tsx`
+  - `package.json`
 
 Why it matters: inherited names, domains, keys, logos, or analytics can misdirect customers and data while still looking technically valid.
 
@@ -28,11 +36,18 @@ Check:
 - Confirm analytics belongs to the client and production project.
 - Contact email and social accounts are optional. If the client does not publish them, omit them. If present, verify each destination.
 
-Code: `src/config/env.ts`, `src/config/site.ts`, `src/app/icon.svg`, `src/app/opengraph-image.tsx`, `package.json`.
-
 ### BRAND-02 — template placeholder visuals are removed
 
-- [ ] **Todo**
+- [ ] **Automated**
+- Automated check: `no-template-placeholders`
+- Files:
+  - `src/app/icon.svg`
+  - `src/app/opengraph-image.tsx`
+  - `public/media`
+  - `src/app/uses/[slug]/_components`
+  - `src/content/use-cases`
+  - `src/lib/use-cases.ts`
+  - `src/lib/use-cases.test.ts`
 
 Why it matters: template artwork can look finished enough to survive a rushed launch while still showing the wrong identity, language, or visual system.
 
@@ -44,21 +59,26 @@ Check:
 - Render the final social image at 1200×630 and review its copy, crop, fonts, colors, and logo.
 - Review all visible feature and use-case visuals on desktop and mobile.
 
-Code: `src/app/icon.svg`, `src/app/opengraph-image.tsx`, `public/media`, and route-local visual components. The production launch audit fails while explicit placeholder filenames or markers remain.
+The production launch audit fails while explicit placeholder filenames or markers remain.
 
 ### ROUTE-01 — every internal destination works
 
 - [ ] **Todo**
+- Files:
+  - `src/app/**/page.tsx`
+  - `src/config/site.ts`
 
 Why it matters: a polished page can still ship dead navigation, inherited CTAs, or links to routes planned but never built.
 
 Check every header, footer, CTA, card, body, canonical, hreflang, and sitemap URL. It must return the intended 2xx page or a reviewed redirect. Links that require authentication or an external app still need a verified production destination.
 
-Code: explicit `src/app/**/page.tsx` routes and `src/config/site.ts` navigation.
-
 ### ROUTE-02 — missing and removed URLs have honest status codes
 
 - [ ] **Todo**
+- Files:
+  - `src/app/not-found.tsx`
+  - `src/app/error.tsx`
+  - `src/config/redirects.ts`
 
 Why it matters: returning a generic 200 page for missing content creates soft 404s. Redirecting unrelated removed pages to home confuses users and search engines.
 
@@ -69,11 +89,13 @@ Check:
 - Redirects go directly to the final relevant destination.
 - Error and not-found experiences still help a human recover.
 
-Code: `src/app/not-found.tsx`, `src/app/error.tsx`, `src/config/redirects.ts`.
-
 ### SEO-01 — production can be crawled and indexed
 
 - [ ] **Todo**
+- Files:
+  - `src/app/robots.ts`
+  - `src/app/**/page.tsx`
+  - `src/config/env.ts`
 
 Why it matters: a stray `noindex`, robots block, authentication wall, or preview header can erase every other SEO improvement.
 
@@ -90,11 +112,12 @@ Check:
 - Public pages do not emit `noindex` or an equivalent response header.
 - Preview/local deployments remain non-indexable.
 
-Code: `src/app/robots.ts`, route metadata, `src/config/env.ts`.
-
 ### SEO-02 — page meaning is clear in the right order
 
 - [ ] **Todo**
+- Files:
+  - `src/app/**/page.tsx`
+  - `src/lib/seo.ts`
 
 This is the main on-page priority order. Review each indexable page in exactly this sequence:
 
@@ -106,11 +129,13 @@ This is the main on-page priority order. Review each indexable page in exactly t
 
 Why this order: the title and description shape the search result, the H1 establishes the visible subject, and the opening copy confirms relevance. Dates help time-sensitive editorial content when they are real source data.
 
-Code: route `metadata`/`generateMetadata`, visible route copy, and `src/lib/seo.ts`.
-
 ### SEO-03 — each indexable page declares a consistent canonical URL
 
 - [ ] **Todo**
+- Files:
+  - `src/lib/seo.ts`
+  - `src/config/env.ts`
+  - `src/app/**/page.tsx`
 
 Why it matters: query variants, protocol/host variants, trailing-slash differences, and duplicated content can split signals or make the wrong URL appear in search.
 
@@ -121,21 +146,23 @@ Check:
 - A canonical is not a substitute for redirecting an obsolete URL.
 - Local/preview hosts never appear in production metadata.
 
-Code: `src/lib/seo.ts`, `src/config/env.ts`, route metadata.
-
 ### SEO-04 — robots policy points to the canonical sitemap
 
 - [ ] **Todo**
+- Files:
+  - `src/app/robots.ts`
 
 Why it matters: `robots.txt` is a small file with site-wide consequences. Environment mistakes are common during cutovers.
 
 Check production returns 200 at `/robots.txt`, allows intended public routes, blocks only deliberate crawl paths, and includes an absolute `Sitemap:` URL. Do not use robots rules to hide secrets; protect them with authentication and authorization.
 
-Code: `src/app/robots.ts`.
-
 ### SEO-05 — the sitemap lists canonical HTML pages
 
 - [ ] **Todo**
+- Files:
+  - `src/app/sitemap.ts`
+  - `src/lib/blog.ts`
+  - `src/lib/use-cases.ts`
 
 Why it matters: a sitemap helps discovery and communicates which canonical URLs the site considers public. It is a hint, not a replacement for internal links.
 
@@ -147,11 +174,13 @@ Check:
 - Do not add `priority` or `changeFrequency` for Google; Google ignores them.
 - Optional `.md` representations are non-blocking. Their presence, absence, or sitemap omission must never stop launch.
 
-Code: `src/app/sitemap.ts` and enabled content loaders such as `src/lib/blog.ts` and `src/lib/use-cases.ts`.
-
 ### SEO-06 — important content and links exist in rendered HTML
 
 - [ ] **Todo**
+- Files:
+  - `src/app`
+  - `src/components/site-header.tsx`
+  - `src/components/site-footer.tsx`
 
 Why it matters: search engines can render JavaScript, but server-rendered/prerendered content is faster and easier for users, crawlers, unfurlers, and other agents to consume.
 
@@ -162,11 +191,12 @@ Check:
 - Buttons are not used as navigation and click handlers are not the only source of a URL.
 - Filtered client interactions enhance an already useful server-rendered view.
 
-Code: Server Components under `src/app`; `src/components/site-header.tsx`, `site-footer.tsx`.
-
 ### SEO-07 — URL policy is consistent
 
 - [ ] **Todo**
+- Files:
+  - `next.config.ts`
+  - `src/config/redirects.ts`
 
 Why it matters: paths are case-sensitive and multiple host/protocol/trailing-slash variants can create duplicates and unnecessary redirects.
 
@@ -179,11 +209,13 @@ Decide and test:
 - query parameter behavior;
 - direct final internal links without redirect hops.
 
-Code: deployment host settings, `next.config.ts`, `src/config/redirects.ts`.
-
 ### PERF-01 — media and rendering do not sabotage the opening experience
 
 - [ ] **Todo**
+- Files:
+  - `src/app/**/page.tsx`
+  - `src/app/globals.css`
+  - `src/instrumentation-client.ts`
 
 Why it matters: a technically indexable page can still lose users through slow or unstable rendering.
 
@@ -194,8 +226,6 @@ Check:
 - Use modern formats and responsive sources where appropriate.
 - Fonts and third-party scripts do not block the page unnecessarily.
 - Critical content does not wait for a large animation or client bundle.
-
-Code: page media, `next/image`, `src/app/globals.css`, `src/instrumentation-client.ts`.
 
 ### PERF-02 — representative mobile performance has no severe regression
 
@@ -214,12 +244,13 @@ Check secrets are server-only and uncommitted, dependencies are reviewed, extern
 ### LEGAL-01 — legal content describes the real site
 
 - [ ] **Todo**
+- Files:
+  - `src/app/privacy/page.tsx`
+  - `src/app/terms/page.tsx`
 
 Why it matters: generic terms cannot truthfully describe the entity, service, data collection, processors, rights, or jurisdictions.
 
 Check privacy/terms/cookie disclosures as applicable, effective dates, company/contact identity, analytics and form data, subprocessors, retention, user rights, commercial terms, and recorded client/counsel approval. `TODO_CLIENT_LEGAL_REVIEW` blocks production.
-
-Code: `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`.
 
 ### OPS-01 — the launch has a rollback path
 
@@ -254,10 +285,11 @@ Collect URLs from the old sitemap, a crawl, analytics landing pages, Search Cons
 
 - [ ] **Todo**
 - Recipe: [docs/launch/migration.md](./migration.md)
+- Files:
+  - `docs/launch/url-map.csv`
+  - `src/config/redirects.ts`
 
 Choose one: preserve, permanent redirect to a relevant replacement, consolidate into a genuinely equivalent page, or intentionally return 404/410. Never leave the decision implicit.
-
-Code: `docs/launch/url-map.csv`, `src/config/redirects.ts` or hosting-level rules.
 
 ### MIG-03 — redirects are direct and relevant
 
@@ -307,41 +339,53 @@ Verify old and new Search Console properties and host variants. Use Search Conso
 
 - [ ] **Todo**
 - Recipe: [docs/recipes/contact.md](../recipes/contact.md)
+- Files:
+  - `src/app/contact/page.tsx`
+  - `src/app/contact/_components/contact-form.tsx`
+  - `src/app/api/contact/route.ts`
+  - `src/lib/contact-delivery.ts`
+  - `scripts/launch-audit.ts`
 
 Test production delivery, the actual recipient or CRM, confirmation, failure handling, reply path, and monitoring. A form returning 200 is not enough if nobody receives the lead.
-
-Code: `src/app/contact/page.tsx`, `src/app/contact/_components/contact-form.tsx`, `src/app/api/contact/route.ts`, `src/lib/contact-delivery.ts`, `scripts/launch-audit.ts`.
 
 ### FORM-02 — form input and output are bounded
 
 - [ ] **Todo**
 - Recipe: [docs/recipes/contact.md](../recipes/contact.md)
+- Files:
+  - `src/lib/contact.ts`
+  - `src/lib/contact-delivery.ts`
+  - `src/app/api/contact/route.ts`
 
 Validate types and sensible lengths server-side, escape output, reject unexpected fields, avoid logging secrets/PII, and show safe useful errors.
-
-Code: `src/lib/contact.ts`, `src/lib/contact-delivery.ts`, `src/app/api/contact/route.ts`.
 
 ### FORM-03 — abuse and retention match the risk
 
 - [ ] **Todo**
 - Recipe: [docs/recipes/contact.md](../recipes/contact.md)
+- Files:
+  - `src/app/api/contact/route.ts`
+  - `src/app/api/contact/_lib/rate-limit.ts`
+  - `src/app/privacy/page.tsx`
+  - `docs/recipes/contact.md`
 
 Choose spam controls, rate limits, retention, consent, access, and deletion processes appropriate to the traffic and data. Do not copy a CAPTCHA or legal basis automatically between clients.
 
 The included honeypot, completion-time check, same-origin check, and in-memory per-instance rate limit are a low-risk baseline, not a universal production answer. Review whether the deployed traffic and hosting model require a durable rate limiter, CAPTCHA, WAF rule, or provider control. Confirm who can access delivered leads and when the inbox or CRM deletes them.
 
-Code: `src/app/api/contact/route.ts`, `src/app/api/contact/_lib/rate-limit.ts`, `src/app/privacy/page.tsx`, `docs/recipes/contact.md`.
-
 ### FORM-04 — attribution is minimized
 
 - [ ] **Todo**
 - Recipe: [docs/recipes/contact.md](../recipes/contact.md)
+- Files:
+  - `src/lib/visitor-context.ts`
+  - `src/app/contact/_components/visitor-context-tracker.tsx`
+  - `src/lib/contact.ts`
+  - `src/app/contact/_components/contact-form.tsx`
 
 Collect only useful attribution fields, document first/recent-page storage, avoid sensitive query values, and align analytics/storage with the privacy decision.
 
 The default keeps first-touch UTM fields, an external referrer without its query string, the first landing page, and at most five same-site paths. It drops all other query values, expires browser context after 90 days, validates it again on the server, and sends no form values or attribution to PostHog.
-
-Code: `src/lib/visitor-context.ts`, `src/app/contact/_components/visitor-context-tracker.tsx`, `src/lib/contact.ts`, `src/app/contact/_components/contact-form.tsx`.
 
 ## P1 — non-blocking quality and feature-dependent checks
 
@@ -358,10 +402,14 @@ For articles with real source dates, include `datePublished` and `dateModified` 
 ### SOCIAL-01 — important pages unfurl correctly
 
 - [ ] **Todo**
+- Files:
+  - `src/app/**/page.tsx`
+  - `src/app/opengraph-image.tsx`
+  - `.agents/skills/micro-ui/SKILL.md`
 
 Review Open Graph and Twitter title, description, image, URL, crop, and brand treatment on representative routes. This affects sharing and messaging previews more directly than Google rankings.
 
-Code: page metadata, `src/app/opengraph-image.tsx`. Use `.agents/skills/micro-ui` when a small code-native sharing visual is appropriate. Verify the rendered 1200×630 image directly; do not rely only on the component source.
+Use `.agents/skills/micro-ui` when a small code-native sharing visual is appropriate. Verify the rendered 1200×630 image directly; do not rely only on the component source.
 
 ### A11Y-01 — accessibility review
 
@@ -374,6 +422,11 @@ For animation work, use `.agents/skills/animated-ui` and verify both ordinary an
 ### IMAGE-01 — image sources and treatments are intentional
 
 - [ ] **Todo**
+- Files:
+  - `public/media`
+  - `src/app/opengraph-image.tsx`
+  - `src/app/uses/[slug]/_components/use-case-visual.tsx`
+  - `.agents/skills/micro-ui/SKILL.md`
 
 Why it matters: an image can be technically optimized and still ship the wrong client, crop, claim, license, alternative text, or stale inherited asset.
 
@@ -386,9 +439,9 @@ Check:
 - Generated visuals use real project language and do not invent customers, metrics, integrations, or outcomes.
 - A JSON-backed page references only a validated visual ID. File paths, React component names, layout classes, and serialized props stay in code.
 
-Code: `next/image`, `public/media`, `src/app/opengraph-image.tsx`, and the bounded `/uses` resolver in `src/app/uses/[slug]/_components/use-case-visual.tsx`. Use `.agents/skills/micro-ui` to create or adapt a visual, then register it through the resolver when it belongs to a use-case hero or capability.
-
 For `/uses`, confirm every `hero.visualId` and `solution.items[].visualId` resolves to either an approved React component or local image source.
+
+Use `.agents/skills/micro-ui` to create or adapt a visual, then register it through the resolver when it belongs to a use-case hero or capability.
 
 ### ANALYTICS-01 — analytics is configured and privacy-aware
 
@@ -427,6 +480,14 @@ Add submission automation only when publishing frequency and target search engin
 
 - [ ] **Todo**
 - Recipe: [docs/recipes/blog.md](../recipes/blog.md)
+- Files:
+  - `src/app/blog/blog.config.ts`
+  - `src/app/blog/page.tsx`
+  - `src/app/blog/_components/blog-pagination.tsx`
+  - `src/app/blog/[slug]/page.tsx`
+  - `src/app/blog/[slug]/_components/article-sidebar.tsx`
+  - `src/lib/blog.ts`
+  - `src/lib/blog-content.ts`
 
 Add blog tags, featured articles, filters, search, related content, feeds, and freshness workflows only after the basic server-rendered blog index/article path works and the publication has enough real content to support them.
 
@@ -443,8 +504,6 @@ Check:
 - Keep `/blog` canonical. Exclude search, filter, and pagination variants from the main sitemap unless a project deliberately promotes a stable archive page with unique value.
 - Avoid repeating a pinned article in the first result grid. Test page one, a middle and final page, every configured filter, an empty result, and a search with and without results.
 - When changing the CMS or tag model, update the route config and the matching items in this checklist; do not create a second publishing or SEO checklist.
-
-Code: `src/app/blog/blog.config.ts`, `src/app/blog/page.tsx`, `src/app/blog/_components/blog-pagination.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/blog/[slug]/_components/article-sidebar.tsx`, `src/lib/blog.ts`, `src/lib/blog-content.ts`.
 
 ## Primary references
 

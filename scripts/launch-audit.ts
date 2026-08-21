@@ -1,7 +1,15 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { loadChecklist, type LaunchChecklist } from "./launch-checklist";
+import {
+  runAutomatedChecks,
+  validateAutomatedChecks,
+} from "./automated-checks";
+import {
+  allChecklistItems,
+  loadChecklist,
+  type LaunchChecklist,
+} from "./launch-checklist";
 
 type Mode = "template" | "preview" | "production";
 type Level = "PASS" | "FAIL" | "WARN" | "INFO";
@@ -25,6 +33,7 @@ type ChecklistSummary = {
   todo: number;
   done: number;
   notApplicable: number;
+  automatic: number;
   p0TodoIds: string[];
 };
 
@@ -66,14 +75,15 @@ function record(
 }
 
 function auditChecklist(checklist: LaunchChecklist): ChecklistSummary {
+  const items = allChecklistItems(checklist);
   const summary = {
-    total: checklist.items.length,
-    todo: checklist.items.filter((item) => item.status === "todo").length,
-    done: checklist.items.filter((item) => item.status === "done").length,
-    notApplicable: checklist.items.filter(
-      (item) => item.status === "not_applicable",
-    ).length,
-    p0TodoIds: checklist.items
+    total: items.length,
+    todo: items.filter((item) => item.status === "todo").length,
+    done: items.filter((item) => item.status === "done").length,
+    notApplicable: items.filter((item) => item.status === "not_applicable")
+      .length,
+    automatic: items.filter((item) => item.status === "auto").length,
+    p0TodoIds: items
       .filter((item) => item.priority === "P0" && item.status === "todo")
       .map((item) => item.id),
   };
@@ -92,8 +102,30 @@ function auditChecklist(checklist: LaunchChecklist): ChecklistSummary {
   return summary;
 }
 
+async function auditAutomatedChecks(checklist: LaunchChecklist): Promise<void> {
+  validateAutomatedChecks(checklist);
+
+  for (const result of await runAutomatedChecks(checklist)) {
+    if (result.passed) {
+      record(result.id, "PASS", result.check, "Automated check passed");
+      continue;
+    }
+
+    for (const finding of result.findings) {
+      record(
+        result.id,
+        mode === "production" ? "FAIL" : "INFO",
+        finding.subject,
+        finding.message,
+      );
+    }
+  }
+}
+
 function validateAuditIds(checklist: LaunchChecklist): void {
-  const checklistIds = new Set(checklist.items.map((item) => item.id));
+  const checklistIds = new Set(
+    allChecklistItems(checklist).map((item) => item.id),
+  );
   const unknownIds = [
     ...new Set(
       results.map((result) => result.id).filter((id) => !checklistIds.has(id)),
@@ -300,7 +332,6 @@ async function staticAudit(): Promise<void> {
   const forbidden = ["reglyr", "trythrawn", "citationbench", "serp-sniper"];
   let sentinelCount = 0;
   let legacyCount = 0;
-  const placeholderSources = new Set<string>();
 
   for (const file of scannable) {
     const content = await readFile(file, "utf8");
@@ -327,15 +358,6 @@ async function staticAudit(): Promise<void> {
         `Forbidden legacy identity: ${matchedLegacy.join(", ")}`,
       );
     }
-
-    if (
-      path.basename(file).toLowerCase().includes("placeholder") ||
-      /\bplaceholder-[a-z0-9]|PlaceholderOpenGraphImage|TEMPLATE_PLACEHOLDER/i.test(
-        content,
-      )
-    ) {
-      placeholderSources.add(file);
-    }
   }
 
   if (sentinelCount === 0) {
@@ -343,19 +365,6 @@ async function staticAudit(): Promise<void> {
   }
   if (legacyCount === 0) {
     record("BRAND-01", "PASS", "source", "No known legacy identities found");
-  }
-
-  if (placeholderSources.size === 0) {
-    record("BRAND-02", "PASS", "source", "No template visual markers found");
-  } else {
-    for (const file of placeholderSources) {
-      record(
-        "BRAND-02",
-        mode === "production" ? "FAIL" : "INFO",
-        file,
-        "Replace or remove this template placeholder before launch",
-      );
-    }
   }
 
   const packageJson = JSON.parse(await readFile("package.json", "utf8")) as {
@@ -697,6 +706,7 @@ async function saveReport(checklist: ChecklistSummary): Promise<void> {
 async function main(): Promise<void> {
   const checklist = await loadChecklist();
   const checklistSummary = auditChecklist(checklist);
+  await auditAutomatedChecks(checklist);
   await staticAudit();
   await liveAudit();
   validateAuditIds(checklist);

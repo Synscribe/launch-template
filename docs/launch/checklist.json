@@ -16,9 +16,14 @@
         "- Replace the template name, URL, description, package name, icon, and social-preview treatment.",
         "- Remove `TODO_CLIENT_*` values and forbidden legacy brands/domains.",
         "- Confirm analytics belongs to the client and production project.",
-        "- Contact email and social accounts are optional. If the client does not publish them, omit them. If present, verify each destination.",
-        "",
-        "Code: `src/config/env.ts`, `src/config/site.ts`, `src/app/icon.svg`, `src/app/opengraph-image.tsx`, `package.json`."
+        "- Contact email and social accounts are optional. If the client does not publish them, omit them. If present, verify each destination."
+      ],
+      "files": [
+        "src/config/env.ts",
+        "src/config/site.ts",
+        "src/app/icon.svg",
+        "src/app/opengraph-image.tsx",
+        "package.json"
       ]
     },
     {
@@ -26,7 +31,7 @@
       "title": "template placeholder visuals are removed",
       "priority": "P0",
       "group": "every site",
-      "status": "todo",
+      "status": "auto",
       "details": [
         "Why it matters: template artwork can look finished enough to survive a rushed launch while still showing the wrong identity, language, or visual system.",
         "",
@@ -38,8 +43,18 @@
         "- Render the final social image at 1200×630 and review its copy, crop, fonts, colors, and logo.",
         "- Review all visible feature and use-case visuals on desktop and mobile.",
         "",
-        "Code: `src/app/icon.svg`, `src/app/opengraph-image.tsx`, `public/media`, and route-local visual components. The production launch audit fails while explicit placeholder filenames or markers remain."
-      ]
+        "The production launch audit fails while explicit placeholder filenames or markers remain."
+      ],
+      "files": [
+        "src/app/icon.svg",
+        "src/app/opengraph-image.tsx",
+        "public/media",
+        "src/app/uses/[slug]/_components",
+        "src/content/use-cases",
+        "src/lib/use-cases.ts",
+        "src/lib/use-cases.test.ts"
+      ],
+      "check": "no-template-placeholders"
     },
     {
       "id": "ROUTE-01",
@@ -50,10 +65,9 @@
       "details": [
         "Why it matters: a polished page can still ship dead navigation, inherited CTAs, or links to routes planned but never built.",
         "",
-        "Check every header, footer, CTA, card, body, canonical, hreflang, and sitemap URL. It must return the intended 2xx page or a reviewed redirect. Links that require authentication or an external app still need a verified production destination.",
-        "",
-        "Code: explicit `src/app/**/page.tsx` routes and `src/config/site.ts` navigation."
-      ]
+        "Check every header, footer, CTA, card, body, canonical, hreflang, and sitemap URL. It must return the intended 2xx page or a reviewed redirect. Links that require authentication or an external app still need a verified production destination."
+      ],
+      "files": ["src/app/**/page.tsx", "src/config/site.ts"]
     },
     {
       "id": "ROUTE-02",
@@ -69,9 +83,12 @@
         "- Unknown routes return HTTP 404.",
         "- Intentionally removed content returns 404/410 or a relevant permanent redirect.",
         "- Redirects go directly to the final relevant destination.",
-        "- Error and not-found experiences still help a human recover.",
-        "",
-        "Code: `src/app/not-found.tsx`, `src/app/error.tsx`, `src/config/redirects.ts`."
+        "- Error and not-found experiences still help a human recover."
+      ],
+      "files": [
+        "src/app/not-found.tsx",
+        "src/app/error.tsx",
+        "src/config/redirects.ts"
       ]
     },
     {
@@ -94,10 +111,9 @@
         "- Representative production routes return 200 without authentication.",
         "- Production `robots.txt` permits intended public routes and points to the absolute sitemap.",
         "- Public pages do not emit `noindex` or an equivalent response header.",
-        "- Preview/local deployments remain non-indexable.",
-        "",
-        "Code: `src/app/robots.ts`, route metadata, `src/config/env.ts`."
-      ]
+        "- Preview/local deployments remain non-indexable."
+      ],
+      "files": ["src/app/robots.ts", "src/app/**/page.tsx", "src/config/env.ts"]
     },
     {
       "id": "SEO-02",
@@ -114,10 +130,9 @@
         "4. **First 200 visible words.** State what the page is about, who it helps, and the useful substance early. Do not make crawlers or users cross animation, vague brand prose, or client-only rendering to discover the topic.",
         "5. **Published and updated dates.** When the content actually has these dates, show the date treatment that helps readers accurately—for example, “Last updated”—and include `datePublished`/`dateModified` in the applicable JSON-LD when available. Never invent or automatically refresh a date merely to look current.",
         "",
-        "Why this order: the title and description shape the search result, the H1 establishes the visible subject, and the opening copy confirms relevance. Dates help time-sensitive editorial content when they are real source data.",
-        "",
-        "Code: route `metadata`/`generateMetadata`, visible route copy, and `src/lib/seo.ts`."
-      ]
+        "Why this order: the title and description shape the search result, the H1 establishes the visible subject, and the opening copy confirms relevance. Dates help time-sensitive editorial content when they are real source data."
+      ],
+      "files": ["src/app/**/page.tsx", "src/lib/seo.ts"]
     },
     {
       "id": "SEO-03",
@@ -133,10 +148,9 @@
         "- Use one HTTPS production origin and one URL style.",
         "- Canonical URLs are absolute, indexable, return 200, and match sitemap/internal-link destinations.",
         "- A canonical is not a substitute for redirecting an obsolete URL.",
-        "- Local/preview hosts never appear in production metadata.",
-        "",
-        "Code: `src/lib/seo.ts`, `src/config/env.ts`, route metadata."
-      ]
+        "- Local/preview hosts never appear in production metadata."
+      ],
+      "files": ["src/lib/seo.ts", "src/config/env.ts", "src/app/**/page.tsx"]
     },
     {
       "id": "SEO-04",
@@ -147,10 +161,9 @@
       "details": [
         "Why it matters: `robots.txt` is a small file with site-wide consequences. Environment mistakes are common during cutovers.",
         "",
-        "Check production returns 200 at `/robots.txt`, allows intended public routes, blocks only deliberate crawl paths, and includes an absolute `Sitemap:` URL. Do not use robots rules to hide secrets; protect them with authentication and authorization.",
-        "",
-        "Code: `src/app/robots.ts`."
-      ]
+        "Check production returns 200 at `/robots.txt`, allows intended public routes, blocks only deliberate crawl paths, and includes an absolute `Sitemap:` URL. Do not use robots rules to hide secrets; protect them with authentication and authorization."
+      ],
+      "files": ["src/app/robots.ts"]
     },
     {
       "id": "SEO-05",
@@ -167,10 +180,9 @@
         "- Exclude redirects, errors, `noindex` pages, preview URLs, filtered/search-result URLs, and duplicate variants.",
         "- Use accurate `lastModified` only when the content source has a reliable value.",
         "- Do not add `priority` or `changeFrequency` for Google; Google ignores them.",
-        "- Optional `.md` representations are non-blocking. Their presence, absence, or sitemap omission must never stop launch.",
-        "",
-        "Code: `src/app/sitemap.ts` and enabled content loaders such as `src/lib/blog.ts` and `src/lib/use-cases.ts`."
-      ]
+        "- Optional `.md` representations are non-blocking. Their presence, absence, or sitemap omission must never stop launch."
+      ],
+      "files": ["src/app/sitemap.ts", "src/lib/blog.ts", "src/lib/use-cases.ts"]
     },
     {
       "id": "SEO-06",
@@ -186,9 +198,12 @@
         "- Core headings, opening copy, article text, list-page results, and navigation are present without a client-side fetch.",
         "- Important pages are reachable from another findable page through `<a href>`/`Link` elements.",
         "- Buttons are not used as navigation and click handlers are not the only source of a URL.",
-        "- Filtered client interactions enhance an already useful server-rendered view.",
-        "",
-        "Code: Server Components under `src/app`; `src/components/site-header.tsx`, `site-footer.tsx`."
+        "- Filtered client interactions enhance an already useful server-rendered view."
+      ],
+      "files": [
+        "src/app",
+        "src/components/site-header.tsx",
+        "src/components/site-footer.tsx"
       ]
     },
     {
@@ -207,10 +222,9 @@
         "- lowercase, descriptive paths;",
         "- trailing-slash policy;",
         "- query parameter behavior;",
-        "- direct final internal links without redirect hops.",
-        "",
-        "Code: deployment host settings, `next.config.ts`, `src/config/redirects.ts`."
-      ]
+        "- direct final internal links without redirect hops."
+      ],
+      "files": ["next.config.ts", "src/config/redirects.ts"]
     },
     {
       "id": "PERF-01",
@@ -227,9 +241,12 @@
         "- Images/video reserve dimensions and do not cause layout shift.",
         "- Use modern formats and responsive sources where appropriate.",
         "- Fonts and third-party scripts do not block the page unnecessarily.",
-        "- Critical content does not wait for a large animation or client bundle.",
-        "",
-        "Code: page media, `next/image`, `src/app/globals.css`, `src/instrumentation-client.ts`."
+        "- Critical content does not wait for a large animation or client bundle."
+      ],
+      "files": [
+        "src/app/**/page.tsx",
+        "src/app/globals.css",
+        "src/instrumentation-client.ts"
       ]
     },
     {
@@ -263,10 +280,9 @@
       "details": [
         "Why it matters: generic terms cannot truthfully describe the entity, service, data collection, processors, rights, or jurisdictions.",
         "",
-        "Check privacy/terms/cookie disclosures as applicable, effective dates, company/contact identity, analytics and form data, subprocessors, retention, user rights, commercial terms, and recorded client/counsel approval. `TODO_CLIENT_LEGAL_REVIEW` blocks production.",
-        "",
-        "Code: `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`."
-      ]
+        "Check privacy/terms/cookie disclosures as applicable, effective dates, company/contact identity, analytics and form data, subprocessors, retention, user rights, commercial terms, and recorded client/counsel approval. `TODO_CLIENT_LEGAL_REVIEW` blocks production."
+      ],
+      "files": ["src/app/privacy/page.tsx", "src/app/terms/page.tsx"]
     },
     {
       "id": "OPS-01",
@@ -314,11 +330,10 @@
       "group": "migration or rebuild only",
       "status": "todo",
       "details": [
-        "Choose one: preserve, permanent redirect to a relevant replacement, consolidate into a genuinely equivalent page, or intentionally return 404/410. Never leave the decision implicit.",
-        "",
-        "Code: `docs/launch/url-map.csv`, `src/config/redirects.ts` or hosting-level rules."
+        "Choose one: preserve, permanent redirect to a relevant replacement, consolidate into a genuinely equivalent page, or intentionally return 404/410. Never leave the decision implicit."
       ],
-      "recipe": "docs/launch/migration.md"
+      "recipe": "docs/launch/migration.md",
+      "files": ["docs/launch/url-map.csv", "src/config/redirects.ts"]
     },
     {
       "id": "MIG-03",
@@ -393,11 +408,16 @@
       "group": "selected conversion features",
       "status": "todo",
       "details": [
-        "Test production delivery, the actual recipient or CRM, confirmation, failure handling, reply path, and monitoring. A form returning 200 is not enough if nobody receives the lead.",
-        "",
-        "Code: `src/app/contact/page.tsx`, `src/app/contact/_components/contact-form.tsx`, `src/app/api/contact/route.ts`, `src/lib/contact-delivery.ts`, `scripts/launch-audit.ts`."
+        "Test production delivery, the actual recipient or CRM, confirmation, failure handling, reply path, and monitoring. A form returning 200 is not enough if nobody receives the lead."
       ],
-      "recipe": "docs/recipes/contact.md"
+      "recipe": "docs/recipes/contact.md",
+      "files": [
+        "src/app/contact/page.tsx",
+        "src/app/contact/_components/contact-form.tsx",
+        "src/app/api/contact/route.ts",
+        "src/lib/contact-delivery.ts",
+        "scripts/launch-audit.ts"
+      ]
     },
     {
       "id": "FORM-02",
@@ -406,11 +426,14 @@
       "group": "selected conversion features",
       "status": "todo",
       "details": [
-        "Validate types and sensible lengths server-side, escape output, reject unexpected fields, avoid logging secrets/PII, and show safe useful errors.",
-        "",
-        "Code: `src/lib/contact.ts`, `src/lib/contact-delivery.ts`, `src/app/api/contact/route.ts`."
+        "Validate types and sensible lengths server-side, escape output, reject unexpected fields, avoid logging secrets/PII, and show safe useful errors."
       ],
-      "recipe": "docs/recipes/contact.md"
+      "recipe": "docs/recipes/contact.md",
+      "files": [
+        "src/lib/contact.ts",
+        "src/lib/contact-delivery.ts",
+        "src/app/api/contact/route.ts"
+      ]
     },
     {
       "id": "FORM-03",
@@ -421,11 +444,15 @@
       "details": [
         "Choose spam controls, rate limits, retention, consent, access, and deletion processes appropriate to the traffic and data. Do not copy a CAPTCHA or legal basis automatically between clients.",
         "",
-        "The included honeypot, completion-time check, same-origin check, and in-memory per-instance rate limit are a low-risk baseline, not a universal production answer. Review whether the deployed traffic and hosting model require a durable rate limiter, CAPTCHA, WAF rule, or provider control. Confirm who can access delivered leads and when the inbox or CRM deletes them.",
-        "",
-        "Code: `src/app/api/contact/route.ts`, `src/app/api/contact/_lib/rate-limit.ts`, `src/app/privacy/page.tsx`, `docs/recipes/contact.md`."
+        "The included honeypot, completion-time check, same-origin check, and in-memory per-instance rate limit are a low-risk baseline, not a universal production answer. Review whether the deployed traffic and hosting model require a durable rate limiter, CAPTCHA, WAF rule, or provider control. Confirm who can access delivered leads and when the inbox or CRM deletes them."
       ],
-      "recipe": "docs/recipes/contact.md"
+      "recipe": "docs/recipes/contact.md",
+      "files": [
+        "src/app/api/contact/route.ts",
+        "src/app/api/contact/_lib/rate-limit.ts",
+        "src/app/privacy/page.tsx",
+        "docs/recipes/contact.md"
+      ]
     },
     {
       "id": "FORM-04",
@@ -436,11 +463,15 @@
       "details": [
         "Collect only useful attribution fields, document first/recent-page storage, avoid sensitive query values, and align analytics/storage with the privacy decision.",
         "",
-        "The default keeps first-touch UTM fields, an external referrer without its query string, the first landing page, and at most five same-site paths. It drops all other query values, expires browser context after 90 days, validates it again on the server, and sends no form values or attribution to PostHog.",
-        "",
-        "Code: `src/lib/visitor-context.ts`, `src/app/contact/_components/visitor-context-tracker.tsx`, `src/lib/contact.ts`, `src/app/contact/_components/contact-form.tsx`."
+        "The default keeps first-touch UTM fields, an external referrer without its query string, the first landing page, and at most five same-site paths. It drops all other query values, expires browser context after 90 days, validates it again on the server, and sends no form values or attribution to PostHog."
       ],
-      "recipe": "docs/recipes/contact.md"
+      "recipe": "docs/recipes/contact.md",
+      "files": [
+        "src/lib/visitor-context.ts",
+        "src/app/contact/_components/visitor-context-tracker.tsx",
+        "src/lib/contact.ts",
+        "src/app/contact/_components/contact-form.tsx"
+      ]
     },
     {
       "id": "SEO-08",
@@ -465,7 +496,12 @@
       "details": [
         "Review Open Graph and Twitter title, description, image, URL, crop, and brand treatment on representative routes. This affects sharing and messaging previews more directly than Google rankings.",
         "",
-        "Code: page metadata, `src/app/opengraph-image.tsx`. Use `.agents/skills/micro-ui` when a small code-native sharing visual is appropriate. Verify the rendered 1200×630 image directly; do not rely only on the component source."
+        "Use `.agents/skills/micro-ui` when a small code-native sharing visual is appropriate. Verify the rendered 1200×630 image directly; do not rely only on the component source."
+      ],
+      "files": [
+        "src/app/**/page.tsx",
+        "src/app/opengraph-image.tsx",
+        ".agents/skills/micro-ui/SKILL.md"
       ]
     },
     {
@@ -498,9 +534,16 @@
         "- Generated visuals use real project language and do not invent customers, metrics, integrations, or outcomes.",
         "- A JSON-backed page references only a validated visual ID. File paths, React component names, layout classes, and serialized props stay in code.",
         "",
-        "Code: `next/image`, `public/media`, `src/app/opengraph-image.tsx`, and the bounded `/uses` resolver in `src/app/uses/[slug]/_components/use-case-visual.tsx`. Use `.agents/skills/micro-ui` to create or adapt a visual, then register it through the resolver when it belongs to a use-case hero or capability.",
         "",
-        "For `/uses`, confirm every `hero.visualId` and `solution.items[].visualId` resolves to either an approved React component or local image source."
+        "For `/uses`, confirm every `hero.visualId` and `solution.items[].visualId` resolves to either an approved React component or local image source.",
+        "",
+        "Use `.agents/skills/micro-ui` to create or adapt a visual, then register it through the resolver when it belongs to a use-case hero or capability."
+      ],
+      "files": [
+        "public/media",
+        "src/app/opengraph-image.tsx",
+        "src/app/uses/[slug]/_components/use-case-visual.tsx",
+        ".agents/skills/micro-ui/SKILL.md"
       ]
     },
     {
@@ -575,13 +618,21 @@
         "- Build social-sharing destinations from the article's absolute canonical URL, not `window.location` or a preview host. Give each icon an accessible label and verify the production domain before launch.",
         "- Keep `/blog` canonical. Exclude search, filter, and pagination variants from the main sitemap unless a project deliberately promotes a stable archive page with unique value.",
         "- Avoid repeating a pinned article in the first result grid. Test page one, a middle and final page, every configured filter, an empty result, and a search with and without results.",
-        "- When changing the CMS or tag model, update the route config and the matching items in this checklist; do not create a second publishing or SEO checklist.",
-        "",
-        "Code: `src/app/blog/blog.config.ts`, `src/app/blog/page.tsx`, `src/app/blog/_components/blog-pagination.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/blog/[slug]/_components/article-sidebar.tsx`, `src/lib/blog.ts`, `src/lib/blog-content.ts`."
+        "- When changing the CMS or tag model, update the route config and the matching items in this checklist; do not create a second publishing or SEO checklist."
       ],
-      "recipe": "docs/recipes/blog.md"
+      "recipe": "docs/recipes/blog.md",
+      "files": [
+        "src/app/blog/blog.config.ts",
+        "src/app/blog/page.tsx",
+        "src/app/blog/_components/blog-pagination.tsx",
+        "src/app/blog/[slug]/page.tsx",
+        "src/app/blog/[slug]/_components/article-sidebar.tsx",
+        "src/lib/blog.ts",
+        "src/lib/blog-content.ts"
+      ]
     }
   ],
+  "projectItems": [],
   "primaryReferences": [
     {
       "label": "Next.js Metadata and OG images",

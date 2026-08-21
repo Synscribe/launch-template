@@ -2,13 +2,13 @@
 
 ## Sources of truth
 
-- Launch requirements and current status: `docs/launch/checklist.json`
+- Launch requirements, related files, automated checks, and current status: reusable `items` and client-specific `projectItems` in `docs/launch/checklist.json`
 - Generated readable checklist: `docs/launch/checklist.md`
 - Feature defaults and deletion paths: `docs/features.md`
 - Migration workflow and URL mapping: `docs/launch/migration.md`, `docs/launch/url-map.csv`
 - Architecture and phased plan: `PLAN.md`
 
-Do not edit `docs/launch/checklist.md` directly or create a second SEO guide or checklist. Update the matching item in `docs/launch/checklist.json`, then run `pnpm launch:checklist --write`.
+Do not edit `docs/launch/checklist.md` directly or create a second SEO guide or checklist. Update the matching item in `docs/launch/checklist.json`, or add a discovered client requirement with `pnpm launch:checklist --add-project`, then run `pnpm launch:checklist --write` after manual JSON edits.
 
 ## Architecture
 
@@ -53,4 +53,4 @@ For page or launch work, also run the appropriate live audit:
 pnpm launch:audit --url http://localhost:3000 --mode template
 ```
 
-Before production, run the same audit against the deployed production URL with `--mode production` and resolve every applicable P0 checklist item.
+Before production, run `pnpm launch:verify`, then run the same audit against the deployed production URL with `--mode production`. Resolve every applicable manual P0 item and every failing automated check.
