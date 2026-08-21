@@ -2,13 +2,13 @@
 
 ## Sources of truth
 
-- Launch and technical SEO requirements: `docs/launch/checklist.md`
-- Current project evidence and exceptions: `docs/launch/status.md`
+- Launch requirements and current status: `docs/launch/checklist.json`
+- Generated readable checklist: `docs/launch/checklist.md`
 - Feature defaults and deletion paths: `docs/features.md`
 - Migration workflow and URL mapping: `docs/launch/migration.md`, `docs/launch/url-map.csv`
 - Architecture and phased plan: `PLAN.md`
 
-Do not create a second SEO guide or checklist. Add rationale, code references, and verification steps to the canonical checklist so they cannot diverge.
+Do not edit `docs/launch/checklist.md` directly or create a second SEO guide or checklist. Update the matching item in `docs/launch/checklist.json`, then run `pnpm launch:checklist --write`.
 
 ## Architecture
 
@@ -24,7 +24,7 @@ Do not create a second SEO guide or checklist. Add rationale, code references, a
 ## Launch safety
 
 - Never replace a missing client value with a believable fictional value.
-- Use a `TODO_CLIENT_*` sentinel for unresolved production content and record an owner in `docs/launch/status.md`.
+- Use a `TODO_CLIENT_*` sentinel for unresolved production content and leave the matching checklist item as `todo`.
 - Contact email and social profiles are optional. If absent, omit their UI entirely.
 - Preview/local deployments must stay non-indexable. Production must be explicitly configured as production.
 - Migration work starts with the URL map before routes or redirects are changed.
@@ -52,4 +52,4 @@ For page or launch work, also run the appropriate live audit:
 pnpm launch:audit --url http://localhost:3000 --mode template
 ```
 
-Before production, run the same audit against the deployed production URL with `--mode production` and attach evidence to `docs/launch/status.md`.
+Before production, run the same audit against the deployed production URL with `--mode production` and resolve every applicable P0 checklist item.

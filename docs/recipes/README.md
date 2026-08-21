@@ -2,6 +2,8 @@
 
 Recipes explain how to configure or delete defaults and how to add project-specific capabilities. They are instructions, not runtime modules.
 
+Checklist priority, guidance, and status live only in `docs/launch/checklist.json`. A recipe may explain a longer workflow, but it links back to checklist IDs and never keeps its own completion state.
+
 ## Available now
 
 - [`posthog.md`](posthog.md): configure the default client analytics integration or remove it cleanly.

@@ -1,0 +1,611 @@
+{
+  "schemaVersion": 1,
+  "description": "The single source of truth for launch readiness and technical SEO is `docs/launch/checklist.json`. This Markdown file is its generated readable view.",
+  "items": [
+    {
+      "id": "BRAND-01",
+      "title": "production identity is intentional",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: inherited names, domains, keys, logos, or analytics can misdirect customers and data while still looking technically valid.",
+        "",
+        "Check:",
+        "",
+        "- Replace the template name, URL, description, package name, icon, and social-preview treatment.",
+        "- Remove `TODO_CLIENT_*` values and forbidden legacy brands/domains.",
+        "- Confirm analytics belongs to the client and production project.",
+        "- Contact email and social accounts are optional. If the client does not publish them, omit them. If present, verify each destination.",
+        "",
+        "Code: `src/config/env.ts`, `src/config/site.ts`, `src/app/icon.svg`, `src/app/opengraph-image.tsx`, `package.json`."
+      ]
+    },
+    {
+      "id": "ROUTE-01",
+      "title": "every internal destination works",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: a polished page can still ship dead navigation, inherited CTAs, or links to routes planned but never built.",
+        "",
+        "Check every header, footer, CTA, card, body, canonical, hreflang, and sitemap URL. It must return the intended 2xx page or a reviewed redirect. Links that require authentication or an external app still need a verified production destination.",
+        "",
+        "Code: explicit `src/app/**/page.tsx` routes and `src/config/site.ts` navigation."
+      ]
+    },
+    {
+      "id": "ROUTE-02",
+      "title": "missing and removed URLs have honest status codes",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: returning a generic 200 page for missing content creates soft 404s. Redirecting unrelated removed pages to home confuses users and search engines.",
+        "",
+        "Check:",
+        "",
+        "- Unknown routes return HTTP 404.",
+        "- Intentionally removed content returns 404/410 or a relevant permanent redirect.",
+        "- Redirects go directly to the final relevant destination.",
+        "- Error and not-found experiences still help a human recover.",
+        "",
+        "Code: `src/app/not-found.tsx`, `src/app/error.tsx`, `src/config/redirects.ts`."
+      ]
+    },
+    {
+      "id": "SEO-01",
+      "title": "production can be crawled and indexed",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: a stray `noindex`, robots block, authentication wall, or preview header can erase every other SEO improvement.",
+        "",
+        "How crawling and indexing differ:",
+        "",
+        "- `robots.txt` controls crawler access; it is not a reliable way to remove an already known URL from an index.",
+        "- `noindex` controls indexing but the crawler must be able to fetch the page to see it.",
+        "- Preview/local environments should be blocked. Production must deliberately switch to the public policy.",
+        "",
+        "Check:",
+        "",
+        "- Representative production routes return 200 without authentication.",
+        "- Production `robots.txt` permits intended public routes and points to the absolute sitemap.",
+        "- Public pages do not emit `noindex` or an equivalent response header.",
+        "- Preview/local deployments remain non-indexable.",
+        "",
+        "Code: `src/app/robots.ts`, route metadata, `src/config/env.ts`."
+      ]
+    },
+    {
+      "id": "SEO-02",
+      "title": "page meaning is clear in the right order",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "This is the main on-page priority order. Review each indexable page in exactly this sequence:",
+        "",
+        "1. **Meta title.** Unique, concise, descriptive, and aligned with what the page actually provides. Put the distinguishing topic before repetitive brand boilerplate.",
+        "2. **Meta description.** A page-specific summary that earns the click and matches visible content. There is no arbitrary pass/fail character count; search engines may choose a different snippet.",
+        "3. **H1.** The clear visible main heading. It should agree with the title without needing to be identical.",
+        "4. **First 200 visible words.** State what the page is about, who it helps, and the useful substance early. Do not make crawlers or users cross animation, vague brand prose, or client-only rendering to discover the topic.",
+        "5. **Published and updated dates.** When the content actually has these dates, show the date treatment that helps readers accurately—for example, “Last updated”—and include `datePublished`/`dateModified` in the applicable JSON-LD when available. Never invent or automatically refresh a date merely to look current.",
+        "",
+        "Why this order: the title and description shape the search result, the H1 establishes the visible subject, and the opening copy confirms relevance. Dates help time-sensitive editorial content when they are real source data.",
+        "",
+        "Code: route `metadata`/`generateMetadata`, visible route copy, and `src/lib/seo.ts`."
+      ]
+    },
+    {
+      "id": "SEO-03",
+      "title": "each indexable page declares a consistent canonical URL",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: query variants, protocol/host variants, trailing-slash differences, and duplicated content can split signals or make the wrong URL appear in search.",
+        "",
+        "Check:",
+        "",
+        "- Use one HTTPS production origin and one URL style.",
+        "- Canonical URLs are absolute, indexable, return 200, and match sitemap/internal-link destinations.",
+        "- A canonical is not a substitute for redirecting an obsolete URL.",
+        "- Local/preview hosts never appear in production metadata.",
+        "",
+        "Code: `src/lib/seo.ts`, `src/config/env.ts`, route metadata."
+      ]
+    },
+    {
+      "id": "SEO-04",
+      "title": "robots policy points to the canonical sitemap",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: `robots.txt` is a small file with site-wide consequences. Environment mistakes are common during cutovers.",
+        "",
+        "Check production returns 200 at `/robots.txt`, allows intended public routes, blocks only deliberate crawl paths, and includes an absolute `Sitemap:` URL. Do not use robots rules to hide secrets; protect them with authentication and authorization.",
+        "",
+        "Code: `src/app/robots.ts`."
+      ]
+    },
+    {
+      "id": "SEO-05",
+      "title": "the sitemap lists canonical HTML pages",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: a sitemap helps discovery and communicates which canonical URLs the site considers public. It is a hint, not a replacement for internal links.",
+        "",
+        "Check:",
+        "",
+        "- Include every canonical, indexable HTML route from every enabled content source.",
+        "- Exclude redirects, errors, `noindex` pages, preview URLs, filtered/search-result URLs, and duplicate variants.",
+        "- Use accurate `lastModified` only when the content source has a reliable value.",
+        "- Do not add `priority` or `changeFrequency` for Google; Google ignores them.",
+        "- Optional `.md` representations are non-blocking. Their presence, absence, or sitemap omission must never stop launch.",
+        "",
+        "Code: `src/app/sitemap.ts` and enabled content loaders such as `src/lib/blog.ts` and `src/lib/use-cases.ts`."
+      ]
+    },
+    {
+      "id": "SEO-06",
+      "title": "important content and links exist in rendered HTML",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: search engines can render JavaScript, but server-rendered/prerendered content is faster and easier for users, crawlers, unfurlers, and other agents to consume.",
+        "",
+        "Check:",
+        "",
+        "- Core headings, opening copy, article text, list-page results, and navigation are present without a client-side fetch.",
+        "- Important pages are reachable from another findable page through `<a href>`/`Link` elements.",
+        "- Buttons are not used as navigation and click handlers are not the only source of a URL.",
+        "- Filtered client interactions enhance an already useful server-rendered view.",
+        "",
+        "Code: Server Components under `src/app`; `src/components/site-header.tsx`, `site-footer.tsx`."
+      ]
+    },
+    {
+      "id": "SEO-07",
+      "title": "URL policy is consistent",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: paths are case-sensitive and multiple host/protocol/trailing-slash variants can create duplicates and unnecessary redirects.",
+        "",
+        "Decide and test:",
+        "",
+        "- `www` or apex host;",
+        "- HTTPS enforcement;",
+        "- lowercase, descriptive paths;",
+        "- trailing-slash policy;",
+        "- query parameter behavior;",
+        "- direct final internal links without redirect hops.",
+        "",
+        "Code: deployment host settings, `next.config.ts`, `src/config/redirects.ts`."
+      ]
+    },
+    {
+      "id": "PERF-01",
+      "title": "media and rendering do not sabotage the opening experience",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: a technically indexable page can still lose users through slow or unstable rendering.",
+        "",
+        "Check:",
+        "",
+        "- The likely LCP image is intentionally sized and loaded; noncritical images are lazy.",
+        "- Images/video reserve dimensions and do not cause layout shift.",
+        "- Use modern formats and responsive sources where appropriate.",
+        "- Fonts and third-party scripts do not block the page unnecessarily.",
+        "- Critical content does not wait for a large animation or client bundle.",
+        "",
+        "Code: page media, `next/image`, `src/app/globals.css`, `src/instrumentation-client.ts`."
+      ]
+    },
+    {
+      "id": "PERF-02",
+      "title": "representative mobile performance has no severe regression",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: lab tests catch obvious regressions before launch; real-user Core Web Vitals require production traffic.",
+        "",
+        "Check representative homepage, listing, detail, and conversion routes on mobile. Investigate severe LCP, interaction latency/TBT, and CLS problems. Do not require a synthetic score of 100. Check field performance after launch; current “good” Core Web Vitals targets are LCP ≤2.5s, INP ≤200ms, and CLS ≤0.1 at the 75th percentile."
+      ]
+    },
+    {
+      "id": "SEC-01",
+      "title": "client data and production configuration are safe",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Check secrets are server-only and uncommitted, dependencies are reviewed, external scripts are intentional, security headers fit the deployment, and public environment values contain nothing confidential. A marketing site still needs an abuse model for forms and APIs."
+      ]
+    },
+    {
+      "id": "LEGAL-01",
+      "title": "legal content describes the real site",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: generic terms cannot truthfully describe the entity, service, data collection, processors, rights, or jurisdictions.",
+        "",
+        "Check privacy/terms/cookie disclosures as applicable, effective dates, company/contact identity, analytics and form data, subprocessors, retention, user rights, commercial terms, and recorded client/counsel approval. `TODO_CLIENT_LEGAL_REVIEW` blocks production.",
+        "",
+        "Code: `src/app/privacy/page.tsx`, `src/app/terms/page.tsx`."
+      ]
+    },
+    {
+      "id": "OPS-01",
+      "title": "the launch has a rollback path",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Confirm the production domain, DNS/TLS setup, deployment target, environment variables, launch window, backup/rollback procedure, and who can make the cutover decision."
+      ]
+    },
+    {
+      "id": "QA-01",
+      "title": "preview passes before cutover",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Run formatting, lint, typecheck, tests, build, and the live preview audit. Test representative browsers/devices and primary user journeys. Resolve every applicable P0 item before production.",
+        "",
+        "Commands:",
+        "",
+        "```bash",
+        "pnpm check",
+        "pnpm build",
+        "pnpm launch:audit --url https://preview.example.com --mode preview",
+        "```"
+      ]
+    },
+    {
+      "id": "MIG-01",
+      "title": "inventory the old surface",
+      "priority": "P0",
+      "group": "migration or rebuild only",
+      "status": "todo",
+      "details": [
+        "Collect URLs from the old sitemap, a crawl, analytics landing pages, Search Console, CMS exports, backlinks, server logs where available, and important images/downloads. A crawl alone misses orphaned but valuable URLs. Store the result in `docs/launch/url-map.csv` with sources and priority."
+      ],
+      "recipe": "docs/launch/migration.md"
+    },
+    {
+      "id": "MIG-02",
+      "title": "every old URL gets a disposition",
+      "priority": "P0",
+      "group": "migration or rebuild only",
+      "status": "todo",
+      "details": [
+        "Choose one: preserve, permanent redirect to a relevant replacement, consolidate into a genuinely equivalent page, or intentionally return 404/410. Never leave the decision implicit.",
+        "",
+        "Code: `docs/launch/url-map.csv`, `src/config/redirects.ts` or hosting-level rules."
+      ],
+      "recipe": "docs/launch/migration.md"
+    },
+    {
+      "id": "MIG-03",
+      "title": "redirects are direct and relevant",
+      "priority": "P0",
+      "group": "migration or rebuild only",
+      "status": "todo",
+      "details": [
+        "Test high-traffic/backlinked URLs, host/protocol variants, query handling, loops, chains, and targets. Prefer server-side 301/308 redirects. Do not redirect many unrelated pages to home; that can behave like a soft 404."
+      ],
+      "recipe": "docs/launch/migration.md"
+    },
+    {
+      "id": "MIG-04",
+      "title": "preserve valuable page signals intentionally",
+      "priority": "P0",
+      "group": "migration or rebuild only",
+      "status": "todo",
+      "details": [
+        "Compare titles, descriptions, H1s, first 200 words, dates, copy, media, structured data, internal links, and conversion paths for pages with existing traffic. A redesign is not permission to erase the content users and search engines already value."
+      ],
+      "recipe": "docs/launch/migration.md"
+    },
+    {
+      "id": "MIG-05",
+      "title": "all new annotations use final URLs",
+      "priority": "P0",
+      "group": "migration or rebuild only",
+      "status": "todo",
+      "details": [
+        "Update canonicals, hreflang, sitemap URLs, navigation, body links, feeds, structured data, campaign URLs, profiles, and important external links where possible."
+      ],
+      "recipe": "docs/launch/migration.md"
+    },
+    {
+      "id": "MIG-06",
+      "title": "remove migration-only blocks",
+      "priority": "P0",
+      "group": "migration or rebuild only",
+      "status": "todo",
+      "details": [
+        "At cutover, remove temporary `noindex`, robots disallows, password protection, preview headers, and staging canonicals from production. Verify representative URLs with Search Console URL Inspection."
+      ],
+      "recipe": "docs/launch/migration.md"
+    },
+    {
+      "id": "MIG-07",
+      "title": "retain and monitor redirects",
+      "priority": "P0",
+      "group": "migration or rebuild only",
+      "status": "todo",
+      "details": [
+        "Keep permanent redirects for at least one year and preferably while they remain useful. Monitor old/new properties, crawl errors, redirect hits, index coverage, rankings, landing-page traffic, server capacity, and conversion events after launch."
+      ],
+      "recipe": "docs/launch/migration.md"
+    },
+    {
+      "id": "MIG-08",
+      "title": "complete domain-move operations when applicable",
+      "priority": "P0",
+      "group": "migration or rebuild only",
+      "status": "todo",
+      "details": [
+        "Verify old and new Search Console properties and host variants. Use Search Console Change of Address for an actual domain change, not a simple path or HTTP→HTTPS change. Submit the new sitemap and keep old infrastructure serving redirects."
+      ],
+      "recipe": "docs/launch/migration.md"
+    },
+    {
+      "id": "FORM-01",
+      "title": "the primary conversion path works end to end",
+      "priority": "P0",
+      "group": "selected conversion features",
+      "status": "todo",
+      "details": [
+        "Test production delivery, the actual recipient or CRM, confirmation, failure handling, reply path, and monitoring. A form returning 200 is not enough if nobody receives the lead.",
+        "",
+        "Code: `src/app/contact/page.tsx`, `src/app/contact/_components/contact-form.tsx`, `src/app/api/contact/route.ts`, `src/lib/contact-delivery.ts`, `scripts/launch-audit.ts`."
+      ],
+      "recipe": "docs/recipes/contact.md"
+    },
+    {
+      "id": "FORM-02",
+      "title": "form input and output are bounded",
+      "priority": "P0",
+      "group": "selected conversion features",
+      "status": "todo",
+      "details": [
+        "Validate types and sensible lengths server-side, escape output, reject unexpected fields, avoid logging secrets/PII, and show safe useful errors.",
+        "",
+        "Code: `src/lib/contact.ts`, `src/lib/contact-delivery.ts`, `src/app/api/contact/route.ts`."
+      ],
+      "recipe": "docs/recipes/contact.md"
+    },
+    {
+      "id": "FORM-03",
+      "title": "abuse and retention match the risk",
+      "priority": "P0",
+      "group": "selected conversion features",
+      "status": "todo",
+      "details": [
+        "Choose spam controls, rate limits, retention, consent, access, and deletion processes appropriate to the traffic and data. Do not copy a CAPTCHA or legal basis automatically between clients.",
+        "",
+        "The included honeypot, completion-time check, same-origin check, and in-memory per-instance rate limit are a low-risk baseline, not a universal production answer. Review whether the deployed traffic and hosting model require a durable rate limiter, CAPTCHA, WAF rule, or provider control. Confirm who can access delivered leads and when the inbox or CRM deletes them.",
+        "",
+        "Code: `src/app/api/contact/route.ts`, `src/app/api/contact/_lib/rate-limit.ts`, `src/app/privacy/page.tsx`, `docs/recipes/contact.md`."
+      ],
+      "recipe": "docs/recipes/contact.md"
+    },
+    {
+      "id": "FORM-04",
+      "title": "attribution is minimized",
+      "priority": "P0",
+      "group": "selected conversion features",
+      "status": "todo",
+      "details": [
+        "Collect only useful attribution fields, document first/recent-page storage, avoid sensitive query values, and align analytics/storage with the privacy decision.",
+        "",
+        "The default keeps first-touch UTM fields, an external referrer without its query string, the first landing page, and at most five same-site paths. It drops all other query values, expires browser context after 90 days, validates it again on the server, and sends no form values or attribution to PostHog.",
+        "",
+        "Code: `src/lib/visitor-context.ts`, `src/app/contact/_components/visitor-context-tracker.tsx`, `src/lib/contact.ts`, `src/app/contact/_components/contact-form.tsx`."
+      ],
+      "recipe": "docs/recipes/contact.md"
+    },
+    {
+      "id": "SEO-08",
+      "title": "structured data is accurate and applicable",
+      "priority": "P1",
+      "group": "non-blocking quality and feature-dependent checks",
+      "status": "todo",
+      "details": [
+        "Structured data sits inside SEO, not a separate checklist.",
+        "",
+        "Use only supported/applicable types such as Organization, Breadcrumb, Article, Product, or LocalBusiness. Follow the search engine's feature documentation, include required properties, reflect visible content, and validate the deployed result. More schema is not automatically better. Generic `WebPage` JSON-LD on every route is not a launch requirement.",
+        "",
+        "For articles with real source dates, include `datePublished` and `dateModified` as available. Do not invent dates. Keep builders with metadata in `src/lib/seo.ts`."
+      ]
+    },
+    {
+      "id": "SOCIAL-01",
+      "title": "important pages unfurl correctly",
+      "priority": "P1",
+      "group": "non-blocking quality and feature-dependent checks",
+      "status": "todo",
+      "details": [
+        "Review Open Graph and Twitter title, description, image, URL, crop, and brand treatment on representative routes. This affects sharing and messaging previews more directly than Google rankings.",
+        "",
+        "Code: page metadata, `src/app/opengraph-image.tsx`. Use `.agents/skills/micro-ui` when a small code-native sharing visual is appropriate. Verify the rendered 1200×630 image directly; do not rely only on the component source."
+      ]
+    },
+    {
+      "id": "A11Y-01",
+      "title": "accessibility review",
+      "priority": "P1",
+      "group": "non-blocking quality and feature-dependent checks",
+      "status": "todo",
+      "details": [
+        "Nice to have and non-blocking in this template's priority system. Review semantic landmarks, keyboard navigation, focus visibility, labels/errors, contrast, alternatives, zoom/reflow, and reduced motion. Record serious user-impacting defects even when they do not block the formal launch gate.",
+        "",
+        "For animation work, use `.agents/skills/animated-ui` and verify both ordinary and `prefers-reduced-motion: reduce` states in a browser. Critical copy and links must remain present without client JavaScript."
+      ]
+    },
+    {
+      "id": "IMAGE-01",
+      "title": "image sources and treatments are intentional",
+      "priority": "P1",
+      "group": "non-blocking quality and feature-dependent checks",
+      "status": "todo",
+      "details": [
+        "Why it matters: an image can be technically optimized and still ship the wrong client, crop, claim, license, alternative text, or stale inherited asset.",
+        "",
+        "Check:",
+        "",
+        "- Every visible image belongs to the current project and has a known source or generation record.",
+        "- Meaningful images have useful alt text; decorative or fully duplicated images use an empty alt. Do not turn filenames or nearby captions into repetitive alt text.",
+        "- Width, height/aspect ratio, responsive sizes, crop, loading priority, and format fit the real placement at desktop and mobile sizes.",
+        "- Above-the-fold images are deliberately prioritized; lower-page images remain lazy unless measurement shows otherwise.",
+        "- Generated visuals use real project language and do not invent customers, metrics, integrations, or outcomes.",
+        "- A JSON-backed page references only a validated visual ID. File paths, React component names, layout classes, and serialized props stay in code.",
+        "",
+        "Code: `next/image`, `public/media`, `src/app/opengraph-image.tsx`, and the bounded `/uses` resolver in `src/app/uses/[slug]/_components/use-case-visual.tsx`. Use `.agents/skills/micro-ui` to create or adapt a visual, then register it through the resolver when it belongs to a use-case hero or capability.",
+        "",
+        "For `/uses`, confirm every `hero.visualId` and `solution.items[].visualId` resolves to either an approved React component or local image source."
+      ]
+    },
+    {
+      "id": "ANALYTICS-01",
+      "title": "analytics is configured and privacy-aware",
+      "priority": "P1",
+      "group": "non-blocking quality and feature-dependent checks",
+      "status": "todo",
+      "details": [
+        "PostHog is included by default but inactive without a token. Verify the production project, pageviews and named conversion events, internal/staff exclusions, consent behavior where required, session-replay policy, retention, and that sensitive form values are not captured. Delete `src/instrumentation-client.ts` and `posthog-js` if analytics is unused."
+      ],
+      "recipe": "docs/recipes/posthog.md"
+    },
+    {
+      "id": "MON-01",
+      "title": "post-launch signals are checked",
+      "priority": "P1",
+      "group": "non-blocking quality and feature-dependent checks",
+      "status": "todo",
+      "details": [
+        "Check Search Console, analytics, uptime/error monitoring, and field performance after launch. Decide how often to review them and what should trigger rollback or remediation."
+      ]
+    },
+    {
+      "id": "LLM-01",
+      "title": "`llms.txt`",
+      "priority": "P2",
+      "group": "later enhancements",
+      "status": "todo",
+      "details": [
+        "Generate it from enabled content sources if the project benefits. Treat it as experimental discovery support, never as core Google SEO or an independently maintained content inventory."
+      ]
+    },
+    {
+      "id": "LLM-02",
+      "title": "`.md` representations",
+      "priority": "P2",
+      "group": "later enhancements",
+      "status": "todo",
+      "details": [
+        "Optional and non-blocking. Generate selected `.md` routes from the same Markdown/MDX source as HTML, keep HTML canonical, define an indexing policy for the alternate representation, and exclude alternates from the main HTML sitemap."
+      ]
+    },
+    {
+      "id": "INDEX-01",
+      "title": "IndexNow",
+      "priority": "P2",
+      "group": "later enhancements",
+      "status": "todo",
+      "details": [
+        "Add submission automation only when publishing frequency and target search engines justify the operational work. Never copy an old site's key."
+      ]
+    },
+    {
+      "id": "CONTENT-01",
+      "title": "richer publishing tools",
+      "priority": "P2",
+      "group": "later enhancements",
+      "status": "todo",
+      "details": [
+        "Add blog tags, featured articles, filters, search, related content, feeds, and freshness workflows only after the basic server-rendered blog index/article path works and the publication has enough real content to support them.",
+        "",
+        "Why it matters: editorial controls should help readers find useful articles without creating empty archives, made-up categories, duplicate indexable URLs, or a client-only listing that crawlers cannot follow.",
+        "",
+        "Check:",
+        "",
+        "- Declare optional filters and featured behavior in `src/app/blog/blog.config.ts`; do not scatter tag names or pinned slugs through components.",
+        "- Map each visible filter to a real Wisp tag. Remove a filter when the publication does not maintain that tag, and never invent a generic category for untagged posts.",
+        "- Set `BLOG_FEATURED.heroSlug` to an approved lead article or `null`. Set `BLOG_FEATURED.tag` to the real featured tag or `null`. These are content choices, not feature flags.",
+        "- Keep the default list, filters, search results, article links, and pagination in server-rendered HTML. Filters and pagination must use real links, while search must work as a normal GET form.",
+        "- Build an article table of contents from sanitized source headings on the server. Heading IDs must be stable and unique, contents entries must be normal fragment links, and long lists must remain usable without JavaScript on mobile and desktop.",
+        "- Build social-sharing destinations from the article's absolute canonical URL, not `window.location` or a preview host. Give each icon an accessible label and verify the production domain before launch.",
+        "- Keep `/blog` canonical. Exclude search, filter, and pagination variants from the main sitemap unless a project deliberately promotes a stable archive page with unique value.",
+        "- Avoid repeating a pinned article in the first result grid. Test page one, a middle and final page, every configured filter, an empty result, and a search with and without results.",
+        "- When changing the CMS or tag model, update the route config and the matching items in this checklist; do not create a second publishing or SEO checklist.",
+        "",
+        "Code: `src/app/blog/blog.config.ts`, `src/app/blog/page.tsx`, `src/app/blog/_components/blog-pagination.tsx`, `src/app/blog/[slug]/page.tsx`, `src/app/blog/[slug]/_components/article-sidebar.tsx`, `src/lib/blog.ts`, `src/lib/blog-content.ts`."
+      ],
+      "recipe": "docs/recipes/blog.md"
+    }
+  ],
+  "primaryReferences": [
+    {
+      "label": "Next.js Metadata and OG images",
+      "url": "https://nextjs.org/docs/app/getting-started/metadata-and-og-images"
+    },
+    {
+      "label": "Next.js production checklist",
+      "url": "https://nextjs.org/docs/app/guides/production-checklist"
+    },
+    {
+      "label": "Google developer SEO guide",
+      "url": "https://developers.google.com/search/docs/fundamentals/get-started-developers"
+    },
+    {
+      "label": "Google title-link guidance",
+      "url": "https://developers.google.com/search/docs/appearance/title-link"
+    },
+    {
+      "label": "Google snippet guidance",
+      "url": "https://developers.google.com/search/docs/appearance/snippet"
+    },
+    {
+      "label": "Google sitemap guidance",
+      "url": "https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap"
+    },
+    {
+      "label": "Google canonical guidance",
+      "url": "https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls"
+    },
+    {
+      "label": "Google JavaScript SEO basics",
+      "url": "https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics"
+    },
+    {
+      "label": "Google site-move guidance",
+      "url": "https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes"
+    },
+    {
+      "label": "Google structured-data guidelines",
+      "url": "https://developers.google.com/search/docs/appearance/structured-data/sd-policies"
+    },
+    {
+      "label": "Core Web Vitals thresholds",
+      "url": "https://web.dev/articles/defining-core-web-vitals-thresholds"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 The `/contact` page is ordinary, deletable code. It server-renders the page and form markup, then uses a small Client Component for validation, submission state, and minimized attribution. Delivery is disabled until every server-only mail value is present.
 
-The canonical launch requirements are `FORM-01` through `FORM-04` in `docs/launch/checklist.md`. Keep rationale and verification changes there instead of creating another form or privacy checklist.
+The canonical launch requirements are `FORM-01` through `FORM-04` in `docs/launch/checklist.json`; `docs/launch/checklist.md` is their generated readable view. Keep rationale and verification changes in the JSON instead of creating another form or privacy checklist.
 
 ## Configure delivery
 
@@ -21,7 +21,7 @@ All six values are required. The form stays visibly unavailable when one is miss
 
 SMTP delivery lives in `src/lib/contact-delivery.ts`. Replace that adapter when a project uses a transactional email API or CRM, while keeping validation and the route contract stable.
 
-The included success state promises a reply within 1–3 working days. Keep that sentence only when the client has an owner and process that can meet it; otherwise replace it with an approved response expectation before production.
+The included success state promises a reply within 1–3 working days. Keep that sentence only when the client can meet it; otherwise replace it with an accurate response expectation before production.
 
 ## Attribution kept by the default
 
@@ -54,7 +54,7 @@ The included rate limit is an in-memory, per-instance baseline. For high traffic
 4. Confirm the received message did not preserve unrelated or sensitive query values.
 5. If PostHog is configured, confirm `contact_form_submitted` arrives without names, emails, message text, URLs, or campaign values.
 6. Check keyboard behavior, visible focus, labels, field errors, mobile layout, and the form without a delivery configuration.
-7. Run `pnpm check`, `pnpm build`, and the launch audit. Repeat the audit and an end-to-end delivery test against production, then record recipient ownership and evidence in `docs/launch/status.md`.
+7. Run `pnpm check`, `pnpm build`, and the launch audit. Repeat the audit and an end-to-end delivery test against production, then update `FORM-01` through `FORM-04`.
 
 ## Remove
 
@@ -65,7 +65,7 @@ When the project does not use a contact form:
 3. Remove `/contact` from the header CTA, footer, and `src/app/sitemap.ts`; replace the CTA with a real destination.
 4. Remove `nodemailer` and `@types/nodemailer`, then reinstall dependencies.
 5. Remove the six contact mail values from `.env.example` and every deployment.
-6. Remove the contact-specific privacy text and update `docs/features.md` and `docs/launch/status.md`.
+6. Remove the contact-specific privacy text, update `docs/features.md`, and mark `FORM-01` through `FORM-04` as `not_applicable`.
 7. Run the complete checks and audit every remaining CTA.
 
 Do not retain the form behind an enable/disable flag.

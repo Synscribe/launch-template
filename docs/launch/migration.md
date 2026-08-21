@@ -1,6 +1,6 @@
 # Migration and rebuild playbook
 
-Use this workflow whenever an existing public site is being migrated, rebuilt, redesigned, or moved to a new domain. The canonical requirements are `MIG-01` through `MIG-08` in `checklist.md`.
+Use this workflow whenever an existing public site is being migrated, rebuilt, redesigned, or moved to a new domain. The canonical requirements and their status are `MIG-01` through `MIG-08` in `checklist.json`; `checklist.md` is the generated readable view.
 
 ## 1. Define the kind of change
 
@@ -60,7 +60,7 @@ Use the result to define the next route. Do not create a generic block engine to
 
 ## 5. Implement redirects
 
-For small and medium maps, implement reviewed rules in `src/config/redirects.ts`. Large or pattern-heavy migrations may use hosting/CDN rules, but `url-map.csv` remains the project evidence.
+For small and medium maps, implement reviewed rules in `src/config/redirects.ts`. Large or pattern-heavy migrations may use hosting/CDN rules, but `url-map.csv` remains the canonical migration record.
 
 Rules:
 

@@ -4,10 +4,10 @@ A lean starting point for client migrations, rebuilds, and new startup sites. Th
 
 ## Start here
 
-1. Read [`docs/launch/checklist.md`](docs/launch/checklist.md). It is the canonical launch and technical SEO guide.
+1. Work through the readable [`docs/launch/checklist.md`](docs/launch/checklist.md). Its source and current state live in [`docs/launch/checklist.json`](docs/launch/checklist.json).
 2. Use [`docs/features.md`](docs/features.md) during project kickoff. Default features are normal code: delete them when unused instead of adding flags.
 3. For an existing site, begin with [`docs/launch/migration.md`](docs/launch/migration.md) and [`docs/launch/url-map.csv`](docs/launch/url-map.csv).
-4. Record project decisions and launch evidence in [`docs/launch/status.md`](docs/launch/status.md).
+4. Update a check with `pnpm launch:checklist --set <ID> <todo|done|not_applicable>`.
 5. Keep [`PLAN.md`](PLAN.md) for the architecture audit and page-by-page roadmap.
 
 ## Development
@@ -23,6 +23,7 @@ pnpm dev
 Quality checks:
 
 ```bash
+pnpm launch:checklist
 pnpm check
 pnpm build
 pnpm launch:audit --url http://localhost:3000 --mode template
@@ -34,7 +35,7 @@ Before production, configure the real identity and run:
 pnpm launch:audit --url https://example.com --mode production
 ```
 
-The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sentinels, inherited legacy brands, broken internal links, production crawl blocks, sitemap drift, and missing priority metadata.
+The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sentinels, inherited legacy brands, broken internal links, production crawl blocks, sitemap drift, and missing priority metadata. It also fails while any P0 checklist item remains `todo`.
 
 ## Current implementation
 

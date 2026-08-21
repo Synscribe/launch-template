@@ -13,7 +13,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+    "check": "pnpm format:check && pnpm launch:checklist --check && pnpm lint && pnpm typecheck && pnpm test",
+    "launch:checklist": "tsx scripts/launch-checklist.ts",
     "launch:audit": "tsx scripts/launch-audit.ts",
     "prepush": "pnpm check && pnpm build"
   },

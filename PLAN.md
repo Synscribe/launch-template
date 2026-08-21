@@ -126,25 +126,25 @@ The untracked `../zero-to-rank-template/doc/seo-defaults.md` is a useful extract
 
 This is the most important part of the future repository. Other agents and client repositories should be able to start here.
 
-| Planned path                | Canonical responsibility                                                                                                                       | Copy/reference policy                                                                  |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `README.md`                 | Setup, project modes, and links to the documents below.                                                                                        | Start here. Keep short.                                                                |
-| `AGENTS.md`                 | Mandatory agent workflow, source-of-truth paths, and required checks.                                                                          | Copy into client repos.                                                                |
-| `docs/launch/checklist.md`  | **Canonical prioritized launch and technical SEO guide**, with stable IDs, rationale, applicability, evidence, and code links.                 | Primary file for agents to copy or work down; there is no separate SEO guide to drift. |
-| `docs/launch/migration.md`  | Existing-site inventory, URL mapping, redirects, DNS/domain cutover, and monitoring.                                                           | Required for migration/rebuild projects.                                               |
-| `docs/launch/status.md`     | Per-project decisions, owners, exceptions, evidence links, and sign-off.                                                                       | Reset for every client. Never use template-complete statuses.                          |
-| `docs/features.md`          | **Canonical feature/consideration catalog**: default, opt-in, future, dependencies, and relevant checks.                                       | Use during project kickoff and scoping.                                                |
-| `docs/recipes/README.md`    | Index of configuration, deletion, and add-on recipes.                                                                                          | Default features document clean removal; add-ons document installation.                |
-| `docs/recipes/*.md`         | Configuration/removal notes for default features plus installation notes for docs/MDX, `llms.txt`, `.md` routes, i18n, and advanced animation. | Each recipe lists files added/changed and removal steps.                               |
-| `docs/launch/url-map.csv`   | Old URL → new URL/disposition inventory for migrations.                                                                                        | Created per migration; not needed for new startups.                                    |
-| `src/config/site.ts`        | Minimal typed global identity and navigation.                                                                                                  | No page bodies, blocks, or per-page layout config.                                     |
-| `src/config/env.ts`         | Required/optional environment validation with no production fallbacks.                                                                         | The build fails on invalid required values.                                            |
-| `src/config/redirects.ts`   | Small/medium migration redirect map, when applicable.                                                                                          | Generated or reviewed from `url-map.csv`; empty for new sites.                         |
-| `src/lib/seo.ts`            | Metadata, URL normalization, and typed builders for applicable structured data.                                                                | One SEO implementation boundary; no arbitrary JSON blobs in content files.             |
-| `src/app/robots.ts`         | Environment-aware crawl policy and sitemap URL.                                                                                                | Production and preview behavior must be tested.                                        |
-| `src/app/sitemap.ts`        | Enabled, canonical, indexable routes only.                                                                                                     | Derived from actual content sources.                                                   |
-| `scripts/launch-audit.ts`   | Static plus live launch checks keyed to checklist IDs.                                                                                         | Single executable audit entry point.                                                   |
-| `.agents/skills/*/SKILL.md` | Focused workflows for cloning, animation, visuals, SEO review, and launch review.                                                              | Skills point back to canonical docs instead of copying them.                           |
+| Planned path                 | Canonical responsibility                                                                                                                       | Copy/reference policy                                                      |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `README.md`                  | Setup, project modes, and links to the documents below.                                                                                        | Start here. Keep short.                                                    |
+| `AGENTS.md`                  | Mandatory agent workflow, source-of-truth paths, and required checks.                                                                          | Copy into client repos.                                                    |
+| `docs/launch/checklist.json` | **Canonical prioritized launch requirements and current status**, with stable IDs, rationale, checks, code links, and optional recipes.        | Edit this file or use the checklist CLI; there is no separate status file. |
+| `docs/launch/checklist.md`   | Generated readable view of the canonical JSON checklist.                                                                                       | Read or copy this view, but never edit it directly.                        |
+| `docs/launch/migration.md`   | Existing-site inventory, URL mapping, redirects, DNS/domain cutover, and monitoring.                                                           | Required for migration/rebuild projects.                                   |
+| `docs/features.md`           | **Canonical feature/consideration catalog**: default, opt-in, future, dependencies, and relevant checks.                                       | Use during project kickoff and scoping.                                    |
+| `docs/recipes/README.md`     | Index of configuration, deletion, and add-on recipes.                                                                                          | Default features document clean removal; add-ons document installation.    |
+| `docs/recipes/*.md`          | Configuration/removal notes for default features plus installation notes for docs/MDX, `llms.txt`, `.md` routes, i18n, and advanced animation. | Each recipe lists files added/changed and removal steps.                   |
+| `docs/launch/url-map.csv`    | Old URL → new URL/disposition inventory for migrations.                                                                                        | Created per migration; not needed for new startups.                        |
+| `src/config/site.ts`         | Minimal typed global identity and navigation.                                                                                                  | No page bodies, blocks, or per-page layout config.                         |
+| `src/config/env.ts`          | Required/optional environment validation with no production fallbacks.                                                                         | The build fails on invalid required values.                                |
+| `src/config/redirects.ts`    | Small/medium migration redirect map, when applicable.                                                                                          | Generated or reviewed from `url-map.csv`; empty for new sites.             |
+| `src/lib/seo.ts`             | Metadata, URL normalization, and typed builders for applicable structured data.                                                                | One SEO implementation boundary; no arbitrary JSON blobs in content files. |
+| `src/app/robots.ts`          | Environment-aware crawl policy and sitemap URL.                                                                                                | Production and preview behavior must be tested.                            |
+| `src/app/sitemap.ts`         | Enabled, canonical, indexable routes only.                                                                                                     | Derived from actual content sources.                                       |
+| `scripts/launch-audit.ts`    | Static plus live launch checks keyed to checklist IDs.                                                                                         | Single executable audit entry point.                                       |
+| `.agents/skills/*/SKILL.md`  | Focused workflows for cloning, animation, visuals, SEO review, and launch review.                                                              | Skills point back to canonical docs instead of copying them.               |
 
 Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-01`, `MIG-01`, `A11Y-01`, `PERF-01`, `FORM-01`, `DATA-01`, and `OPS-01`. IDs let other repos cite a requirement without depending on heading text.
 
@@ -157,9 +157,9 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 ├── docs/
 │   ├── features.md
 │   ├── launch/
+│   │   ├── checklist.json
 │   │   ├── checklist.md
 │   │   ├── migration.md
-│   │   ├── status.md
 │   │   └── url-map.csv              # migration projects only
 │   └── recipes/
 │       └── README.md
@@ -209,7 +209,7 @@ Important boundaries:
 
 ### P0 — blocks launch
 
-A P0 item protects indexability, user trust, data safety, accessibility, a working conversion path, or an existing site's traffic. An applicable P0 item must pass or have a documented owner-approved exception in `docs/launch/status.md`.
+A P0 item protects indexability, user trust, data safety, a working conversion path, or an existing site's traffic. An applicable P0 item must be `done` before production; use `not_applicable` only when the check genuinely does not belong to the project.
 
 ### P1 — expected quality, feature-dependent
 
@@ -223,9 +223,7 @@ Priority and default state are separate. A contact form can be P0 **if the proje
 
 ## 8. Launch-checklist contract
 
-The reusable launch and technical SEO requirements live only in `docs/launch/checklist.md`. That file owns the stable IDs, priorities, rationale, code references, and evidence expectations. This plan defines the priority model and implementation sequence, but it must not restate the requirements.
-
-Record project-specific decisions, evidence, and approved exceptions in `docs/launch/status.md`.
+The reusable launch and technical SEO requirements and current project status live only in `docs/launch/checklist.json`. That file owns the stable IDs, priorities, rationale, checks, code references, optional recipe links, and `todo`/`done`/`not_applicable` state. `docs/launch/checklist.md` is generated from it. This plan defines the priority model and implementation sequence, but it must not restate the requirements.
 
 ## 9. Feature-catalog contract
 
@@ -269,7 +267,7 @@ The migration path must begin before implementation:
 7. Build one route template and compare it before scaling the pattern.
 8. Implement redirects from the reviewed map.
 9. Crawl preview and compare old/new status, metadata, headings, canonicals, internal links, word/content presence, and screenshots.
-10. Cut over with rollback and monitoring owners present.
+10. Cut over with the rollback path and post-launch monitoring ready.
 
 For client-authorized 1:1 clones, the skill should reproduce the visual system and behavior in maintainable local code. It should not blindly copy analytics IDs, form endpoints, third-party secrets, cookie tooling, stale scripts, or inaccessible markup.
 
@@ -352,10 +350,10 @@ Create focused project skills using the repository's canonical docs:
 - `site-clone`: inventory/capture, implement route by route, and visually compare approved sites;
 - `animated-ui`: create route-local Next.js animation with reduced-motion, a11y, and performance checks;
 - `micro-ui`: create route-native interface visuals and generated graphics without a standalone block or asset catalog;
-- `technical-seo-review`: work through relevant `SEO-*` and `MIG-*` requirements and point to evidence;
-- `launch-review`: run the launch audit, inspect non-automatable P0 items, and update status/evidence.
+- `technical-seo-review`: work through relevant `SEO-*` and `MIG-*` requirements;
+- `launch-review`: run the launch audit, inspect non-automatable P0 items, and update checklist status.
 
-Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.md` and invoke shared scripts.
+Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.json`, may link to the generated Markdown view, and invoke shared scripts.
 
 Current progress: `micro-ui` and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. Both were pared down from the previous template, validated, and exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. No graphics or animation dependency was added. `site-clone`, `technical-seo-review`, and `launch-review` remain deliberately deferred.
 
@@ -385,7 +383,7 @@ Every page is complete only when:
 7. selected analytics/conversion events are verified without unintended PII;
 8. relevant structured data is accurate and validated, or deliberately absent;
 9. build, typecheck, lint, focused tests, and launch audit pass;
-10. `docs/launch/status.md` contains evidence or an explicit decision for non-automatable requirements.
+10. Every applicable checklist item has been set to `done`; unused feature checks are explicitly `not_applicable`.
 
 ## 14. Automation and CI
 

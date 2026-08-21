@@ -9,7 +9,8 @@
 - Use-case React visuals: `src/app/uses/[slug]/_components/use-case-visual-components.tsx`
 - Use-case local files: `public/media/uses`
 - Visual ID validation: `src/lib/use-cases.ts`
-- Launch requirements: `docs/launch/checklist.md`
+- Launch requirements and status: `docs/launch/checklist.json`
+- Generated readable checklist: `docs/launch/checklist.md`
 
 ## Placement
 
@@ -35,4 +36,4 @@ Read the actual values before rendering an image because clients may replace eve
 
 ## Verification
 
-Relevant checklist IDs are `BRAND-01`, `SEO-02`, `SOCIAL-01`, `PERF-01`, `A11Y-01`, and `IMAGE-01`. Do not duplicate their requirements here. Verify the rendered asset/page, then place evidence or exceptions in `docs/launch/status.md`.
+Relevant checklist IDs are `BRAND-01`, `SEO-02`, `SOCIAL-01`, `PERF-01`, `A11Y-01`, and `IMAGE-01`. Do not duplicate their requirements here. Verify the rendered asset or page, then update the matching status in the canonical JSON.

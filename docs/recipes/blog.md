@@ -12,7 +12,7 @@ The blog is ordinary, deletable application code. It connects directly to Wisp o
 6. Edit `src/app/blog/blog.config.ts`. Add only filters backed by maintained Wisp tags. Set the optional lead article slug and featured tag, or use `null` to omit either featured surface. Remove a filter entry to hide it; there are no runtime feature flags.
 7. Review the first page, every configured filter, an empty result, a search result, a middle and final pagination page, an article with an image, an article without an image, a long and short table of contents, every share destination, related articles, `/feed.xml`, and `/sitemap.xml`.
 8. Confirm titles, descriptions, H1s, opening copy, visible date treatment, canonical URLs, share images, and Article JSON-LD against `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, and `CONTENT-01` in the canonical checklist. The default article hero shows “Last updated”; JSON-LD retains both source dates when available.
-9. Record the source, selected filters/featured behavior, and evidence in `docs/launch/status.md`.
+9. Run the blog-related checks and update their statuses in `docs/launch/checklist.json`.
 
 Implementation:
 
@@ -40,7 +40,7 @@ The article table of contents uses sanitized `h2` and `h3` headings. Keep meanin
 6. Remove Blog from `src/config/site.ts` and `src/components/site-footer.tsx`.
 7. Remove the blog imports, index route, and article entries from `src/app/sitemap.ts`.
 8. Remove `buildArticleJsonLd` and its tests from `src/lib/seo.ts` only if no remaining article-like route uses it.
-9. Update `docs/features.md`, `docs/launch/status.md`, `README.md`, and this recipes index.
+9. Update `docs/features.md`, `README.md`, this recipes index, and any blog-only checklist statuses.
 10. Run `pnpm check`, `pnpm build`, and the launch audit.
 
 Do not replace the deleted files with `ENABLE_BLOG` or an equivalent flag.

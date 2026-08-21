@@ -5,7 +5,8 @@
 - Global tokens and reduced-motion baseline: `src/app/globals.css`
 - Route-local use-case visuals: `src/app/uses/[slug]/_components`
 - Homepage-only composition: `src/app/(marketing)/_components`
-- Launch requirements: `docs/launch/checklist.md`
+- Launch requirements and status: `docs/launch/checklist.json`
+- Generated readable checklist: `docs/launch/checklist.md`
 
 ## Architecture
 
@@ -17,4 +18,4 @@
 
 ## Verification
 
-Relevant checklist IDs are `PERF-01`, `PERF-02`, `A11Y-01`, and `IMAGE-01`. Do not copy those requirements into the skill. Run the normal page audit and record material evidence or exceptions in `docs/launch/status.md`.
+Relevant checklist IDs are `PERF-01`, `PERF-02`, `A11Y-01`, and `IMAGE-01`. Do not copy those requirements into the skill. Run the normal page audit, then update the matching status in the canonical JSON.

@@ -26,8 +26,8 @@ The structure lives in `src/app/uses/[slug]/page.tsx`; it is not configurable pe
 6. Run `pnpm check`. The content loader rejects malformed JSON, missing fields, filename/slug mismatches, duplicate slugs or capability visual IDs, unsupported visual IDs, unknown/duplicate group IDs, and external CTA paths.
 7. Run `pnpm build`. `generateStaticParams` should list the new `/uses/<slug>` route.
 8. Confirm the route is linked from the grouped `/uses` hub and appears in `/sitemap.xml`.
-9. Review `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, `IMAGE-01`, and the per-page definition of done in `docs/launch/checklist.md`.
-10. Run the live launch audit and attach project evidence to `docs/launch/status.md`.
+9. Review `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, and `IMAGE-01` in the generated `docs/launch/checklist.md`.
+10. Run the live launch audit, then update those checks in `docs/launch/checklist.json`.
 
 There is no numeric page order. Use cases have a deterministic alphabetical fallback, while the array order in `groups.json` controls the hub-section order. A use case with multiple group IDs appears in multiple relevant hub sections. Add a group definition only when the project has a real grouping to show; do not create empty speculative groups.
 
@@ -89,7 +89,7 @@ Adding a JSON document does not add a block type. All use cases share the same d
 3. Delete `public/media/uses` when no other route uses those assets.
 4. Remove the use-case import and routes from `src/app/sitemap.ts`.
 5. Remove every use-case link from `src/config/site.ts`, page copy, footer, and related-content links.
-6. Remove this recipe and update `docs/features.md`, `PLAN.md`, and `docs/launch/status.md`.
+6. Remove this recipe, update `docs/features.md` and `PLAN.md`, and mark use-case-only checks `not_applicable`.
 7. Run `pnpm check`, `pnpm build`, and the launch audit. Verify old production use-case URLs receive an intentional 404/410 or relevant redirect.
 
 Do not replace deletion with an `ENABLE_USE_CASES` flag.

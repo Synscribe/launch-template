@@ -8,7 +8,7 @@ Use this file at kickoff to decide what the project keeps, deletes, or adds. Def
 - If unused, delete the route/components/content, navigation and sitemap entries, tests, dependency, and recipe references.
 - Do not retain an unused integration behind `enabled: false`.
 - Advanced capabilities are added when the real project selects them.
-- Record the project decision in `docs/launch/status.md`.
+- Mark checks for a removed feature `not_applicable` in `docs/launch/checklist.json`.
 
 ## Catalog
 
