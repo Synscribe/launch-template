@@ -239,6 +239,8 @@ Build one strong, generic example homepage with real component code and a modest
 
 Exit: homepage passes the per-page definition of done and becomes the style reference for the next route.
 
+Current progress: the homepage now follows the shared hero → trust → positioning → capabilities → path to start → questions → closing-action flow in `docs/recipes/homepage.md`. Its original design and copy remain the base; the existing checklist section now comes before the workflow. The header, hero, and close use the same “Launch Website” action and `/contact` destination. The visible positioning sentence, metadata description, and WebSite JSON-LD share `siteConfig.description`, while the questions and FAQ JSON-LD share one server-owned array. The trust bar names the real project stack; customer logos, outcome numbers, and quotes remain intentionally omitted until the project has approved, sourced proof.
+
 ### Phase 2 — not-found, privacy, then terms
 
 Treat these as separate pages. Legal pages may begin as clearly marked templates, but production audit must fail until organization identity, jurisdiction, service behavior, subprocessors/cookies, contacts, effective dates, and counsel/client approval are recorded as applicable.

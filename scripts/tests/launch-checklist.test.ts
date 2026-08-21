@@ -16,11 +16,11 @@ describe("launch checklist", () => {
       JSON.parse(await readFile(CHECKLIST_JSON_PATH, "utf8")),
     );
 
-    expect(checklist.items).toHaveLength(39);
+    expect(checklist.items).toHaveLength(42);
     expect(checklist.projectItems).toEqual([]);
     expect(
       new Set(allChecklistItems(checklist).map((item) => item.id)).size,
-    ).toBe(39);
+    ).toBe(42);
     expect(checklist.items.find((item) => item.id === "SEO-02")?.priority).toBe(
       "P0",
     );
@@ -143,7 +143,7 @@ describe("launch checklist", () => {
       ],
     });
 
-    expect(allChecklistItems(expanded)).toHaveLength(40);
+    expect(allChecklistItems(expanded)).toHaveLength(43);
     expect(await renderChecklist(expanded)).toContain(
       "### WIDGET-01 — cookie consent behavior is production-ready",
     );

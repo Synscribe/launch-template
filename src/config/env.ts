@@ -51,7 +51,7 @@ export const env = Object.freeze({
   siteUrl: normalizedUrl(process.env.NEXT_PUBLIC_SITE_URL),
   siteDescription:
     optional(process.env.NEXT_PUBLIC_SITE_DESCRIPTION) ??
-    "A practical Next.js foundation for agentic websites, client migrations, rebuilds, and new launches.",
+    "Launch Template is a Next.js website foundation for developers and business owners building with Claude Code, Codex, or another AI coding tool.",
   deploymentEnvironment: deploymentEnvironment(
     process.env.NEXT_PUBLIC_DEPLOYMENT_ENV,
   ),

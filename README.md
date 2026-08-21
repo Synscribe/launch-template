@@ -50,7 +50,7 @@ pnpm launch:audit --url https://example.com --mode production
 ## Current implementation
 
 - Phase 0 foundation: implemented.
-- Phase 1 homepage: implemented.
+- Phase 1 homepage: implemented with one `/contact` action, a stack trust bar, shared positioning sentence, reordered existing sections, FAQ, and close. Customer-proof sections stay omitted until real inputs exist; see `docs/recipes/homepage.md`.
 - shadcn/ui: configured with the `base-nova` style; only the Button, Card, and Badge primitives used by current pages are checked in.
 - PostHog: included through `src/instrumentation-client.ts`; add its token to activate it or delete the file and dependency.
 - Privacy and terms: safe noindex scaffolds only. They deliberately block production until replaced and reviewed.

@@ -61,6 +61,45 @@ Check:
 
 The production launch audit fails while explicit placeholder filenames or markers remain.
 
+### HOME-01 — the homepage keeps one primary action within reach
+
+- [ ] **Todo**
+- Recipe: [docs/recipes/homepage.md](../recipes/homepage.md)
+- Files:
+  - `src/components/site-header.tsx`
+  - `src/app/(marketing)/page.tsx`
+  - `src/app/contact/page.tsx`
+
+Why it matters: a visitor should not have to decode several competing actions or scroll back to the top to find the real next step.
+
+Check:
+
+- Use the same primary-action label and destination in the shared header, homepage hero, and closing section.
+- Point to the real conversion route, not a same-page anchor or placeholder destination.
+- Keep the header action reachable on a phone and confirm the closing action remains visible after responsive reflow.
+- A secondary hero action may help exploration, but it must not compete with the primary action.
+
+This check covers reaching the conversion path. `FORM-01` separately covers whether the form works end to end.
+
+### HOME-02 — homepage proof is real, sourced, and approved
+
+- [ ] **Todo**
+- Recipe: [docs/recipes/homepage.md](../recipes/homepage.md)
+- Files:
+  - `src/app/(marketing)/page.tsx`
+  - `public/media`
+  - `docs/launch/status.md`
+
+Why it matters: invented or vague proof creates legal and trust risk. A layout gap is safer than a believable fictional customer claim.
+
+Check:
+
+- Every displayed logo has permission and a clear relationship to the claim beside it.
+- Every number describes system scale or a customer outcome, with a written definition, source, and measurement window where relevant.
+- Every quote has recorded approval plus a real name, role, and company.
+- Omit proof sections when the project has no approved inputs. Never ship sample logos, internal file/module counts, anonymous praise, or plausible placeholder outcomes.
+- Keep proof directly below the hero by default. Move the whole proof block later only when the product needs explaining first or the names need context; record that choice in the page source.
+
 ### ROUTE-01 — every internal destination works
 
 - [ ] **Todo**
@@ -388,6 +427,25 @@ Collect only useful attribution fields, document first/recent-page storage, avoi
 The default keeps first-touch UTM fields, an external referrer without its query string, the first landing page, and at most five same-site paths. It drops all other query values, expires browser context after 90 days, validates it again on the server, and sends no form values or attribution to PostHog.
 
 ## P1 — non-blocking quality and feature-dependent checks
+
+### HOME-03 — the homepage defines the offer once and consistently
+
+- [ ] **Todo**
+- Recipe: [docs/recipes/homepage.md](../recipes/homepage.md)
+- Files:
+  - `.env.example`
+  - `src/config/env.ts`
+  - `src/app/(marketing)/page.tsx`
+  - `src/lib/seo.ts`
+
+Why it matters: one concise definition helps people, search results, and other systems understand the site without combining fragments from several sections.
+
+Check:
+
+- Include one self-contained positioning summary that names the brand, category, audience, and core capabilities in plain language.
+- Keep its lead sentence at or below 155 characters and use it word for word as `NEXT_PUBLIC_SITE_DESCRIPTION`, the homepage meta description, visible homepage copy, and the WebSite JSON-LD description.
+- Keep links out of the summary and avoid repeating the same capability list in the next section.
+- Read it aloud. Rewrite keyword lists, unexplained jargon, and sentences that sound unlike the rest of the page.
 
 ### SEO-08 — structured data is accurate and applicable
 
