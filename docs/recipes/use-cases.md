@@ -1,42 +1,43 @@
 # Use cases: structure, visuals, add, or remove
 
-Use cases are ordinary, deletable content and routes. Each detail page comes from one validated JSON document. The JSON owns content, SEO, group membership, and `visualId` references; `page.tsx` owns the React composition. Do not put component names, file paths, Tailwind classes, or serialized React props in the content format.
+Use cases are ordinary, deletable content and routes. Each detail page comes from one validated JSON document. The JSON owns content, metadata, one group membership, and `visualId` references; `page.tsx` owns the React composition. Do not put component names, file paths, Tailwind classes, or serialized React props in the content format.
 
 ## Detail-page structure
 
 Every JSON-backed detail page uses the same route composition, in this order:
 
 1. **Hero:** one H1, one summary, one primary action, and one `UseCaseVisual` selected by `hero.visualId`.
-2. **Risks:** a short introduction and three problems the work should prevent.
+2. **Problem:** a short introduction and three problems the work should prevent.
 3. **Solution:** three to five capability rows. Each row has a category, title, short explanation, highlights, and one visual selected by `visualId`.
 4. **Method:** a short ordered sequence explaining how the work proceeds.
 5. **Outcomes:** concrete deliverables or states the client should have before launch.
 6. **FAQ:** native, server-rendered disclosures for real buying or delivery questions.
-7. **Closing:** one final action with a real internal destination.
+7. **CTA:** one final action. Its optional `href` overrides the default `/contact` destination.
 
 The structure lives in `src/app/uses/[slug]/page.tsx`; it is not configurable per JSON file. If a client needs a materially different page type, build an explicit route or intentionally change the shared composition. Do not add section flags or turn the JSON into a page builder.
 
 ## Add a use case
 
 1. Copy `src/content/use-cases/website-migrations.json` to a lowercase, hyphenated filename.
-2. Give the document a matching unique `slug`, a short hub title, and one or more `groups` IDs from `src/content/use-cases/groups.json`.
-3. Replace every SEO, hero, risk, capability, method, outcome, FAQ, and closing field with project-appropriate copy. Do not keep claims, outcomes, audiences, or response promises that are not true for the client.
+2. Set `metadata.slug` to the filename, `metadata.anchor` to the short hub title, and `metadata.group` to exactly one ID from `src/content/use-cases/groups.json`. Keep the page title and description in the same `metadata` object.
+3. Replace every metadata, hero, problem, capability, method, outcome, FAQ, and CTA field with project-appropriate copy. Do not keep claims, outcomes, audiences, or response promises that are not true for the client.
 4. Choose one supported `visualId` for the hero and for each capability. The same field always selects the visual; the JSON never describes how it is rendered.
 5. If none of the current IDs fits, add a new visual through the resolver workflow below before referencing it in JSON.
-6. Run `pnpm check`. The content loader rejects malformed JSON, missing fields, filename/slug mismatches, duplicate slugs or capability visual IDs, unsupported visual IDs, unknown/duplicate group IDs, and external CTA paths.
-7. Run `pnpm build`. `generateStaticParams` should list the new `/uses/<slug>` route.
-8. Confirm the route is linked from the grouped `/uses` hub and appears in `/sitemap.xml`.
-9. Review `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, and `IMAGE-01` in the generated `docs/launch/checklist.md`.
-10. Run the live launch audit, then update those checks in `docs/launch/checklist.json`.
+6. Leave `cta.href` out to use `/contact`. Add it only when the use case needs a different internal destination.
+7. Run `pnpm check`. The content loader rejects malformed JSON, missing fields, filename/slug mismatches, duplicate slugs or capability visual IDs, unsupported visual IDs, unknown group IDs, and external CTA paths.
+8. Run `pnpm build`. `generateStaticParams` should list the new `/uses/<slug>` route.
+9. Confirm the route is linked from the grouped `/uses` hub and appears in `/sitemap.xml`.
+10. Review `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, and `IMAGE-01` in the generated `docs/launch/checklist.md`.
+11. Run the live launch audit, then update those checks in `docs/launch/checklist.json`.
 
-There is no numeric page order. Use cases have a deterministic alphabetical fallback, while the array order in `groups.json` controls the hub-section order. A use case with multiple group IDs appears in multiple relevant hub sections. Add a group definition only when the project has a real grouping to show; do not create empty speculative groups.
+There is no numeric page order. Use cases sort alphabetically by `metadata.anchor`, while the array order in `groups.json` controls the hub-section order. Each use case belongs to one group and appears once on the hub. Add a group definition only when the project has a real grouping to show; do not create empty speculative groups.
 
 ## The visual resolver
 
 `UseCaseVisual` is the route-local visual resolver. Both the hero and capability rows call it with only a validated `visualId`:
 
 - Renderer and typed source map: `src/app/uses/[slug]/_components/use-case-visual.tsx`
-- React visual implementations: `src/app/uses/[slug]/_components/use-case-visual-components.tsx`
+- Starter React visual implementations: `src/app/uses/[slug]/_components/placeholder-use-case-visual-components.tsx`
 - Visual CSS and reduced-motion rules: `src/app/uses/[slug]/_components/use-case-visuals.module.css`
 - Valid ID union and JSON validation: `src/lib/use-cases.ts`
 - Local visual files: `public/media/uses`
@@ -52,7 +53,7 @@ To add a visual:
 
 1. Use `$micro-ui` to identify the claim, visual mode, and smallest durable output.
 2. Add the new ID to `USE_CASE_VISUAL_IDS` in `src/lib/use-cases.ts`.
-3. For non-interactive React, add the implementation to `use-case-visual-components.tsx`, export it, import it into `use-case-visual.tsx`, and add a `kind: "component"` source. For interaction, create a focused `*.client.tsx` module under the same `_components` folder and register that component without moving the resolver across the client boundary.
+3. For non-interactive React, create `use-case-visual-components.tsx` for project-owned implementations, export the component, import it into `use-case-visual.tsx`, and add a `kind: "component"` source. For interaction, create a focused `*.client.tsx` module under the same `_components` folder and register that component without moving the resolver across the client boundary. Delete `placeholder-use-case-visual-components.tsx` after replacing its last registered visual.
 4. For an image, save the approved optimized file under `public/media/uses`, then add a `kind: "image"` source with the local path and intentional alt text. Use an empty alt only when the image is genuinely decorative and repeats adjacent text.
 5. Reference the new ID from `hero.visualId` or `solution.items[].visualId`.
 6. Run tests and inspect every placement at desktop and mobile sizes. An image or interactive component that works in a feature row must also survive the hero width if the ID is used there.
@@ -75,7 +76,7 @@ Do not pass visual props through JSON. If a visual needs its own internal labels
 - Hub composition: `src/app/uses/page.tsx`
 - Detail composition: `src/app/uses/[slug]/page.tsx`
 - Visual resolver: `src/app/uses/[slug]/_components/use-case-visual.tsx`
-- React visuals: `src/app/uses/[slug]/_components/use-case-visual-components.tsx`
+- Starter React visuals: `src/app/uses/[slug]/_components/placeholder-use-case-visual-components.tsx`
 - Local visual files: `public/media/uses`
 - Route-local styling: `src/app/uses/[slug]/use-case.module.css`
 - Discovery: `src/app/sitemap.ts` and `src/config/site.ts`

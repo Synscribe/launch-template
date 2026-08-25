@@ -21,7 +21,7 @@ import {
   StartupHeroVisual,
   UrlDecisionsVisual,
   UrlInventoryVisual,
-} from "./use-case-visual-components";
+} from "./placeholder-use-case-visual-components";
 
 type ComponentVisualSource = {
   kind: "component";
@@ -37,9 +37,9 @@ type ImageVisualSource = {
 type UseCaseVisualSource = ComponentVisualSource | ImageVisualSource;
 
 const useCaseVisualSources = {
-  "website-migration-overview": {
+  "placeholder-website-migration-overview": {
     kind: "image",
-    src: "/media/uses/website-migration-overview.svg",
+    src: "/media/uses/placeholder-website-migration-overview.svg",
     alt: "A reviewed route map connecting old website URLs to their launch destinations.",
   },
   "saas-rebuild-overview": {

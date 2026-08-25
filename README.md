@@ -8,7 +8,8 @@ A lean starting point for client migrations, rebuilds, and new startup sites. Th
 2. Use [`docs/features.md`](docs/features.md) during project kickoff. Default features are normal code: delete them when unused instead of adding flags.
 3. For an existing site, begin with [`docs/launch/migration.md`](docs/launch/migration.md) and [`docs/launch/url-map.csv`](docs/launch/url-map.csv).
 4. Update a check with `pnpm launch:checklist --set <ID> <todo|done|not_applicable>`.
-5. Keep [`PLAN.md`](PLAN.md) for the architecture audit and page-by-page roadmap.
+5. Add a client-specific check with `pnpm launch:checklist --add-project <ID> <P0|P1|P2> <title> --detail <Markdown>`.
+6. Keep [`PLAN.md`](PLAN.md) for the architecture audit and page-by-page roadmap.
 
 ## Development
 
@@ -29,25 +30,34 @@ pnpm build
 pnpm launch:audit --url http://localhost:3000 --mode template
 ```
 
+Launch commands have separate jobs:
+
+- `pnpm launch:checklist` displays manual progress and identifies automated items. Its `--set`, `--add-project`, `--write`, and `--check` options manage or validate the canonical checklist.
+- `pnpm launch:verify` executes every named check whose checklist status is `auto`. It needs no running website and exits non-zero when a check fails.
+- `pnpm launch:audit` runs those automated checks plus live crawling, route, metadata, indexability, sitemap, and production-safety checks against a URL.
+
+`pnpm check` includes `pnpm launch:checklist --check` so invalid checklist data or stale generated Markdown fails normal CI. It does not run `pnpm launch:verify`, because the base template intentionally contains marked placeholders until a client replaces them.
+
 Before production, configure the real identity and run:
 
 ```bash
+pnpm launch:verify
 pnpm launch:audit --url https://example.com --mode production
 ```
 
-The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sentinels, inherited legacy brands, broken internal links, production crawl blocks, sitemap drift, and missing priority metadata. It also fails while any P0 checklist item remains `todo`.
+`pnpm launch:verify` runs every checklist item whose status is `auto`; it exits non-zero while any named check fails. The production audit runs those functions alongside live route, metadata, indexability, and sitemap checks. It also fails while any manual P0 item remains `todo`.
 
 ## Current implementation
 
 - Phase 0 foundation: implemented.
-- Phase 1 homepage: implemented.
+- Phase 1 homepage: implemented with one `/contact` action, a stack trust bar, shared positioning sentence, reordered existing sections, FAQ, and close. Customer-proof sections stay omitted until real inputs exist; see `docs/recipes/homepage.md`.
 - shadcn/ui: configured with the `base-nova` style; only the Button, Card, and Badge primitives used by current pages are checked in.
 - PostHog: included through `src/instrumentation-client.ts`; add its token to activate it or delete the file and dependency.
 - Privacy and terms: safe noindex scaffolds only. They deliberately block production until replaced and reviewed.
 - Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented. Heroes and capability rows share one validated `visualId` contract that resolves route-local React or project-owned images through `UseCaseVisual`; see `docs/recipes/use-cases.md`.
-- Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. The `.env.example` ID is temporarily Cyber Sierra's and must be replaced or the blog deleted for a client.
+- Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. Replace the demo publication ID or delete the blog for a client project.
 - Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured.
-- Project skills: `$site-clone`, `$micro-ui`, and `$animated-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
+- Project skills: `$site-clone` and `$micro-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
 
 ## Architecture rules
 
@@ -61,9 +71,8 @@ The production audit rejects the `Launch Template` identity, `TODO_CLIENT_*` sen
 
 ## Project skills
 
-- `$site-clone` inventories an authorized source site, maps exact URLs and wildcard page families, migrates original assets, and drives a screenshot/diff loop through homepage approval before other routes.
-- `$micro-ui` builds route-native interface visuals, local use-case images, and generated social images. `/uses` output is registered in its bounded typed visual resolver instead of a site-wide block registry.
-- `$animated-ui` adds restrained route-local motion while keeping the server-rendered content visible and providing a reduced-motion fallback.
+- `$site-clone` inventories an authorized source site, maps exact URLs and wildcard page families, migrates original assets, reproduces visible widgets, journals functional gaps, and drives a screenshot/diff loop through homepage approval before other routes.
+- `$micro-ui` builds route-native interface visuals, route-local motion, local use-case images, and generated social images. Looping capability visuals use its shared framer-motion kit; page-level motion stays CSS-first. Server-rendered content stays visible without JavaScript and every animation has a composed reduced-motion state. `/uses` output is registered in its bounded typed visual resolver instead of a site-wide block registry.
 
 The `.claude/skills/*` entries are symlinks to `.agents/skills/*`. Keep the names aligned and validate both the canonical skill and its symlink after changing one.
 

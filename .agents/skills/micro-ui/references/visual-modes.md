@@ -26,9 +26,9 @@ Prefer a simple flow or checklist to a fake dashboard. Use an abstract system on
 
 ## Composition rules
 
+Accent ratio and container variety are set in `motion-system.md`; these are the rules specific to still output.
+
 - Give the visual one focal point.
 - Limit supporting groups to three or four.
-- Use one strong accent and one quiet supporting color.
 - Make states differ by label or icon, not color alone.
 - Keep decorative layers behind the information.
-- For a batch, vary container shape as well as internal content.

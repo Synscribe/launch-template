@@ -1,10 +1,13 @@
+import { PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { siteConfig } from "@/config/site";
 import {
+  buildFaqJsonLd,
   buildWebsiteJsonLd,
   createPageMetadata,
   serializeJsonLd,
@@ -14,8 +17,7 @@ import styles from "./home.module.css";
 
 export const metadata: Metadata = createPageMetadata({
   title: "A practical Next.js template for agentic websites",
-  description:
-    "Launch agentic websites, migrations, and rebuilds with technical SEO, redirects, analytics, and launch checks kept close to the code.",
+  description: siteConfig.description,
   path: "/",
 });
 
@@ -26,6 +28,8 @@ const signals = [
   ["Migration", "Old URLs are mapped"],
   ["Launch", "Checks are recorded"],
 ];
+
+const trustStack = ["Next.js", "TypeScript", "shadcn/ui", "PostHog"];
 
 const principles = [
   {
@@ -96,8 +100,32 @@ const workflow = [
   },
 ];
 
+const questions = [
+  {
+    question: "Is this only for brand-new websites?",
+    answer:
+      "No. Use it for a new launch, a rebuild, or a migration. Migration projects start with the existing URL inventory and redirect map before routes change.",
+  },
+  {
+    question: "Do I need to keep every included feature?",
+    answer:
+      "No. Blog, use cases, PostHog, and the contact flow are ordinary code. Delete what the project does not need.",
+  },
+  {
+    question: "Can I bring my own design system?",
+    answer:
+      "Yes. Replace the semantic tokens first, then change the shared shell and route-level composition. The routing and launch checks can stay underneath.",
+  },
+  {
+    question: "What does the launch review check?",
+    answer:
+      "It checks identity, routes, indexing, metadata, the sitemap, redirects, forms, analytics, and the launch risks recorded in the checklist.",
+  },
+];
+
 export default function HomePage() {
   const websiteJsonLd = buildWebsiteJsonLd();
+  const faqJsonLd = buildFaqJsonLd(questions);
 
   return (
     <main id="main-content">
@@ -105,9 +133,13 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
+      />
 
       <section className={`${styles.hero} border-b border-ink/10`}>
-        <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl items-center gap-14 px-5 py-20 sm:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:py-24">
+        <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl items-start gap-14 px-5 pt-14 pb-20 sm:px-8 sm:pt-16 lg:grid-cols-[1.08fr_0.92fr] lg:pt-20 lg:pb-24">
           <div>
             <p
               className={`${styles.kicker} flex items-center gap-3 text-xs font-bold tracking-[0.2em] text-ink-muted uppercase`}
@@ -126,14 +158,14 @@ export default function HomePage() {
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
-                href="#priorities"
+                href="/contact"
                 className={buttonVariants({
                   size: "lg",
                   className:
                     "h-auto rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-paper hover:-translate-y-0.5 hover:bg-ink/85",
                 })}
               >
-                See launch priorities
+                Launch Website
               </Link>
               <Link
                 href="#principles"
@@ -204,7 +236,48 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="principles" className="scroll-mt-24 bg-paper py-24 sm:py-32">
+      <section
+        aria-label="Technology trust bar"
+        className="border-b border-ink/10 bg-paper"
+      >
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-5 py-7 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <p className="text-sm font-semibold text-ink-muted">
+            Built on a stack your team can inspect and own.
+          </p>
+          <ul className="flex flex-wrap gap-x-7 gap-y-3">
+            {trustStack.map((item) => (
+              <li
+                className="font-display text-lg tracking-[-0.02em] text-ink"
+                key={item}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Customer proof belongs below this trust bar once approved logos, outcomes, or quotes exist. */}
+
+      <section className="bg-paper py-24 sm:py-32">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <p className="text-xs font-bold tracking-[0.2em] text-signal uppercase">
+            What Launch Template is
+          </p>
+          <h2 className="mt-6 max-w-6xl text-balance font-display text-4xl leading-[1.04] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+            {siteConfig.description}
+          </h2>
+          <p className="mt-8 max-w-3xl text-lg leading-8 text-ink-muted">
+            It keeps pages, metadata, redirects, analytics, forms, and launch
+            checks in one codebase, ready to change one route at a time.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="principles"
+        className="scroll-mt-24 border-t border-ink/10 bg-paper py-24 sm:py-32"
+      >
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
           <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
             <div>
@@ -292,45 +365,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section
-        id="workflow"
-        className="scroll-mt-24 bg-night py-24 text-paper sm:py-32"
-      >
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-          <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-            <div>
-              <p className="text-xs font-bold tracking-[0.2em] text-mint uppercase">
-                Build one page at a time
-              </p>
-              <h2 className="mt-5 font-display text-5xl leading-[0.98] tracking-[-0.045em] sm:text-6xl">
-                Four steps anyone can follow.
-              </h2>
-              <p className="mt-6 max-w-xl text-base leading-7 text-white/60">
-                Use the same order for every project. Each finished page leaves
-                behind code, decisions, and launch evidence.
-              </p>
-            </div>
-
-            <div className="border-t border-white/15">
-              {workflow.map((step) => (
-                <article
-                  className="grid grid-cols-[5rem_1fr] gap-4 border-b border-white/15 py-7 sm:grid-cols-[7rem_0.55fr_1fr] sm:items-start"
-                  key={step.number}
-                >
-                  <p className={`${styles.stepNumber} text-5xl leading-none`}>
-                    {step.number}
-                  </p>
-                  <h3 className="pt-1 text-lg font-semibold">{step.title}</h3>
-                  <p className="col-start-2 text-sm leading-6 text-white/55 sm:col-start-auto">
-                    {step.body}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="bg-paper py-24 sm:py-32">
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
@@ -373,6 +407,106 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section
+        id="workflow"
+        className="scroll-mt-24 bg-night py-24 text-paper sm:py-32"
+      >
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+            <div>
+              <p className="text-xs font-bold tracking-[0.2em] text-mint uppercase">
+                Build one page at a time
+              </p>
+              <h2 className="mt-5 font-display text-5xl leading-[0.98] tracking-[-0.045em] sm:text-6xl">
+                Four steps anyone can follow.
+              </h2>
+              <p className="mt-6 max-w-xl text-base leading-7 text-white/60">
+                Use the same order for every project. Each finished page leaves
+                behind code, decisions, and launch evidence.
+              </p>
+            </div>
+
+            <div className="border-t border-white/15">
+              {workflow.map((step) => (
+                <article
+                  className="grid grid-cols-[5rem_1fr] gap-4 border-b border-white/15 py-7 sm:grid-cols-[7rem_0.55fr_1fr] sm:items-start"
+                  key={step.number}
+                >
+                  <p className={`${styles.stepNumber} text-5xl leading-none`}>
+                    {step.number}
+                  </p>
+                  <h3 className="pt-1 text-lg font-semibold">{step.title}</h3>
+                  <p className="col-start-2 text-sm leading-6 text-white/55 sm:col-start-auto">
+                    {step.body}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-ink/10 bg-paper py-24 sm:py-32">
+        <div className="mx-auto grid w-full max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
+          <div>
+            <p className="text-xs font-bold tracking-[0.2em] text-signal uppercase">
+              Common questions
+            </p>
+            <h2 className="mt-5 max-w-xl font-display text-5xl leading-[0.98] tracking-[-0.045em] sm:text-6xl">
+              Start with a clear answer.
+            </h2>
+          </div>
+
+          <div className="border-t border-ink/15">
+            {questions.map((item) => (
+              <details className={styles.faqItem} key={item.question}>
+                <summary className="grid cursor-pointer grid-cols-[1fr_1.5rem] gap-4 py-6">
+                  <span className="text-lg leading-7 font-semibold">
+                    {item.question}
+                  </span>
+                  <PlusIcon
+                    className={`${styles.faqMarker} mt-1 size-5 text-ink-faint`}
+                    aria-hidden="true"
+                  />
+                </summary>
+                <p className="max-w-2xl pr-8 pb-7 text-base leading-8 text-ink-muted">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-ink/10 py-20 sm:py-24">
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+          <Card
+            className={`${styles.closingCard} gap-0 rounded-[2rem] border-0 p-8 py-8 text-paper ring-0 sm:p-12 sm:py-12`}
+          >
+            <CardContent className="grid gap-10 px-0 lg:grid-cols-[1fr_auto] lg:items-end">
+              <div>
+                <p className="text-xs font-bold tracking-[0.2em] text-mint uppercase">
+                  Ready when you are
+                </p>
+                <h2 className="mt-5 max-w-4xl text-balance font-display text-4xl leading-[1] tracking-[-0.04em] sm:text-6xl">
+                  Build the website you want. Keep the launch under control.
+                </h2>
+              </div>
+              <Link
+                href="/contact"
+                className={buttonVariants({
+                  size: "lg",
+                  className:
+                    "h-auto shrink-0 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-signal-strong hover:-translate-y-0.5 hover:bg-white/90",
+                })}
+              >
+                Launch Website
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </main>

@@ -149,6 +149,37 @@
   box-shadow: 0 34px 90px rgba(18, 32, 30, 0.18);
 }
 
+.faqItem {
+  border-bottom: 1px solid rgba(23, 32, 31, 0.15);
+}
+
+.faqItem summary {
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqMarker {
+  transition: transform 180ms ease;
+}
+
+.faqItem[open] .faqMarker {
+  transform: rotate(45deg);
+}
+
+.closingCard {
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(191, 227, 209, 0.22),
+      transparent 32%
+    ),
+    #c83f1b;
+  box-shadow: 0 34px 90px rgba(116, 42, 23, 0.2);
+}
+
 @keyframes rise {
   from {
     opacity: 0;

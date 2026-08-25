@@ -1,6 +1,6 @@
 # Migration and rebuild playbook
 
-Use this workflow whenever an existing public site is being migrated, rebuilt, redesigned, or moved to a new domain. The canonical requirements and their status are `MIG-01` through `MIG-08` in `checklist.json`; `checklist.md` is the generated readable view.
+Use this workflow whenever an existing public site is being migrated, rebuilt, redesigned, or moved to a new domain. The reusable requirements and their status are `MIG-01` through `MIG-08` in `checklist.json`; client-specific requirements discovered during migration belong in that file's `projectItems`. `checklist.md` is the generated readable view.
 
 ## 1. Define the kind of change
 
@@ -27,7 +27,8 @@ Before implementation:
 - review server logs when available;
 - identify linked PDFs, images, videos, and downloads;
 - capture representative desktop/mobile screenshots;
-- record forms, events, cookies, structured data, and external integrations.
+- record forms, events, cookies, structured data, and external integrations;
+- capture visible third-party widgets and their observable desktop/mobile states, including delayed overlays such as consent banners, live chat, scheduling, popups, and feedback controls.
 
 Store old URLs in `url-map.csv`. Add the source of each URL so important orphaned URLs are not discarded merely because a crawl missed them.
 
@@ -44,7 +45,18 @@ For each URL, record traffic/backlink priority, new destination, implementation 
 
 ## 4. Build the homepage or one representative route first
 
-For an authorized 1:1 design clone, use `$site-clone` from `.agents/skills/site-clone`. It adds the technical workflow for recursive sitemap inventory, wildcard route families, original asset migration, agent-browser screenshot/diff comparison, and the required homepage approval gate. Clone and approve the homepage first.
+For an authorized 1:1 design clone, use `$site-clone` from `.agents/skills/site-clone`. It adds the technical workflow for recursive sitemap inventory, wildcard route families, original asset migration, visible widget reproduction, an implementation journal, agent-browser screenshot/diff comparison, and the required homepage approval gate. Clone and approve the homepage first.
+
+Keep `docs/launch/clone-journal.md` as evidence for what is fully wired, visual-only, partial, omitted, or blocked. It is not a second checklist. Add every unresolved launch action to `projectItems` with the checklist CLI, for example:
+
+```bash
+pnpm launch:checklist --add-project WIDGET-01 P0 \
+  "cookie consent behavior is production-ready" \
+  --detail "The banner is visually cloned; persistence and script gating remain unwired." \
+  --recipe docs/launch/clone-journal.md
+```
+
+Use a visual-only stand-in when it is needed for faithful preview comparison and real integration configuration is unavailable. Never treat that stand-in as proof of production functionality or copy the old site's vendor IDs, recipients, consent policy, or analytics destination.
 
 For a framework/content migration without a 1:1 design requirement, choose a route that exercises the real page model without being the riskiest page. Compare:
 
@@ -58,7 +70,7 @@ For a framework/content migration without a 1:1 design requirement, choose a rou
 - server-rendered HTML;
 - performance and third-party scripts.
 
-Use the result to define the next route. Do not create a generic block engine to account for every old template variation. Keep every exact old URL in `url-map.csv` even when repeated page archetypes are summarized as `/blog/*`, `/uses/*`, or another wildcard in the clone inventory.
+Use the result to define the next route. Do not create a generic block engine to account for every source-site layout variation. Keep every exact old URL in `url-map.csv` even when repeated page archetypes are summarized as `/blog/*`, `/uses/*`, or another wildcard in the clone inventory.
 
 ## 5. Implement redirects
 
@@ -86,7 +98,8 @@ The comparison should report:
 - first-200-word or key-content change;
 - internal-link failures;
 - structured-data/date change when applicable;
-- screenshot differences for clone work.
+- screenshot differences for clone work;
+- widget visual states and real integration behavior as separate results.
 
 ## 7. Cutover
 
@@ -98,6 +111,7 @@ Before DNS or route activation:
 - new canonical sitemap is ready;
 - Search Console properties are verified;
 - analytics events and form delivery work;
+- consent, chat, scheduling, and other retained widget integrations use reviewed client-owned configuration and work end to end;
 - server capacity, error monitoring, backup, and rollback are ready;
 - the cutover window and rollback decision are clear.
 

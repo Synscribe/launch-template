@@ -4,6 +4,7 @@ import {
   absoluteUrl,
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
+  buildFaqJsonLd,
   createPageMetadata,
   serializeJsonLd,
 } from "./seo";
@@ -62,6 +63,29 @@ describe("SEO helpers", () => {
       position: 2,
       name: "Website migrations",
       item: "http://localhost:3000/uses/website-migrations",
+    });
+  });
+
+  it("builds FAQ structured data from visible questions and answers", () => {
+    const faq = buildFaqJsonLd([
+      {
+        question: "Can I bring my own design system?",
+        answer: "Yes. Replace the design tokens and keep the launch checks.",
+      },
+    ]);
+
+    expect(faq).toMatchObject({
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Can I bring my own design system?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. Replace the design tokens and keep the launch checks.",
+          },
+        },
+      ],
     });
   });
 

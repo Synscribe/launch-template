@@ -30,9 +30,9 @@ export default function ContactPage() {
       data-contact-delivery={deliveryConfigured ? "configured" : "missing"}
       id="main-content"
     >
-      <section className="py-12 sm:py-20 lg:py-28">
+      <section className="pt-14 pb-12 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-28">
         <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
-          <div className="lg:pt-5">
+          <div>
             <p className="text-sm font-semibold tracking-[0.16em] text-signal-strong uppercase">
               Start a project
             </p>

@@ -11,7 +11,7 @@ type MethodStep = ContentItem & {
 };
 
 export const USE_CASE_VISUAL_IDS = [
-  "website-migration-overview",
+  "placeholder-website-migration-overview",
   "saas-rebuild-overview",
   "startup-launch-overview",
   "seo-landing-page-overview",
@@ -53,10 +53,10 @@ export type UseCaseGroup = {
 };
 
 export type UseCaseContent = {
-  slug: string;
-  shortTitle: string;
-  groups: string[];
-  seo: {
+  metadata: {
+    slug: string;
+    anchor: string;
+    group: string;
     title: string;
     description: string;
   };
@@ -65,7 +65,7 @@ export type UseCaseContent = {
     summary: string;
     visualId: UseCaseVisualId;
   };
-  risks: {
+  problem: {
     title: string;
     introduction: string;
     items: ContentItem[];
@@ -89,13 +89,11 @@ export type UseCaseContent = {
     introduction: string;
     items: FaqItem[];
   };
-  closing: {
+  cta: {
     title: string;
     description: string;
-    cta: {
-      label: string;
-      href: string;
-    };
+    label: string;
+    href?: string;
   };
 };
 
@@ -153,24 +151,6 @@ function textList(value: unknown, fileName: string, field: string): string[] {
     fail(fileName, field, "a non-empty string array");
   }
   return value.map((item, index) => text(item, fileName, `${field}[${index}]`));
-}
-
-function uniqueSlugList(
-  value: unknown,
-  fileName: string,
-  field: string,
-): string[] {
-  if (!Array.isArray(value) || value.length === 0) {
-    fail(fileName, field, "a non-empty identifier array");
-  }
-
-  const values = value.map((item, index) =>
-    slug(item, fileName, `${field}[${index}]`),
-  );
-  if (new Set(values).size !== values.length) {
-    fail(fileName, field, "an array of unique identifiers");
-  }
-  return values;
 }
 
 function contentItems(
@@ -276,43 +256,49 @@ function faqItems(value: unknown, fileName: string, field: string): FaqItem[] {
 
 function parseUseCase(value: unknown, fileName: string): UseCaseContent {
   const source = record(value, fileName, "root");
-  const seo = record(source.seo, fileName, "seo");
+  const metadata = record(source.metadata, fileName, "metadata");
   const hero = record(source.hero, fileName, "hero");
-  const risks = record(source.risks, fileName, "risks");
+  const problem = record(source.problem, fileName, "problem");
   const solution = record(source.solution, fileName, "solution");
   const method = record(source.method, fileName, "method");
   const outcomes = record(source.outcomes, fileName, "outcomes");
   const faq = record(source.faq, fileName, "faq");
-  const closing = record(source.closing, fileName, "closing");
-  const cta = record(closing.cta, fileName, "closing.cta");
-  const useCaseSlug = slug(source.slug, fileName, "slug");
+  const cta = record(source.cta, fileName, "cta");
+  const useCaseSlug = slug(metadata.slug, fileName, "metadata.slug");
 
   if (fileName !== `${useCaseSlug}.json`) {
     throw new Error(`${fileName}: filename must match slug ${useCaseSlug}`);
   }
 
-  const href = text(cta.href, fileName, "closing.cta.href");
-  if (!href.startsWith("/")) {
-    fail(fileName, "closing.cta.href", "an internal path beginning with /");
+  let href: string | undefined;
+  if (cta.href !== undefined) {
+    href = text(cta.href, fileName, "cta.href");
+    if (!href.startsWith("/")) {
+      fail(fileName, "cta.href", "an internal path beginning with /");
+    }
   }
 
   return {
-    slug: useCaseSlug,
-    shortTitle: text(source.shortTitle, fileName, "shortTitle"),
-    groups: uniqueSlugList(source.groups, fileName, "groups"),
-    seo: {
-      title: text(seo.title, fileName, "seo.title"),
-      description: text(seo.description, fileName, "seo.description"),
+    metadata: {
+      slug: useCaseSlug,
+      anchor: text(metadata.anchor, fileName, "metadata.anchor"),
+      group: slug(metadata.group, fileName, "metadata.group"),
+      title: text(metadata.title, fileName, "metadata.title"),
+      description: text(metadata.description, fileName, "metadata.description"),
     },
     hero: {
       title: text(hero.title, fileName, "hero.title"),
       summary: text(hero.summary, fileName, "hero.summary"),
       visualId: visualId(hero.visualId, fileName, "hero.visualId"),
     },
-    risks: {
-      title: text(risks.title, fileName, "risks.title"),
-      introduction: text(risks.introduction, fileName, "risks.introduction"),
-      items: contentItems(risks.items, fileName, "risks.items"),
+    problem: {
+      title: text(problem.title, fileName, "problem.title"),
+      introduction: text(
+        problem.introduction,
+        fileName,
+        "problem.introduction",
+      ),
+      items: contentItems(problem.items, fileName, "problem.items"),
     },
     solution: {
       title: text(solution.title, fileName, "solution.title"),
@@ -337,13 +323,11 @@ function parseUseCase(value: unknown, fileName: string): UseCaseContent {
       introduction: text(faq.introduction, fileName, "faq.introduction"),
       items: faqItems(faq.items, fileName, "faq.items"),
     },
-    closing: {
-      title: text(closing.title, fileName, "closing.title"),
-      description: text(closing.description, fileName, "closing.description"),
-      cta: {
-        label: text(cta.label, fileName, "closing.cta.label"),
-        href,
-      },
+    cta: {
+      title: text(cta.title, fileName, "cta.title"),
+      description: text(cta.description, fileName, "cta.description"),
+      label: text(cta.label, fileName, "cta.label"),
+      ...(href ? { href } : {}),
     },
   };
 }
@@ -411,22 +395,20 @@ export async function getAllUseCases(): Promise<UseCaseContent[]> {
   const useCaseSlugs = new Set<string>();
 
   for (const useCase of useCases) {
-    if (useCaseSlugs.has(useCase.slug)) {
-      throw new Error(`Duplicate use-case slug: ${useCase.slug}`);
+    if (useCaseSlugs.has(useCase.metadata.slug)) {
+      throw new Error(`Duplicate use-case slug: ${useCase.metadata.slug}`);
     }
-    useCaseSlugs.add(useCase.slug);
+    useCaseSlugs.add(useCase.metadata.slug);
 
-    for (const group of useCase.groups) {
-      if (!groupSlugs.has(group)) {
-        throw new Error(
-          `${useCase.slug}.json: groups references unknown group ${group}`,
-        );
-      }
+    if (!groupSlugs.has(useCase.metadata.group)) {
+      throw new Error(
+        `${useCase.metadata.slug}.json: metadata.group references unknown group ${useCase.metadata.group}`,
+      );
     }
   }
 
   return useCases.sort((left, right) =>
-    left.shortTitle.localeCompare(right.shortTitle),
+    left.metadata.anchor.localeCompare(right.metadata.anchor),
   );
 }
 
@@ -439,8 +421,8 @@ export async function getGroupedUseCases(): Promise<GroupedUseCases[]> {
   return groups
     .map((group) => ({
       ...group,
-      useCases: useCases.filter((useCase) =>
-        useCase.groups.includes(group.slug),
+      useCases: useCases.filter(
+        (useCase) => useCase.metadata.group === group.slug,
       ),
     }))
     .filter((group) => group.useCases.length > 0);
@@ -450,5 +432,5 @@ export async function getUseCaseBySlug(
   useCaseSlug: string,
 ): Promise<UseCaseContent | undefined> {
   const useCases = await getAllUseCases();
-  return useCases.find((useCase) => useCase.slug === useCaseSlug);
+  return useCases.find((useCase) => useCase.metadata.slug === useCaseSlug);
 }

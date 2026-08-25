@@ -26,7 +26,7 @@ agent-browser --session clone-local screenshot --full /tmp/local-home-1440.png
 
 Repeat at a mobile viewport used by the source, normally 390×844. Add an intermediate viewport when the source changes materially around tablet/navigation breakpoints.
 
-If content is lazy-loaded, scroll through the page once, wait for expected media, return to the top, and capture again. Dismiss cookie banners only when the clone is not expected to reproduce them.
+If content is lazy-loaded, scroll through the page once, wait for expected media and delayed widgets, return to the top, and capture again. Do not dismiss a cookie banner, chat launcher, popup, or other overlay until it has been inventoried and its expected clone treatment is recorded. When it belongs in scope, capture matching source/local states with the overlay open and closed.
 
 ## Compare pixels and structure
 
@@ -96,7 +96,7 @@ agent-browser --session clone-source hover @e3
 agent-browser --session clone-source screenshot /tmp/source-nav-hover.png
 ```
 
-Repeat the same state locally. Check desktop navigation, mobile menu, accordions, carousels, tabs, form focus/errors, sticky elements, and reduced motion when present.
+Repeat the same state locally. Check desktop navigation, mobile menu, accordions, carousels, tabs, form focus/errors, sticky elements, third-party or visual-only widgets, and reduced motion when present. For iframe or shadow-root widgets, compare the visible bounding box and screenshots even when internal DOM inspection is unavailable; record functional verification separately in the clone journal.
 
 ## Fix order
 

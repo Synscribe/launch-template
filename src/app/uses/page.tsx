@@ -34,14 +34,14 @@ export default async function UsesPage() {
       />
 
       <section className={`${styles.hero} border-b border-ink/10`}>
-        <div className="mx-auto w-full max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:py-24">
+        <div className="mx-auto w-full max-w-7xl px-5 pt-14 pb-16 sm:px-8 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24">
           <div className="max-w-5xl">
             <h1 className="max-w-4xl text-balance font-display text-[clamp(3.1rem,6.6vw,6rem)] leading-[0.94] tracking-[-0.04em]">
               Start with the job your website needs to do.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-muted sm:text-xl sm:leading-9">
               Choose the project closest to yours. Each use case shows the
-              risks, the work, and what should be ready before launch.
+              problems, the work, and what should be ready before launch.
             </p>
             <Link
               href="#all-uses"
@@ -77,14 +77,17 @@ export default async function UsesPage() {
 
               <ul className="border-t border-ink/15">
                 {group.useCases.map((useCase) => (
-                  <li className="border-b border-ink/15" key={useCase.slug}>
+                  <li
+                    className="border-b border-ink/15"
+                    key={useCase.metadata.slug}
+                  >
                     <Link
                       className={`${styles.useRow} group grid gap-5 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:px-5 sm:py-8`}
-                      href={`/uses/${useCase.slug}`}
+                      href={`/uses/${useCase.metadata.slug}`}
                     >
                       <article>
                         <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                          {useCase.shortTitle}
+                          {useCase.metadata.anchor}
                         </h3>
                         <p className="mt-3 max-w-2xl text-sm leading-7 text-ink-muted sm:text-base">
                           {useCase.hero.summary}

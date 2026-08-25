@@ -1,8 +1,8 @@
 {
-  "slug": "saas-website-rebuilds",
-  "shortTitle": "SaaS website rebuilds",
-  "groups": ["migrations-and-rebuilds", "growth-and-conversion"],
-  "seo": {
+  "metadata": {
+    "slug": "saas-website-rebuilds",
+    "anchor": "SaaS website rebuilds",
+    "group": "migrations-and-rebuilds",
     "title": "SaaS website rebuilds built around how customers buy",
     "description": "Rebuild a SaaS marketing site with clearer buyer journeys, a simpler structure, reusable pages, and safer launch checks."
   },
@@ -11,7 +11,7 @@
     "summary": "Turn a crowded marketing site into clear paths for learning, comparing, and taking action.",
     "visualId": "saas-rebuild-overview"
   },
-  "risks": {
+  "problem": {
     "title": "More pages do not always make a better website.",
     "introduction": "SaaS sites often grow around team requests instead of buyer needs. A rebuild should remove that friction without losing what works.",
     "items": [
@@ -155,12 +155,9 @@
       }
     ]
   },
-  "closing": {
+  "cta": {
     "title": "Make the site easier to buy from and easier to run.",
     "description": "Plan the buyer journey and the URL map first. Then build a page system that stays clear as the company grows.",
-    "cta": {
-      "label": "See the migration approach",
-      "href": "/uses/website-migrations"
-    }
+    "label": "See the migration approach"
   }
 }

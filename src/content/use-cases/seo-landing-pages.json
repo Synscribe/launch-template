@@ -1,8 +1,8 @@
 {
-  "slug": "seo-landing-pages",
-  "shortTitle": "SEO landing pages",
-  "groups": ["technical-seo", "growth-and-conversion"],
-  "seo": {
+  "metadata": {
+    "slug": "seo-landing-pages",
+    "anchor": "SEO landing pages",
+    "group": "technical-seo",
     "title": "SEO landing pages built for real search intent",
     "description": "Build focused landing pages with clear intent, useful copy, internal links, strong technical defaults, and a practical review process."
   },
@@ -11,7 +11,7 @@
     "summary": "Turn useful search demand into focused pages people can understand, navigate, and act on.",
     "visualId": "seo-landing-page-overview"
   },
-  "risks": {
+  "problem": {
     "title": "Scale makes weak pages easier to publish.",
     "introduction": "A page template can save time, but it cannot create a reason to exist. These are the failures we prevent first.",
     "items": [
@@ -155,12 +155,9 @@
       }
     ]
   },
-  "closing": {
+  "cta": {
     "title": "Earn the first page before building the next fifty.",
     "description": "Prove the intent, content, links, and conversion path on a real page. Then repeat only what makes the next page better.",
-    "cta": {
-      "label": "Review the launch priorities",
-      "href": "/#priorities"
-    }
+    "label": "Review the launch priorities"
   }
 }

@@ -23,7 +23,7 @@ curl --fail --location "https://customer.example/path/asset.webp" \
   --output /tmp/source-asset.webp
 ```
 
-Never put cookies, bearer tokens, or signed private URLs into commands, manifests, commits, or chat. For protected assets, ask the user for a safe authenticated export rather than copying browser secrets.
+Never put cookies, bearer tokens, vendor account IDs, or signed private URLs into commands, manifests, commits, or chat. For protected assets, ask the user for a safe authenticated export rather than copying browser secrets. Do not download or reuse assets from a third-party widget unless the client has the right to migrate them.
 
 Check content type and file signature; an image CDN URL may omit the extension. Do not change formats or recompress until the original renders correctly.
 

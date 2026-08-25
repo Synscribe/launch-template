@@ -268,7 +268,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   return (
     <main id="main-content">
       <section className={`${styles.hero} border-b border-ink/10`}>
-        <div className="mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 sm:py-16 lg:py-20">
+        <div className="mx-auto w-full max-w-7xl px-5 pt-14 pb-14 sm:px-8 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20">
           <div className="max-w-4xl">
             <p className="text-sm font-bold tracking-[0.16em] text-signal-strong uppercase">
               Blog

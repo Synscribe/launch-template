@@ -111,6 +111,26 @@ export function buildArticleJsonLd({
   } as const;
 }
 
+export type FaqJsonLdItem = {
+  question: string;
+  answer: string;
+};
+
+export function buildFaqJsonLd(items: readonly FaqJsonLdItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  } as const;
+}
+
 export function serializeJsonLd(value: unknown): string {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }

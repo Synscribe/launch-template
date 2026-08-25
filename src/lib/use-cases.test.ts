@@ -12,7 +12,7 @@ describe("use-case content", () => {
     const useCases = await getAllUseCases();
 
     expect(useCases).toHaveLength(4);
-    expect(useCases.map((useCase) => useCase.slug)).toEqual([
+    expect(useCases.map((useCase) => useCase.metadata.slug)).toEqual([
       "saas-website-rebuilds",
       "seo-landing-pages",
       "startup-launches",
@@ -20,15 +20,27 @@ describe("use-case content", () => {
     ]);
 
     const websiteMigration = useCases.find(
-      (useCase) => useCase.slug === "website-migrations",
+      (useCase) => useCase.metadata.slug === "website-migrations",
     );
     expect(websiteMigration).toMatchObject({
-      slug: "website-migrations",
-      shortTitle: "Website migrations",
-      groups: ["migrations-and-rebuilds", "technical-seo"],
+      metadata: {
+        slug: "website-migrations",
+        anchor: "Website migrations",
+        group: "migrations-and-rebuilds",
+        title: "Website migrations that protect SEO and working URLs",
+      },
+      cta: {
+        label: "See the launch workflow",
+      },
     });
     expect(websiteMigration).not.toHaveProperty("order");
-    expect(websiteMigration?.hero.visualId).toBe("website-migration-overview");
+    expect(websiteMigration).not.toHaveProperty("seo");
+    expect(websiteMigration).not.toHaveProperty("risks");
+    expect(websiteMigration).not.toHaveProperty("closing");
+    expect(websiteMigration?.cta).not.toHaveProperty("href");
+    expect(websiteMigration?.hero.visualId).toBe(
+      "placeholder-website-migration-overview",
+    );
     expect(websiteMigration?.solution.items).toHaveLength(5);
     expect(
       websiteMigration?.solution.items.map((item) => item.visualId),
@@ -56,13 +68,12 @@ describe("use-case content", () => {
     expect(groups.map((group) => group.slug)).toEqual([
       "migrations-and-rebuilds",
       "startup-launches",
-      "growth-and-conversion",
       "technical-seo",
     ]);
     expect(
       groupedUseCases.map((group) => ({
         slug: group.slug,
-        useCases: group.useCases.map((useCase) => useCase.slug),
+        useCases: group.useCases.map((useCase) => useCase.metadata.slug),
       })),
     ).toEqual([
       {
@@ -74,16 +85,8 @@ describe("use-case content", () => {
         useCases: ["startup-launches"],
       },
       {
-        slug: "growth-and-conversion",
-        useCases: [
-          "saas-website-rebuilds",
-          "seo-landing-pages",
-          "startup-launches",
-        ],
-      },
-      {
         slug: "technical-seo",
-        useCases: ["seo-landing-pages", "website-migrations"],
+        useCases: ["seo-landing-pages"],
       },
     ]);
   });

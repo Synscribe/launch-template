@@ -5,10 +5,10 @@ The blog is ordinary, deletable application code. It connects directly to Wisp o
 ## Configure
 
 1. Set `WISP_BLOG_ID` in the local and deployment environments. Keep it server-only; the browser does not need it.
-2. Set `WISP_CONTENT_ORIGIN` to the website that owns source-relative links and legacy images inside Wisp articles. Valid blog links stay local; other root-relative links return to this origin, and Next Image permits this hostname.
-3. Replace the temporary Cyber Sierra publication ID and content origin before using the template for another client.
+2. Set `WISP_CONTENT_ORIGIN` only when the publication contains source-relative links or legacy images. Valid blog links stay local; other root-relative links return to this origin, and Next Image permits this hostname.
+3. Replace the demo publication ID before using the template for a client.
 4. Confirm the Wisp publication belongs to the client and contains only content approved for the production domain.
-5. In Wisp, add the real tags that the index should use. The temporary source currently has a `featured` tag and a `press-release` tag; do not assume another publication uses either.
+5. In Wisp, add the real tags that the index should use. The demo source includes `tips-and-tricks`; do not assume a client publication uses it.
 6. Edit `src/app/blog/blog.config.ts`. Add only filters backed by maintained Wisp tags. Set the optional lead article slug and featured tag, or use `null` to omit either featured surface. Remove a filter entry to hide it; there are no runtime feature flags.
 7. Review the first page, every configured filter, an empty result, a search result, a middle and final pagination page, an article with an image, an article without an image, a long and short table of contents, every share destination, related articles, `/feed.xml`, and `/sitemap.xml`.
 8. Confirm titles, descriptions, H1s, opening copy, visible date treatment, canonical URLs, share images, and Article JSON-LD against `SEO-02`, `SEO-03`, `SEO-05`, `SEO-06`, `SEO-08`, `SOCIAL-01`, and `CONTENT-01` in the canonical checklist. The default article hero shows “Last updated”; JSON-LD retains both source dates when available.
