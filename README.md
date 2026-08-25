@@ -57,7 +57,7 @@ pnpm launch:audit --url https://example.com --mode production
 - Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented. Heroes and capability rows share one validated `visualId` contract that resolves route-local React or project-owned images through `UseCaseVisual`; see `docs/recipes/use-cases.md`.
 - Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. Replace the demo publication ID or delete the blog for a client project.
 - Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured.
-- Project skills: `$site-clone`, `$micro-ui`, and `$animated-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
+- Project skills: `$site-clone` and `$micro-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
 
 ## Architecture rules
 
@@ -72,8 +72,7 @@ pnpm launch:audit --url https://example.com --mode production
 ## Project skills
 
 - `$site-clone` inventories an authorized source site, maps exact URLs and wildcard page families, migrates original assets, reproduces visible widgets, journals functional gaps, and drives a screenshot/diff loop through homepage approval before other routes.
-- `$micro-ui` builds route-native interface visuals, local use-case images, and generated social images. `/uses` output is registered in its bounded typed visual resolver instead of a site-wide block registry.
-- `$animated-ui` adds restrained route-local motion while keeping the server-rendered content visible and providing a reduced-motion fallback.
+- `$micro-ui` builds route-native interface visuals, route-local motion, local use-case images, and generated social images. Looping capability visuals use its shared framer-motion kit; page-level motion stays CSS-first. Server-rendered content stays visible without JavaScript and every animation has a composed reduced-motion state. `/uses` output is registered in its bounded typed visual resolver instead of a site-wide block registry.
 
 The `.claude/skills/*` entries are symlinks to `.agents/skills/*`. Keep the names aligned and validate both the canonical skill and its symlink after changing one.
 

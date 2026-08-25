@@ -475,7 +475,7 @@ Use `.agents/skills/micro-ui` when a small code-native sharing visual is appropr
 
 Nice to have and non-blocking in this template's priority system. Review semantic landmarks, keyboard navigation, focus visibility, labels/errors, contrast, alternatives, zoom/reflow, and reduced motion. Record serious user-impacting defects even when they do not block the formal launch gate.
 
-For animation work, use `.agents/skills/animated-ui` and verify both ordinary and `prefers-reduced-motion: reduce` states in a browser. Critical copy and links must remain present without client JavaScript.
+For animation work, use `.agents/skills/micro-ui` and verify both ordinary and `prefers-reduced-motion: reduce` states in a browser. Critical copy and links must remain present without client JavaScript.
 
 ### IMAGE-01 — image sources and treatments are intentional
 

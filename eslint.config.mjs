@@ -7,6 +7,8 @@ export default defineConfig([
   ...nextTypeScript,
   globalIgnores([
     ".next/**",
+    ".agents/skills/**/references/examples/**",
+    ".claude/**",
     ".claude/worktrees/**",
     "out/**",
     "coverage/**",

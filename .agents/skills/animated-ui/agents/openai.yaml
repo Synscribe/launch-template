@@ -1,4 +1,0 @@
-interface:
-  display_name: "Animated UI"
-  short_description: "Build accessible route-native web animations"
-  default_prompt: "Use $animated-ui to create an accessible animated section for this route."

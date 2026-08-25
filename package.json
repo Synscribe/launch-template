@@ -25,6 +25,7 @@
     "@wisp-cms/client": "0.0.23",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.34.2",
     "lucide-react": "^1.33.0",
     "next": "16.2.9",
     "nodemailer": "^9.0.5",

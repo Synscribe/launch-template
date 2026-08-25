@@ -286,14 +286,13 @@ The blog is a default, deletable surface rather than a feature flag. It connects
 Create focused project skills using the repository's canonical docs:
 
 - `site-clone`: inventory/capture, implement route by route, and visually compare approved sites;
-- `animated-ui`: create route-local Next.js animation with reduced-motion, a11y, and performance checks;
-- `micro-ui`: create route-native interface visuals and generated graphics without a standalone block or asset catalog;
+- `micro-ui`: create route-native interface visuals, route-local animation, and generated graphics without a standalone block or asset catalog, with reduced-motion, a11y, and performance checks;
 - `technical-seo-review`: work through relevant `SEO-*` and `MIG-*` requirements;
 - `launch-review`: run the launch audit, inspect non-automatable P0 items, and update checklist status.
 
 Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.json`, add client-specific gates to `projectItems`, may keep non-status evidence such as a clone implementation journal, may link to the generated Markdown view, and invoke shared scripts.
 
-Current progress: `site-clone`, `micro-ui`, and `animated-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. `site-clone` includes recursive sitemap inventory, exact URL-map output, wildcard page-family grouping, customer-owned asset migration, visible widget reproduction, implementation journaling with checklist escalation, agent-browser visual comparison, persistent homepage execution, and an approval gate before later routes. The visual skills have been exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. No graphics or animation dependency was added. `technical-seo-review` and `launch-review` remain deliberately deferred.
+Current progress: `site-clone` and `micro-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. `site-clone` includes recursive sitemap inventory, exact URL-map output, wildcard page-family grouping, customer-owned asset migration, visible widget reproduction, implementation journaling with checklist escalation, agent-browser visual comparison, persistent homepage execution, and an approval gate before later routes. `micro-ui` absorbed the former `animated-ui` skill and the designer's motion system: a shared framer-motion kit (`_kit.tsx` plus a token-mapped `brand.ts`), a twenty-pattern motion catalogue, and a brand-adoption procedure, while keeping the `ImageResponse`, SVG, and still-visual output paths. The visual skills have been exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. `framer-motion` is the one animation dependency; no graphics dependency was added. `technical-seo-review` and `launch-review` remain deliberately deferred.
 
 ### Phase 7 — advanced content and LLM access
 
