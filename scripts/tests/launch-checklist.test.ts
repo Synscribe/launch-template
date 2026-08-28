@@ -24,6 +24,12 @@ describe("launch checklist", () => {
     expect(checklist.items.find((item) => item.id === "SEO-02")?.priority).toBe(
       "P0",
     );
+    expect(checklist.items.find((item) => item.id === "LLM-01")).toMatchObject({
+      status: "auto",
+      check: "llms-txt-ready",
+      recipe: "docs/recipes/llms-txt.md",
+      files: ["public/llms.txt"],
+    });
   });
 
   it("renders status and guidance from the same item", async () => {

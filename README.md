@@ -57,6 +57,7 @@ pnpm launch:audit --url https://example.com --mode production
 - Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented. Heroes and capability rows share one validated `visualId` contract that resolves route-local React or project-owned images through `UseCaseVisual`; see `docs/recipes/use-cases.md`.
 - Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. Replace the demo publication ID or delete the blog for a client project.
 - Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured.
+- `llms.txt`: a complete website-level example selling Launch Template, focused source validator, production response/public-target audit, and configuration/removal recipe are included. `pnpm launch:verify` deliberately fails until the example is replaced for the client.
 - Project skills: `$site-clone` and `$micro-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
 
 ## Architecture rules

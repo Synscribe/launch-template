@@ -516,11 +516,27 @@ Check Search Console, analytics, uptime/error monitoring, and field performance 
 
 ## P2 — later enhancements
 
-### LLM-01 — `llms.txt`
+### LLM-01 — `llms.txt` is client-specific, useful, and current
 
-- [ ] **Todo**
+- [ ] **Automated**
+- Recipe: [docs/recipes/llms-txt.md](../recipes/llms-txt.md)
+- Automated check: `llms-txt-ready`
+- Files:
+  - `public/llms.txt`
 
-Generate it from enabled content sources if the project benefits. Treat it as experimental discovery support, never as core Google SEO or an independently maintained content inventory.
+Why it matters: an inherited, stale, or promotional file can send agents to the wrong content.
+
+Check:
+
+- Replace the Launch Template example in `public/llms.txt` with the client's reviewed identity, summary, sources, descriptions, and instructions, then remove `TEMPLATE_LLMS_TXT`. Never invent product facts, versions, deprecations, or customer outcomes to make the file look complete.
+- Serve `/llms.txt` directly with HTTP 200 and `text/plain` or `text/markdown`, without authentication, redirects, cookies, HTML chrome, or bot challenges.
+- Use one H1, a short blockquote definition and ISO review date, then H2 sections containing curated `- [Title](absolute URL): task-shaped description` entries.
+- Give every link a specific description. Prefer a small set of high-value, current sources over a sitemap dump or marketing phrases.
+- Point entries to public, authoritative production URLs. Each target must return direct HTTP 200 without authentication or a redirect chain.
+- Build link sets from the same route/content sources that publish the site. Do not create a second JSON inventory solely for `llms.txt`; regenerate it when those sources or a release changes.
+- Add imperative agent directives only for verified current behavior, recent deprecations, version lookup, or a maintained golden path. Keep the section short and remove stale rules.
+
+`pnpm launch:verify` fails while the Launch Template example is unchanged or the source shape is invalid. The production launch audit also checks the deployed response and every described public target.
 
 ### LLM-02 — `.md` representations
 
@@ -576,3 +592,6 @@ Check:
 - [Google site-move guidance](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes)
 - [Google structured-data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies)
 - [Core Web Vitals thresholds](https://web.dev/articles/defining-core-web-vitals-thresholds)
+- [llms.txt proposal and format](https://llmstxt.org/)
+- [Synscribe llms.txt implementation guide](https://www.synscribe.com/agentic-discovery/llms-txt)
+- [Synscribe llms.txt template pack](https://www.synscribe.com/agentic-discovery/resources/llms-txt-template-pack)
