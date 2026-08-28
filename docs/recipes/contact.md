@@ -42,9 +42,10 @@ Before production, the approved privacy policy must name the actual fields, brow
 - `src/app/api/contact/route.ts` requires a same-origin request, checks body size and completion time, and returns safe errors.
 - A hidden honeypot handles simple bots.
 - `src/app/api/contact/_lib/rate-limit.ts` allows five attempts per IP in ten minutes.
+- Optional Cloudflare Turnstile stays disabled until both keys are configured; see `docs/recipes/turnstile.md` for its complete file map and verification flow.
 - `src/lib/contact-delivery.ts` escapes every submitted value in HTML and uses the submitter only as `replyTo`.
 
-The included rate limit is an in-memory, per-instance baseline. For high traffic, coordinated attacks, or multiple serverless instances, replace it with a durable provider/edge control and document the decision under `FORM-03`. Add CAPTCHA only when the actual abuse level and privacy tradeoff justify it.
+The included rate limit is an in-memory, per-instance baseline. For high traffic, coordinated attacks, or multiple serverless instances, replace it with a durable provider/edge control and document the decision under `FORM-03`. Activate Turnstile only when the actual abuse level and privacy tradeoff justify it.
 
 ## Verify
 
@@ -54,7 +55,8 @@ The included rate limit is an in-memory, per-instance baseline. For high traffic
 4. Confirm the received message did not preserve unrelated or sensitive query values.
 5. If PostHog is configured, confirm `contact_form_submitted` arrives without names, emails, message text, URLs, or campaign values.
 6. Check keyboard behavior, visible focus, labels, field errors, mobile layout, and the form without a delivery configuration.
-7. Run `pnpm check`, `pnpm build`, and the launch audit. Repeat the audit and an end-to-end delivery test against production, then update `FORM-01` through `FORM-04`.
+7. If Turnstile is configured, complete `docs/recipes/turnstile.md` verification in preview and production.
+8. Run `pnpm check`, `pnpm build`, and the launch audit. Repeat the audit and an end-to-end delivery test against production, then update `FORM-01` through `FORM-04`.
 
 ## Remove
 
@@ -64,7 +66,7 @@ When the project does not use a contact form:
 2. Remove `VisitorContextTracker` and its `Suspense` wrapper from `src/app/layout.tsx`.
 3. Remove `/contact` from the header CTA, footer, and `src/app/sitemap.ts`; replace the CTA with a real destination.
 4. Remove `nodemailer` and `@types/nodemailer`, then reinstall dependencies.
-5. Remove the six contact mail values from `.env.example` and every deployment.
+5. Remove the six contact mail values and both Turnstile values from `.env.example` and every deployment. Delete `src/lib/turnstile.ts`, its test, and `src/app/contact/_components/turnstile.tsx` when no remaining form uses them.
 6. Remove the contact-specific privacy text, update `docs/features.md`, and mark `FORM-01` through `FORM-04` as `not_applicable`.
 7. Run the complete checks and audit every remaining CTA.
 

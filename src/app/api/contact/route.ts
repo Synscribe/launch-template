@@ -5,6 +5,7 @@ import {
   deliverContactSubmission,
   isContactDeliveryConfigured,
 } from "@/lib/contact-delivery";
+import { TURNSTILE_CONTACT_ACTION, verifyTurnstile } from "@/lib/turnstile";
 
 import { checkContactRateLimit } from "./_lib/rate-limit";
 
@@ -119,6 +120,23 @@ export async function POST(request: Request) {
     return safeError(
       "Form delivery is not configured yet. Please try another contact method.",
       503,
+    );
+  }
+
+  const contactClientKey = clientKey(request);
+  const turnstile = await verifyTurnstile({
+    expectedAction: TURNSTILE_CONTACT_ACTION,
+    expectedHostname: new URL(request.url).hostname,
+    remoteIp: contactClientKey === "unknown" ? undefined : contactClientKey,
+    token: source.turnstileToken,
+  });
+  if (!turnstile.ok) {
+    console.warn("Contact form Turnstile verification rejected", {
+      reason: turnstile.reason,
+    });
+    return safeError(
+      "Bot verification failed. Please refresh and try again.",
+      403,
     );
   }
 

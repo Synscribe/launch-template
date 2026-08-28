@@ -405,12 +405,15 @@ Validate types and sensible lengths server-side, escape output, reject unexpecte
 - Files:
   - `src/app/api/contact/route.ts`
   - `src/app/api/contact/_lib/rate-limit.ts`
+  - `src/app/contact/_components/turnstile.tsx`
+  - `src/lib/turnstile.ts`
   - `src/app/privacy/page.tsx`
   - `docs/recipes/contact.md`
+  - `docs/recipes/turnstile.md`
 
 Choose spam controls, rate limits, retention, consent, access, and deletion processes appropriate to the traffic and data. Do not copy a CAPTCHA or legal basis automatically between clients.
 
-The included honeypot, completion-time check, same-origin check, and in-memory per-instance rate limit are a low-risk baseline, not a universal production answer. Review whether the deployed traffic and hosting model require a durable rate limiter, CAPTCHA, WAF rule, or provider control. Confirm who can access delivered leads and when the inbox or CRM deletes them.
+The included honeypot, completion-time check, same-origin check, and in-memory per-instance rate limit are a low-risk baseline, not a universal production answer. Optional Cloudflare Turnstile is included but stays inactive unless both keys are configured; if enabled, verify its widget, server-side Siteverify call, action and hostname checks, privacy disclosure, and failure path. Review whether the deployed traffic and hosting model also require a durable rate limiter, WAF rule, or provider control. Confirm who can access delivered leads and when the inbox or CRM deletes them.
 
 ### FORM-04 — attribution is minimized
 
