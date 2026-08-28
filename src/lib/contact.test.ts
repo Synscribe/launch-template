@@ -45,6 +45,7 @@ describe("contact validation", () => {
         ...validFields,
         startedAt: Date.now() - 5_000,
         companyWebsite: "",
+        turnstileToken: "single-use-token",
         attribution: {
           referrerUrl: "https://private:secret@google.com/search?q=private",
           firstVisitUrl:

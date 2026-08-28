@@ -56,7 +56,7 @@ pnpm launch:audit --url https://example.com --mode production
 - Privacy and terms: safe noindex scaffolds only. They deliberately block production until replaced and reviewed.
 - Uses: the grouped `/uses` hub and four JSON-backed detail pages are implemented. Heroes and capability rows share one validated `visualId` contract that resolves route-local React or project-owned images through `UseCaseVisual`; see `docs/recipes/use-cases.md`.
 - Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. Replace the demo publication ID or delete the blog for a client project.
-- Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured.
+- Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, optional Cloudflare Turnstile, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured; Turnstile stays inactive until both of its keys are configured.
 - `llms.txt`: a complete website-level example selling Launch Template, focused source validator, production response/public-target audit, and configuration/removal recipe are included. `pnpm launch:verify` deliberately fails until the example is replaced for the client.
 - Project skills: `$site-clone` and `$micro-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
 
@@ -84,6 +84,8 @@ Global identity and navigation live in `src/config/site.ts`; environment parsing
 Set the server-only `WISP_BLOG_ID` to the publication used by `/blog` and `WISP_CONTENT_ORIGIN` to the site that owns source-relative links in those articles. Featured content and optional filters are declared in `src/app/blog/blog.config.ts`. See [`docs/recipes/blog.md`](docs/recipes/blog.md) for configuration and complete removal steps.
 
 Set all `MAIL_*` values and `CONTACT_TO_EMAIL` to activate `/contact`; none may use a `NEXT_PUBLIC_` prefix. The default stores only first-touch campaign fields and five recent same-site paths, and sends no form values to PostHog. See [`docs/recipes/contact.md`](docs/recipes/contact.md) for privacy decisions, verification, and removal.
+
+Set both `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and server-only `TURNSTILE_SECRET_KEY` to add Cloudflare Turnstile to the contact form. With either value absent, the widget script is not loaded and server verification is skipped. See [`docs/recipes/turnstile.md`](docs/recipes/turnstile.md) for the reusable file map and setup flow.
 
 Set `NEXT_PUBLIC_DEPLOYMENT_ENV` deliberately:
 

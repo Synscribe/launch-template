@@ -19,8 +19,12 @@ import {
 } from "@/lib/contact";
 import { getVisitorContext } from "@/lib/visitor-context";
 
+import { useTurnstile } from "./turnstile";
+
 type ContactFormProps = {
   deliveryConfigured: boolean;
+  turnstileAction?: string;
+  turnstileSiteKey?: string;
 };
 
 type SubmissionState = "idle" | "sending" | "success" | "error";
@@ -36,13 +40,27 @@ const initialFields: ContactFields = {
 const fieldClassName =
   "mt-2 w-full rounded-xl border border-ink/15 bg-paper px-4 py-3 text-base text-ink outline-none transition placeholder:text-ink-faint focus:border-signal focus:ring-3 focus:ring-signal/15 aria-invalid:border-signal";
 
-export function ContactForm({ deliveryConfigured }: ContactFormProps) {
+export function ContactForm({
+  deliveryConfigured,
+  turnstileAction,
+  turnstileSiteKey,
+}: ContactFormProps) {
   const [fields, setFields] = useState<ContactFields>(initialFields);
   const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
   const [state, setState] = useState<SubmissionState>("idle");
   const [formError, setFormError] = useState("");
   const [companyWebsite, setCompanyWebsite] = useState("");
   const startedAt = useRef(0);
+  const {
+    enabled: turnstileEnabled,
+    error: turnstileError,
+    reset: resetTurnstile,
+    token: turnstileToken,
+    widget: turnstileWidget,
+  } = useTurnstile({
+    action: turnstileAction,
+    siteKey: turnstileSiteKey,
+  });
 
   useEffect(() => {
     startedAt.current = Date.now();
@@ -78,6 +96,7 @@ export function ContactForm({ deliveryConfigured }: ContactFormProps) {
           attribution: getVisitorContext(),
           companyWebsite,
           startedAt: startedAt.current,
+          ...(turnstileEnabled ? { turnstileToken } : {}),
         }),
       });
       const result = (await response.json()) as {
@@ -91,12 +110,14 @@ export function ContactForm({ deliveryConfigured }: ContactFormProps) {
         throw new Error(result.error || "Your message could not be sent.");
       }
 
+      resetTurnstile();
       if (process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN) {
         posthog.capture("contact_form_submitted", { source: "contact" });
       }
       setFields(initialFields);
       setState("success");
     } catch (error) {
+      resetTurnstile();
       setFormError(
         error instanceof Error
           ? error.message
@@ -261,6 +282,14 @@ export function ContactForm({ deliveryConfigured }: ContactFormProps) {
         />
       </div>
 
+      {turnstileWidget}
+
+      {turnstileError ? (
+        <p className="mt-3 text-sm text-signal-strong" role="alert">
+          {turnstileError}
+        </p>
+      ) : null}
+
       {formError ? (
         <p className="mt-5 text-sm font-medium text-signal-strong" role="alert">
           {formError}
@@ -269,7 +298,11 @@ export function ContactForm({ deliveryConfigured }: ContactFormProps) {
 
       <Button
         className="mt-7 h-auto w-full rounded-full bg-signal px-6 py-3.5 text-base font-semibold text-white shadow-[0_8px_28px_rgba(224,78,34,0.2)] hover:bg-signal-strong sm:w-auto"
-        disabled={!deliveryConfigured || state === "sending"}
+        disabled={
+          !deliveryConfigured ||
+          state === "sending" ||
+          (turnstileEnabled && !turnstileToken)
+        }
         type="submit"
       >
         {state === "sending" ? "Sending…" : "Send message"}

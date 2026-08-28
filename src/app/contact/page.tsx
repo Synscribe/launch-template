@@ -3,6 +3,10 @@ import type { Metadata } from "next";
 
 import { isContactDeliveryConfigured } from "@/lib/contact-delivery";
 import { createPageMetadata } from "@/lib/seo";
+import {
+  TURNSTILE_CONTACT_ACTION,
+  turnstileConfiguration,
+} from "@/lib/turnstile";
 
 import { ContactForm } from "./_components/contact-form";
 
@@ -23,11 +27,13 @@ const usefulDetails = [
 
 export default function ContactPage() {
   const deliveryConfigured = isContactDeliveryConfigured();
+  const turnstile = turnstileConfiguration();
 
   return (
     <main
       className="overflow-hidden"
       data-contact-delivery={deliveryConfigured ? "configured" : "missing"}
+      data-turnstile={turnstile.enabled ? "configured" : "disabled"}
       id="main-content"
     >
       <section className="pt-14 pb-12 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-28">
@@ -63,7 +69,15 @@ export default function ContactPage() {
           </div>
 
           <div className="self-start overflow-hidden rounded-[var(--radius-card)] border border-ink/10 bg-paper p-5 shadow-[var(--shadow-card)] sm:p-8 lg:p-10">
-            <ContactForm deliveryConfigured={deliveryConfigured} />
+            <ContactForm
+              deliveryConfigured={deliveryConfigured}
+              turnstileAction={
+                turnstile.enabled ? TURNSTILE_CONTACT_ACTION : undefined
+              }
+              turnstileSiteKey={
+                turnstile.enabled ? turnstile.siteKey : undefined
+              }
+            />
           </div>
         </div>
       </section>

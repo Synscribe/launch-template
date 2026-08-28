@@ -211,6 +211,7 @@ export function parseContactPayload(
     "attribution",
     "startedAt",
     "companyWebsite",
+    "turnstileToken",
   ]);
   if (Object.keys(source).some((key) => !allowedKeys.has(key))) {
     return { ok: false, error: "Unexpected form fields." };
