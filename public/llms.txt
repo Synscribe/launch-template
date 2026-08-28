@@ -1,0 +1,23 @@
+# Launch Template
+
+<!-- TEMPLATE_LLMS_TXT: Replace this Launch Template example with the client's reviewed content before launch. -->
+
+> Launch Template is a production-minded Next.js foundation for developers and business owners launching, rebuilding, or migrating a website with an AI coding agent.
+> It combines explicit App Router pages, technical SEO, migration safety, deletable content features, and automated launch checks without imposing a page-builder runtime or design system.
+> Last reviewed: 2026-08-25.
+
+## Explore Launch Template
+
+- [Launch Template](https://agenticwebsite.io/): See how the template combines bespoke design freedom with practical routing, technical SEO, migration, analytics, and launch safeguards.
+- [Website launch use cases](https://agenticwebsite.io/uses): Compare the template's approaches to migrations, SaaS rebuilds, startup launches, and search-focused landing pages.
+
+## Choose a launch path
+
+- [Website migrations](https://agenticwebsite.io/uses/website-migrations): Plan URL inventory, direct redirects, page-signal preservation, release gates, and post-launch monitoring.
+- [SaaS website rebuilds](https://agenticwebsite.io/uses/saas-website-rebuilds): Rebuild a SaaS site around buyer journeys, clearer information architecture, reusable pages, and safer launches.
+- [Startup website launches](https://agenticwebsite.io/uses/startup-launches): Launch with a clear offer, focused conversion path, approved proof, measurement, and production checks.
+- [SEO landing pages](https://agenticwebsite.io/uses/seo-landing-pages): Build landing pages around real search intent, useful copy, internal links, technical defaults, and reviewable quality gates.
+
+## Start a website project
+
+- [Launch a website](https://agenticwebsite.io/contact): Share the website you want to launch, rebuild, or migrate and the constraints the project must protect.

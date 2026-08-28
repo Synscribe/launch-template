@@ -22,6 +22,8 @@ type Page = {
   requestedUrl: string;
   finalUrl: string;
   status: number;
+  contentType: string;
+  setsCookie: boolean;
   html: string;
 };
 
@@ -285,6 +287,8 @@ async function fetchPage(url: string): Promise<Page> {
       requestedUrl: url,
       finalUrl: response.url,
       status: response.status,
+      contentType: response.headers.get("content-type") ?? "",
+      setsCookie: response.headers.has("set-cookie"),
       html: await response.text(),
     };
   } catch (error) {
@@ -292,6 +296,8 @@ async function fetchPage(url: string): Promise<Page> {
       requestedUrl: url,
       finalUrl: url,
       status: 0,
+      contentType: "",
+      setsCookie: false,
       html: error instanceof Error ? error.message : String(error),
     };
   }
@@ -322,7 +328,7 @@ async function staticAudit(): Promise<void> {
   }
 
   const scannable = files.filter((file) =>
-    /(?:\.(?:ts|tsx|js|mjs|json|md|css|svg)|package\.json|\.env\.example)$/.test(
+    /(?:\.(?:ts|tsx|js|mjs|json|md|txt|css|svg)|package\.json|\.env\.example)$/.test(
       file,
     ),
   );
@@ -373,6 +379,87 @@ async function staticAudit(): Promise<void> {
       "FAIL",
       "package.json",
       "Replace the template package name before production",
+    );
+  }
+}
+
+function isMarkdownResponse(page: Page): boolean {
+  return (
+    /^text\/(?:plain|markdown)(?:;|$)/i.test(page.contentType) &&
+    !/^\s*<!doctype\s+html\b/i.test(page.html)
+  );
+}
+
+function isPublicContentResponse(page: Page): boolean {
+  return (
+    isMarkdownResponse(page) ||
+    (/^text\/html(?:;|$)/i.test(page.contentType) &&
+      /^\s*<!doctype\s+html\b/i.test(page.html))
+  );
+}
+
+function describedLlmsLinks(content: string): string[] {
+  const links = content.matchAll(
+    /^- \[[^\]]+]\((https:\/\/[^\s)]+)\):\s+\S.*$/gm,
+  );
+  return [...links].map((match) => match[1]);
+}
+
+async function auditLlmsTxt(llmsTxt: Page): Promise<void> {
+  if (llmsTxt.status !== 200) {
+    record("LLM-01", "FAIL", "/llms.txt", `HTTP ${llmsTxt.status}`);
+    return;
+  }
+
+  const requested = normalizePageUrl(llmsTxt.requestedUrl);
+  const final = normalizePageUrl(llmsTxt.finalUrl);
+  const directAndCookieless = requested === final && !llmsTxt.setsCookie;
+  record(
+    "LLM-01",
+    directAndCookieless ? "PASS" : "FAIL",
+    "/llms.txt",
+    directAndCookieless
+      ? "Served directly without a redirect or cookie"
+      : [
+          requested === final ? undefined : `redirected to ${llmsTxt.finalUrl}`,
+          llmsTxt.setsCookie ? "sets a cookie" : undefined,
+        ]
+          .filter(Boolean)
+          .join("; "),
+  );
+  record(
+    "LLM-01",
+    isMarkdownResponse(llmsTxt) ? "PASS" : "FAIL",
+    "/llms.txt",
+    isMarkdownResponse(llmsTxt)
+      ? `HTTP 200 with ${llmsTxt.contentType}`
+      : `Expected text/plain or text/markdown without an HTML document; received ${llmsTxt.contentType || "no content type"}`,
+  );
+
+  const links = describedLlmsLinks(llmsTxt.html);
+  record(
+    "LLM-01",
+    links.length > 0 ? "PASS" : "FAIL",
+    "/llms.txt",
+    `${links.length} described absolute link(s) found`,
+  );
+
+  if (mode !== "production") return;
+
+  const targets = await Promise.all(links.map((url) => fetchPage(url)));
+  for (const target of targets) {
+    const direct =
+      normalizePageUrl(target.requestedUrl) ===
+      normalizePageUrl(target.finalUrl);
+    const passed =
+      target.status === 200 && direct && isPublicContentResponse(target);
+    record(
+      "LLM-01",
+      passed ? "PASS" : "FAIL",
+      target.requestedUrl,
+      passed
+        ? `Direct public content response (${target.contentType})`
+        : `Expected direct HTTP 200 HTML or Markdown; received HTTP ${target.status}, ${target.contentType || "no content type"}${direct ? "" : `, redirected to ${target.finalUrl}`}`,
     );
   }
 }
@@ -582,10 +669,13 @@ function auditPage(page: Page, sitemapUrls: Set<string>): void {
 }
 
 async function liveAudit(): Promise<void> {
-  const [robots, sitemap] = await Promise.all([
+  const [robots, sitemap, llmsTxt] = await Promise.all([
     fetchPage(`${baseUrl}/robots.txt`),
     fetchPage(`${baseUrl}/sitemap.xml`),
+    fetchPage(`${baseUrl}/llms.txt`),
   ]);
+
+  await auditLlmsTxt(llmsTxt);
 
   if (robots.status !== 200) {
     record("SEO-04", "FAIL", "/robots.txt", `HTTP ${robots.status}`);

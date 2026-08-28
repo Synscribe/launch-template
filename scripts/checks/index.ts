@@ -1,11 +1,13 @@
 import type { ChecklistItem, LaunchChecklist } from "../launch-checklist";
 
+import { checkLlmsTxtReady } from "./llms-txt-ready";
 import { checkNoTemplatePlaceholders } from "./no-template-placeholders";
 import type { AutomatedCheck, AutomatedCheckResult } from "./types";
 
 export type { AutomatedCheckFinding, AutomatedCheckResult } from "./types";
 
 export const AUTOMATED_CHECKS = {
+  "llms-txt-ready": checkLlmsTxtReady,
   "no-template-placeholders": checkNoTemplatePlaceholders,
 } satisfies Record<string, AutomatedCheck>;
 

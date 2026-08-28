@@ -66,6 +66,7 @@ This is the repository map. Other agents and client repositories should be able 
 | `docs/recipes/README.md`     | Index of configuration, deletion, and add-on recipes.                                                                                          | Default features document clean removal; add-ons document installation.    |
 | `docs/recipes/*.md`          | Configuration/removal notes for default features plus installation notes for docs/MDX, `llms.txt`, `.md` routes, i18n, and advanced animation. | Each recipe lists files added/changed and removal steps.                   |
 | `docs/launch/url-map.csv`    | Old URL → new URL/disposition inventory for migrations.                                                                                        | Created per migration; not needed for new startups.                        |
+| `public/llms.txt`            | Product-facing Launch Template example served directly from the domain root.                                                                   | Replace per client; generate link sets from real sources when warranted.   |
 | `src/config/site.ts`         | Minimal typed global identity and navigation.                                                                                                  | No page bodies, blocks, or per-page layout config.                         |
 | `src/config/env.ts`          | Required/optional environment validation with no production fallbacks.                                                                         | The build fails on invalid required values.                                |
 | `src/config/redirects.ts`    | Small/medium migration redirect map, when applicable.                                                                                          | Generated or reviewed from `url-map.csv`; empty for new sites.             |
@@ -299,13 +300,15 @@ Current progress: `site-clone` and `micro-ui` are complete in `.agents/skills`, 
 Only after the preceding paths are stable:
 
 - docs/knowledge-base routing;
-- `llms.txt` generated from the same content registry as the sitemap;
+- `llms.txt` curated from the same enabled route/content sources as the sitemap, with generated link sets for collection-driven sites;
 - selected `.md` representations generated from the same Markdown/MDX source;
 - optional full-corpus exports with size and abuse controls;
 - structured content APIs or retrieval endpoints;
 - richer search and AI features.
 
 HTML remains canonical. Advanced machine-readable representations must not create a second hand-maintained content system.
+
+Current progress: the root `public/llms.txt` Launch Template example, `LLM-01` automated replacement/shape check, production response and public-target audit, and `docs/recipes/llms-txt.md` are implemented. The example remains intentionally invalid for a client launch until its content and `TEMPLATE_LLMS_TXT` marker are replaced. Small sites may curate it alongside explicit routes; content-heavy sites generate its link set from their existing source collections.
 
 ## 12. Per-page definition of done
 
@@ -353,7 +356,7 @@ It should **not** fail a launch because:
 
 - a meta description is outside a guessed character range;
 - a page lacks generic `WebPage` JSON-LD;
-- `llms.txt` is disabled;
+- optional `.md` representations are absent;
 - an exact keyword phrase is missing from the first N characters;
 - a sitemap omits ignored `priority`/`changefreq` values;
 - a Lighthouse score is not 100.
@@ -406,6 +409,9 @@ Browser-based visual and accessibility tests may be added for representative rou
 - [Google: site moves and URL migrations](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes)
 - [Google: structured-data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies)
 - [web.dev: Core Web Vitals thresholds](https://web.dev/articles/defining-core-web-vitals-thresholds)
+- [llms.txt proposal and format](https://llmstxt.org/)
+- [Synscribe: llms.txt implementation guide](https://www.synscribe.com/agentic-discovery/llms-txt)
+- [Synscribe: llms.txt template pack](https://www.synscribe.com/agentic-discovery/resources/llms-txt-template-pack)
 
 ## 16. Recommended next action
 
