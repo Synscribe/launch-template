@@ -17,7 +17,7 @@ Do not edit `docs/launch/checklist.md` directly or create a second SEO guide or 
 - Start components in the route's `_components` folder. Promote them only after a second real use.
 - Keep metadata and applicable structured-data builders in `src/lib/seo.ts`.
 - Do not add `site.json`, a marketing catch-all route, an SDUI renderer, a block registry, or schemas for serialized React props.
-- Use-case JSON may reference only validated `visualId` values. Add React or local-file sources through the bounded route-local `UseCaseVisual` resolver; do not put component names, paths, classes, or props in JSON.
+- Use-case JSON may reference only validated `visualId` values. Add IDs in `src/lib/visuals.ts` and React or local-file sources through the one bounded resolver in `src/components/visuals/project-visual.tsx`; `UseCaseVisual` is only its route-specific placement wrapper. Do not put component names, paths, classes, or props in JSON.
 - PostHog, blog, and use cases are default deletable code. Do not add feature flags to turn them on or off. Remove their files, navigation, sitemap entries, tests, dependencies, and documentation when a project does not use them.
 - Do not install a CMS, docs framework, content sync, or component catalog until the current project requires it.
 - `framer-motion` is the one accepted animation dependency; it backs the `$micro-ui` motion kit. Do not add a second one.
@@ -37,6 +37,8 @@ Do not edit `docs/launch/checklist.md` directly or create a second SEO guide or 
 - Preserve the token boundary in `src/app/globals.css` when importing a client design system.
 - Keep critical copy and links in server-rendered HTML.
 - Animation must retain visible content without JavaScript and handle `prefers-reduced-motion`.
+- `/dev`, `/dev/visuals`, and `/dev/launch-assets` are internal review tools. Keep their shared layout gated by the exact server-only `VISUAL_REVIEW_ENABLED=true` allow value, keep them out of navigation and sitemap, and never infer access from a deployment environment.
+- Launch assets reuse validated project visuals and export with `pnpm launch:assets`. Keep frame copy and composition route-local, write generated files to `artifacts/launch-assets`, and do not automatically publish them under `public`.
 - Avoid adding unused primitives or speculative reusable sections.
 
 ## Before completing work

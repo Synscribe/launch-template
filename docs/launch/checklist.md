@@ -45,9 +45,14 @@ Check:
   - `src/app/opengraph-image.tsx`
   - `public/media`
   - `src/app/uses/[slug]/_components`
+  - `src/app/dev/visuals`
+  - `src/app/dev/launch-assets`
+  - `src/components/visuals`
   - `src/content/use-cases`
+  - `src/lib/visuals.ts`
   - `src/lib/use-cases.ts`
   - `src/lib/use-cases.test.ts`
+  - `scripts/launch-assets.mjs`
 
 Why it matters: template artwork can look finished enough to survive a rushed launch while still showing the wrong identity, language, or visual system.
 
@@ -58,6 +63,8 @@ Check:
 - Remove unused placeholder files instead of leaving them hidden in `public` or route folders.
 - Render the final social image at 1200×630 and review its copy, crop, fonts, colors, and logo.
 - Review all visible feature and use-case visuals on desktop and mobile.
+- With local visual review enabled, inspect every registered source at `/dev/visuals` and every final launch frame at `/dev/launch-assets`.
+- Export the launch frames with `pnpm launch:assets` and review the exact PNG outputs, not only the browser gallery.
 
 The production launch audit fails while explicit placeholder filenames or markers remain.
 
@@ -486,7 +493,13 @@ For animation work, use `.agents/skills/micro-ui` and verify both ordinary and `
 - Files:
   - `public/media`
   - `src/app/opengraph-image.tsx`
+  - `src/lib/visuals.ts`
+  - `src/components/visuals/project-visual.tsx`
   - `src/app/uses/[slug]/_components/use-case-visual.tsx`
+  - `src/app/dev/visuals`
+  - `src/app/dev/launch-assets`
+  - `scripts/launch-assets.mjs`
+  - `docs/recipes/launch-assets.md`
   - `.agents/skills/micro-ui/SKILL.md`
 
 Why it matters: an image can be technically optimized and still ship the wrong client, crop, claim, license, alternative text, or stale inherited asset.
@@ -500,9 +513,11 @@ Check:
 - Generated visuals use real project language and do not invent customers, metrics, integrations, or outcomes.
 - A JSON-backed page references only a validated visual ID. File paths, React component names, layout classes, and serialized props stay in code.
 
-For `/uses`, confirm every `hero.visualId` and `solution.items[].visualId` resolves to either an approved React component or local image source.
+For `/uses`, confirm every `hero.visualId` and `solution.items[].visualId` resolves to either an approved React component or local image source through the one project resolver.
 
-Use `.agents/skills/micro-ui` to create or adapt a visual, then register it through the resolver when it belongs to a use-case hero or capability.
+Use `.agents/skills/micro-ui` to create or adapt a visual, then register it through the resolver when it belongs to a current surface. Inspect the complete inventory at `/dev/visuals` with local review enabled.
+
+For launch assets, inspect the exact reduced-motion PNGs emitted by `pnpm launch:assets`. Confirm each frame has the declared dimensions, intentional crop and spacing, client-approved language, and no invented customers, metrics, integrations, or outcomes.
 
 ### ANALYTICS-01 — analytics is configured and privacy-aware
 

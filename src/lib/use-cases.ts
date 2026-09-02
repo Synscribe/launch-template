@@ -1,6 +1,8 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
+import { VISUAL_IDS, type VisualId } from "./visuals";
+
 type ContentItem = {
   title: string;
   description: string;
@@ -10,28 +12,8 @@ type MethodStep = ContentItem & {
   number: string;
 };
 
-export const USE_CASE_VISUAL_IDS = [
-  "placeholder-website-migration-overview",
-  "saas-rebuild-overview",
-  "startup-launch-overview",
-  "seo-landing-page-overview",
-  "url-inventory",
-  "url-decisions",
-  "page-meaning",
-  "release-gates",
-  "post-launch-monitoring",
-  "offer-and-audience",
-  "conversion-path",
-  "proof-and-trust",
-  "measurement-plan",
-  "buyer-journeys",
-  "information-architecture",
-  "reusable-pages",
-  "search-intent",
-  "internal-links",
-] as const;
-
-export type UseCaseVisualId = (typeof USE_CASE_VISUAL_IDS)[number];
+export const USE_CASE_VISUAL_IDS = VISUAL_IDS;
+export type UseCaseVisualId = VisualId;
 
 export type UseCaseCapability = {
   visualId: UseCaseVisualId;

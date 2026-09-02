@@ -17,6 +17,7 @@
     "launch:checklist": "tsx scripts/launch-checklist.ts",
     "launch:verify": "tsx scripts/launch-verify.ts",
     "launch:audit": "tsx scripts/launch-audit.ts",
+    "launch:assets": "node scripts/launch-assets.mjs",
     "skills:check": "node --test .agents/skills/site-clone/scripts/inventory-sitemap.test.mjs",
     "prepush": "pnpm check && pnpm build"
   },
@@ -51,7 +52,8 @@
     "tailwindcss": "4.2.1",
     "tsx": "^4.21.0",
     "typescript": "5.9.3",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.0",
+    "ws": "^8.21.3"
   },
   "packageManager": "pnpm@10.32.1",
   "engines": {
