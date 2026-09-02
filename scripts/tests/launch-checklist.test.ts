@@ -28,8 +28,15 @@ describe("launch checklist", () => {
       status: "auto",
       check: "llms-txt-ready",
       recipe: "docs/recipes/llms-txt.md",
-      files: ["public/llms.txt"],
     });
+    expect(checklist.items.find((item) => item.id === "LLM-01")?.files).toEqual(
+      expect.arrayContaining([
+        "public/llms.txt",
+        "src/config/discovery.ts",
+        "next.config.ts",
+        "scripts/launch-audit.ts",
+      ]),
+    );
   });
 
   it("renders status and guidance from the same item", async () => {

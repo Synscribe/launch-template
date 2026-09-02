@@ -7,12 +7,30 @@ Checklist item: `LLM-01`.
 ## Files and environment values
 
 - Website-level example: `public/llms.txt`
+- Homepage discovery-header value and conditional rule: `src/config/discovery.ts`
+- Next.js file-presence check: `next.config.ts`
 - Automated source check: `scripts/checks/llms-txt-ready.ts`
 - Named-check registry: `scripts/checks/index.ts`
-- Live response and target audit: `scripts/launch-audit.ts`
+- Live discovery-header, response, removal, and target audit: `scripts/launch-audit.ts`
 - Environment values: none. Write final absolute production URLs in the file; never derive them from a local or preview host.
 
 Next.js serves `public/llms.txt` at `/llms.txt` as a static response. The shipped example describes Launch Template and deliberately includes `TEMPLATE_LLMS_TXT`, so client verification stays red until the file is replaced.
+
+## Homepage discovery header
+
+While `public/llms.txt` exists, the homepage response includes one HTTP `Link` header:
+
+```http
+Link: </llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml"
+```
+
+This follows the discovery pattern described in Roboto Studio's Next.js AEO/GEO implementation: a client that requests the homepage can see the machine-readable site index and XML sitemap without first parsing the HTML body. The template advertises only resources it actually has; it does not add the article's `/llms-full.txt` example.
+
+`describedby` is a registered link relation for a resource that provides information about the current context. `sitemap` is a commonly used extension but is not in the IANA link-relation registry. Keep the absolute sitemap declaration in `robots.txt`; the response header is an additional discovery hint, not a replacement for the standard search-engine path.
+
+The header does not implement content negotiation, does not create Markdown versions of HTML pages, and does not guarantee that an agent or search engine will follow either link.
+
+`next.config.ts` checks for `public/llms.txt` when the project is built or the server starts. If the file is absent, `buildDiscoveryHeaderRules(false)` returns no rule, so the complete header—including the sitemap link—is removed automatically. This is file-coupled behavior rather than an environment feature flag.
 
 ## Copyable template
 
@@ -144,6 +162,7 @@ Update the ISO review date on every meaningful change.
 - The response has no redirect, authentication wall, HTML shell, cookie, or bot challenge.
 - Every listed target returns direct HTTP 200 public content.
 - No listed target redirects or requires authentication.
+- The homepage response includes the expected `describedby` `/llms.txt` and `sitemap` `/sitemap.xml` entries in its `Link` header.
 
 ## Replace the Launch Template example
 
@@ -168,6 +187,7 @@ After replacement, use a reviewed production origin:
 export PRODUCTION_URL="REVIEWED_PRODUCTION_ORIGIN"
 pnpm launch:verify
 curl -i "$PRODUCTION_URL/llms.txt"
+curl -sSI "$PRODUCTION_URL/" | grep -i '^link:'
 pnpm launch:audit --url "$PRODUCTION_URL" --mode production
 ```
 
@@ -177,12 +197,19 @@ The launch baseline keeps and replaces `llms.txt`. If a client explicitly decide
 
 1. Delete `public/llms.txt`.
 2. Set `LLM-01` to `not_applicable` in `docs/launch/checklist.json` and record the project decision.
-3. Run `pnpm launch:checklist --write`, `pnpm launch:verify`, and the appropriate live audit.
+3. Build or restart the server. The file-presence check in `next.config.ts` removes the entire homepage discovery-header rule automatically.
+4. Confirm `/llms.txt` returns 404 and the homepage `Link` header contains neither `/llms.txt` nor the paired `/sitemap.xml` discovery entry.
+5. If the project is removing the implementation as well as the published feature, delete `src/config/discovery.ts` and its test, then remove the `buildDiscoveryHeaderRules` import and `headers()` method from `next.config.ts`. Update `docs/features.md`, `README.md`, `PLAN.md`, and the `LLM-01` details/file list, then regenerate the readable checklist.
+6. Run `pnpm launch:checklist --write`, `pnpm launch:verify`, `pnpm check`, `pnpm build`, and the appropriate live audit.
 
 Do not leave the unchanged example deployed or mark it complete manually; `LLM-01` is resolved by its named automated check.
 
 ## References
 
 - [llms.txt format proposal](https://llmstxt.org/)
+- [Roboto Studio: discovery via Link headers](https://robotostudio.com/blog/nextjs-aeo-geo#discovery-via-link-headers)
+- [Next.js: custom response headers](https://nextjs.org/docs/app/api-reference/config/next-config-js/headers)
+- [RFC 8288: Web Linking](https://www.rfc-editor.org/rfc/rfc8288.html)
+- [IANA link relation registry](https://www.iana.org/assignments/link-relations/link-relations.xhtml)
 - [Synscribe: llms.txt implementation guide](https://www.synscribe.com/agentic-discovery/llms-txt)
 - [Synscribe: llms.txt template pack](https://www.synscribe.com/agentic-discovery/resources/llms-txt-template-pack)

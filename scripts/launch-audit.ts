@@ -23,6 +23,7 @@ type Page = {
   finalUrl: string;
   status: number;
   contentType: string;
+  linkHeader: string;
   setsCookie: boolean;
   html: string;
 };
@@ -288,6 +289,7 @@ async function fetchPage(url: string): Promise<Page> {
       finalUrl: response.url,
       status: response.status,
       contentType: response.headers.get("content-type") ?? "",
+      linkHeader: response.headers.get("link") ?? "",
       setsCookie: response.headers.has("set-cookie"),
       html: await response.text(),
     };
@@ -297,6 +299,7 @@ async function fetchPage(url: string): Promise<Page> {
       finalUrl: url,
       status: 0,
       contentType: "",
+      linkHeader: "",
       setsCookie: false,
       html: error instanceof Error ? error.message : String(error),
     };
@@ -462,6 +465,59 @@ async function auditLlmsTxt(llmsTxt: Page): Promise<void> {
         : `Expected direct HTTP 200 HTML or Markdown; received HTTP ${target.status}, ${target.contentType || "no content type"}${direct ? "" : `, redirected to ${target.finalUrl}`}`,
     );
   }
+}
+
+function hasDiscoveryLink(
+  header: string,
+  target: string,
+  relation: string,
+  contentType: string,
+): boolean {
+  return header.split(",").some((value) => {
+    const link = value.trim();
+    return (
+      link.startsWith(`<${target}>`) &&
+      new RegExp(`(?:^|;)\\s*rel=["']${relation}["'](?:;|$)`, "i").test(link) &&
+      new RegExp(`(?:^|;)\\s*type=["']${contentType}["'](?:;|$)`, "i").test(
+        link,
+      )
+    );
+  });
+}
+
+function auditDiscoveryLinkHeader(
+  homepage: Page | undefined,
+  llmsTxtEnabled: boolean,
+): void {
+  const linkHeader = homepage?.linkHeader ?? "";
+  const hasLlmsTxt = hasDiscoveryLink(
+    linkHeader,
+    "/llms.txt",
+    "describedby",
+    "text/plain",
+  );
+  const hasSitemap = hasDiscoveryLink(
+    linkHeader,
+    "/sitemap.xml",
+    "sitemap",
+    "application/xml",
+  );
+  const passed = llmsTxtEnabled
+    ? hasLlmsTxt && hasSitemap
+    : !hasLlmsTxt && !hasSitemap;
+
+  record(
+    "LLM-01",
+    passed ? "PASS" : "FAIL",
+    "homepage Link header",
+    llmsTxtEnabled
+      ? passed
+        ? "Advertises /llms.txt and /sitemap.xml"
+        : "Expected describedby /llms.txt and sitemap /sitemap.xml discovery links"
+      : passed
+        ? "Discovery links are absent with the removed llms.txt feature"
+        : "Remove llms.txt and sitemap discovery links when llms.txt is not applicable",
+  );
 }
 
 async function crawl(): Promise<Map<string, Page>> {
@@ -668,14 +724,28 @@ function auditPage(page: Page, sitemapUrls: Set<string>): void {
   }
 }
 
-async function liveAudit(): Promise<void> {
+async function liveAudit(checklist: LaunchChecklist): Promise<void> {
+  const llmsTxtEnabled =
+    allChecklistItems(checklist).find((item) => item.id === "LLM-01")
+      ?.status !== "not_applicable";
   const [robots, sitemap, llmsTxt] = await Promise.all([
     fetchPage(`${baseUrl}/robots.txt`),
     fetchPage(`${baseUrl}/sitemap.xml`),
     fetchPage(`${baseUrl}/llms.txt`),
   ]);
 
-  await auditLlmsTxt(llmsTxt);
+  if (llmsTxtEnabled) {
+    await auditLlmsTxt(llmsTxt);
+  } else {
+    record(
+      "LLM-01",
+      llmsTxt.status === 404 ? "PASS" : "FAIL",
+      "/llms.txt",
+      llmsTxt.status === 404
+        ? "Deliberately removed"
+        : `Expected 404 after deliberate removal; received HTTP ${llmsTxt.status}`,
+    );
+  }
 
   if (robots.status !== 200) {
     record("SEO-04", "FAIL", "/robots.txt", `HTTP ${robots.status}`);
@@ -726,6 +796,10 @@ async function liveAudit(): Promise<void> {
   }
 
   const pages = await crawl();
+  auditDiscoveryLinkHeader(
+    pages.get(normalizePageUrl(baseUrl)),
+    llmsTxtEnabled,
+  );
   for (const page of pages.values()) auditPage(page, sitemapUrls);
 
   const missing = await fetchPage(
@@ -795,7 +869,7 @@ async function main(): Promise<void> {
   const checklistSummary = auditChecklist(checklist);
   await auditAutomatedChecks(checklist);
   await staticAudit();
-  await liveAudit();
+  await liveAudit(checklist);
   validateAuditIds(checklist);
   printResults();
   await saveReport(checklistSummary);

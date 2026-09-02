@@ -1,5 +1,9 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+
 import type { NextConfig } from "next";
 
+import { buildDiscoveryHeaderRules } from "./src/config/discovery";
 import { redirects } from "./src/config/redirects";
 
 function contentImageRemotePattern():
@@ -32,6 +36,11 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return redirects;
+  },
+  async headers() {
+    return buildDiscoveryHeaderRules(
+      existsSync(path.join(process.cwd(), "public/llms.txt")),
+    );
   },
 };
 

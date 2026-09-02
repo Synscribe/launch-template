@@ -308,7 +308,7 @@ Only after the preceding paths are stable:
 
 HTML remains canonical. Advanced machine-readable representations must not create a second hand-maintained content system.
 
-Current progress: the root `public/llms.txt` Launch Template example, `LLM-01` automated replacement/shape check, production response and public-target audit, and `docs/recipes/llms-txt.md` are implemented. The example remains intentionally invalid for a client launch until its content and `TEMPLATE_LLMS_TXT` marker are replaced. Small sites may curate it alongside explicit routes; content-heavy sites generate its link set from their existing source collections.
+Current progress: the root `public/llms.txt` Launch Template example, conditional homepage `Link` discovery header, `LLM-01` automated replacement/shape check, production header/response/public-target audit, and `docs/recipes/llms-txt.md` are implemented. The header advertises `/llms.txt` and `/sitemap.xml` only while the source file exists; deleting `public/llms.txt` removes the complete rule on the next build or server start. The example remains intentionally invalid for a client launch until its content and `TEMPLATE_LLMS_TXT` marker are replaced. Small sites may curate it alongside explicit routes; content-heavy sites generate its link set from their existing source collections.
 
 ## 12. Per-page definition of done
 
