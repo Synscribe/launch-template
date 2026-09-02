@@ -68,6 +68,28 @@ Check:
 
 The production launch audit fails while explicit placeholder filenames or markers remain.
 
+### BRAND-03 — organization logo is client artwork
+
+- [ ] **Automated**
+- Automated check: `organization-logo-ready`
+- Files:
+  - `public/brand/logo.svg`
+  - `src/lib/seo.ts`
+  - `src/config/env.ts`
+  - `src/config/site.ts`
+  - `.env.example`
+
+Why it matters: `Organization.logo` is the brand mark search engines and answer engines attach to the domain. Shipping the template mark teaches the entity graph the wrong identity, and it is not obvious in the rendered page because the value only appears in JSON-LD.
+
+Check:
+
+- Replace `public/brand/logo.svg` with the client's approved logo and remove its `TEMPLATE_PLACEHOLDER_LOGO` marker.
+- Keep the artwork square-ish, at least 112px on its shortest side, and legible at small sizes.
+- Serve the logo from this project. `Organization.logo`, the site header, the Open Graph image, and the launch frames all resolve `public/brand/logo.svg`; change `defaultOrganizationLogoPath` in `src/lib/seo.ts` if the client needs a different path or format.
+- Confirm the deployed `Organization` JSON-LD resolves the logo URL with a 200 response.
+
+`pnpm launch:verify` fails while the template mark or its marker remains.
+
 ### HOME-01 — the homepage keeps one primary action within reach
 
 - [ ] **Todo**

@@ -6,12 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
-import {
-  buildFaqJsonLd,
-  buildWebsiteJsonLd,
-  createPageMetadata,
-  serializeJsonLd,
-} from "@/lib/seo";
+import { buildFaqJsonLd, createPageMetadata, serializeJsonLd } from "@/lib/seo";
 
 import styles from "./home.module.css";
 
@@ -124,15 +119,10 @@ const questions = [
 ];
 
 export default function HomePage() {
-  const websiteJsonLd = buildWebsiteJsonLd();
   const faqJsonLd = buildFaqJsonLd(questions);
 
   return (
     <main id="main-content">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}

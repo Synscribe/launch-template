@@ -1,8 +1,10 @@
 import { ArrowRightIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
+import { defaultOrganizationLogoPath } from "@/lib/seo";
 
 export function SiteHeader() {
   return (
@@ -13,12 +15,14 @@ export function SiteHeader() {
           className="group inline-flex items-center gap-2.5 font-semibold tracking-tight"
           aria-label={`${siteConfig.name} home`}
         >
-          <span
-            aria-hidden="true"
-            className="grid size-7 place-items-center rounded-full bg-ink text-[10px] font-black text-canvas transition-transform group-hover:-rotate-6"
-          >
-            LT
-          </span>
+          <Image
+            alt=""
+            className="size-7 transition-transform group-hover:-rotate-6"
+            height={28}
+            priority
+            src={defaultOrganizationLogoPath}
+            width={28}
+          />
           <span>{siteConfig.name}</span>
         </Link>
 

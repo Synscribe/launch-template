@@ -5,8 +5,13 @@ import {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
   buildFaqJsonLd,
+  buildOrganizationJsonLd,
+  buildWebsiteJsonLd,
   createPageMetadata,
+  defaultOrganizationLogoPath,
+  organizationJsonLdId,
   serializeJsonLd,
+  websiteJsonLdId,
 } from "./seo";
 
 describe("SEO helpers", () => {
@@ -27,6 +32,41 @@ describe("SEO helpers", () => {
       "http://localhost:3000/example",
     );
     expect(metadata.openGraph?.url).toBe("http://localhost:3000/example");
+  });
+
+  it("gives the organization a canonical node id", () => {
+    const organization = buildOrganizationJsonLd();
+
+    expect(organization["@id"]).toBe("http://localhost:3000/#organization");
+    expect(organization["@id"]).toBe(organizationJsonLdId);
+    expect(organization.url).toBe("http://localhost:3000");
+  });
+
+  it("omits optional organization fields the environment does not supply", () => {
+    const organization = buildOrganizationJsonLd();
+
+    expect(organization).not.toHaveProperty("sameAs");
+  });
+
+  it("resolves the logo to the bundled brand file", () => {
+    const organization = buildOrganizationJsonLd();
+
+    expect(organization.logo).toBe(absoluteUrl(defaultOrganizationLogoPath));
+    expect(organization.logo).toBe("http://localhost:3000/brand/logo.svg");
+  });
+
+  it("points the website and articles at the canonical organization node", () => {
+    const website = buildWebsiteJsonLd();
+    const article = buildArticleJsonLd({
+      headline: "A useful article",
+      description: "A useful description.",
+      path: "/blog/useful",
+    });
+
+    expect(website["@id"]).toBe(websiteJsonLdId);
+    expect(website.publisher).toEqual({ "@id": organizationJsonLdId });
+    expect(article.publisher).toEqual({ "@id": organizationJsonLdId });
+    expect(article.isPartOf).toEqual({ "@id": websiteJsonLdId });
   });
 
   it("includes article dates only when source data provides them", () => {
