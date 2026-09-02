@@ -12,7 +12,7 @@ Checklist priority, guidance, and status live only in `docs/launch/checklist.jso
 - [`blog.md`](blog.md): connect the Wisp-backed blog or remove its routes, feed, dependencies, and navigation.
 - [`contact.md`](contact.md): configure the contact delivery adapter, review minimized attribution and abuse controls, test it end to end, or remove it cleanly.
 - [`turnstile.md`](turnstile.md): activate the optional Cloudflare Turnstile form protection, reuse it on another form, verify it, or remove it cleanly.
-- [`llms-txt.md`](llms-txt.md): replace the root machine-readable index, keep its sources and directives current, verify every public target, or record a deliberate opt-out.
+- [`llms-txt.md`](llms-txt.md): replace the root machine-readable index, advertise it through the conditional homepage `Link` header, verify every public target, or remove both surfaces through the documented opt-out.
 
 ## Later add-ons
 
