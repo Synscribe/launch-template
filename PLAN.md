@@ -1,6 +1,6 @@
 # Next.js Client Launch Template — Architecture and Delivery Plan
 
-Status: foundation, homepage, contact, use cases, Wisp blog, and the first visual skills implemented. This document remains the architecture and phased roadmap.
+Status: foundation, homepage, contact, use cases, Wisp blog, visual workshop, launch-asset export, and the first visual skills implemented. This document remains the architecture and phased roadmap.
 
 This document defines the template's architecture, documentation contract, launch priorities, and page-by-page build order.
 
@@ -73,7 +73,10 @@ This is the repository map. Other agents and client repositories should be able 
 | `src/lib/seo.ts`             | Metadata, URL normalization, and typed builders for applicable structured data.                                                                | One SEO implementation boundary; no arbitrary JSON blobs in content files. |
 | `src/app/robots.ts`          | Environment-aware crawl policy and sitemap URL.                                                                                                | Production and preview behavior must be tested.                            |
 | `src/app/sitemap.ts`         | Enabled, canonical, indexable routes only.                                                                                                     | Derived from actual content sources.                                       |
-| `scripts/launch-*.ts`        | Pnpm command entry points for checklist management, automatic verification, and live auditing.                                                 | Keep helper modules and tests out of the scripts root.                     |
+| `scripts/launch-*`           | Pnpm command entry points for checklist management, automatic verification, live auditing, and launch-asset export.                            | Keep helper modules and tests out of the scripts root.                     |
+| `src/lib/visuals.ts`         | Stable IDs for the current project's bounded visual system.                                                                                    | Content may reference IDs, never paths, components, classes, or props.     |
+| `src/components/visuals`     | One typed React/local-file source resolver shared by real visual consumers.                                                                    | Not a block registry or component catalog.                                 |
+| `src/app/dev`                | Explicitly gated, non-indexable visual inventory and launch-asset workshop.                                                                    | Enable only with server-only `VISUAL_REVIEW_ENABLED=true`.                 |
 | `scripts/checks/*.ts`        | Named automated-check registry and one focused implementation per check.                                                                       | Checklist `check` values must map to this explicit registry.               |
 | `scripts/tests/**/*.test.ts` | Tests for checklist parsing, registry dispatch, and individual automated checks.                                                               | Each automated check needs passing and failing fixtures.                   |
 | `.agents/skills/*/SKILL.md`  | Focused workflows for cloning, animation, visuals, SEO review, and launch review.                                                              | Skills point back to canonical docs instead of copying them.               |
@@ -104,6 +107,7 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 │   ├── tests/
 │   │   └── **/*.test.ts
 │   ├── launch-audit.ts
+│   ├── launch-assets.mjs
 │   ├── launch-checklist.ts
 │   └── launch-verify.ts
 ├── src/
@@ -116,6 +120,7 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 │   │   ├── contact/                 # included by default; delete if unused
 │   │   ├── uses/                    # included by default; delete if unused
 │   │   ├── blog/                    # included by default; delete if unused
+│   │   ├── dev/                     # gated visual inventory and launch assets
 │   │   ├── error.tsx
 │   │   ├── globals.css
 │   │   ├── layout.tsx
@@ -124,6 +129,7 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 │   │   └── sitemap.ts
 │   ├── components/
 │   │   ├── ui/                      # only primitives currently used
+│   │   ├── visuals/                 # bounded resolver shared by current consumers
 │   │   ├── site-footer.tsx
 │   │   └── site-header.tsx
 │   ├── config/
@@ -132,6 +138,7 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 │   │   └── site.ts
 │   └── lib/
 │       ├── seo.ts
+│       ├── visuals.ts
 │       └── utils.ts
 └── .agents/skills/
 ```
@@ -143,6 +150,7 @@ Important boundaries:
 - A content collection may own repeated page data when a repeated page type actually exists. Prefer MDX/Markdown with validated frontmatter for editorial content and TypeScript for small curated datasets.
 - Do not introduce a catch-all marketing route. Dynamic routes such as `blog/[slug]` and `uses/[slug]` are normal and encouraged when they match a real content model.
 - `src/components/ui` is not a showcase. If a primitive is unused, it should not be in the base template.
+- `src/components/visuals` is one bounded source map for current visuals, not a general component catalog. `/dev` exposes it only when the exact server-only review value is present and always emits `noindex` metadata.
 
 ## 6. Priority model
 
@@ -268,7 +276,7 @@ Current progress: complete. `/contact` server-renders its copy and initial form 
 
 Use cases are a default, deletable surface rather than a feature flag. Start with one index and one detail page. Establish the real repeated content model before adding more pages. The index must server-render links to all public details. Each detail owns unique copy, metadata, canonical, and relevant internal links.
 
-Current progress: the server-rendered `/uses` hub groups and links four JSON-backed detail pages covering migrations, SaaS rebuilds, startup launches, and SEO landing pages. The copy uses short, direct sentences and the detail layout uses generous section spacing without a sticky jump bar. Heroes and capability rows use the same validated `visualId`; the route-local `UseCaseVisual` resolver maps each ID to either React or a project-owned local image without placing component props, paths, or layout in JSON. Numeric page ordering has been removed. Each page's `metadata` contains its slug, hub anchor, single group, title, and description; `src/content/use-cases/groups.json` owns hub labels and section order without becoming a component registry. Automatic discovery, grouping, static generation, exhaustive visual mapping, and sitemap inclusion are covered by tests, TypeScript, and the launch audit.
+Current progress: the server-rendered `/uses` hub groups and links four JSON-backed detail pages covering migrations, SaaS rebuilds, startup launches, and SEO landing pages. The copy uses short, direct sentences and the detail layout uses generous section spacing without a sticky jump bar. Heroes and capability rows use the same validated `visualId`; the shared `ProjectVisual` resolver maps each ID to either React or a project-owned local image without placing component props, paths, or layout in JSON, while route-local `UseCaseVisual` remains a thin placement wrapper. Numeric page ordering has been removed. Each page's `metadata` contains its slug, hub anchor, single group, title, and description; `src/content/use-cases/groups.json` owns hub labels and section order without becoming a component registry. Automatic discovery, grouping, static generation, exhaustive visual mapping, and sitemap inclusion are covered by tests, TypeScript, and the launch audit.
 
 ### Phase 5 — basic blog
 
@@ -287,13 +295,13 @@ The blog is a default, deletable surface rather than a feature flag. It connects
 Create focused project skills using the repository's canonical docs:
 
 - `site-clone`: inventory/capture, implement route by route, and visually compare approved sites;
-- `micro-ui`: create route-native interface visuals, route-local animation, and generated graphics without a standalone block or asset catalog, with reduced-motion, a11y, and performance checks;
+- `micro-ui`: create route-native interface visuals, route-local animation, generated graphics, and launch assets without a standalone block catalog, with reduced-motion, a11y, and performance checks;
 - `technical-seo-review`: work through relevant `SEO-*` and `MIG-*` requirements;
 - `launch-review`: run the launch audit, inspect non-automatable P0 items, and update checklist status.
 
 Skills must not carry duplicate checklists. They cite stable IDs from `docs/launch/checklist.json`, add client-specific gates to `projectItems`, may keep non-status evidence such as a clone implementation journal, may link to the generated Markdown view, and invoke shared scripts.
 
-Current progress: `site-clone` and `micro-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. `site-clone` includes recursive sitemap inventory, exact URL-map output, wildcard page-family grouping, customer-owned asset migration, visible widget reproduction, implementation journaling with checklist escalation, agent-browser visual comparison, persistent homepage execution, and an approval gate before later routes. `micro-ui` absorbed the former `animated-ui` skill and the designer's motion system: a shared framer-motion kit (`_kit.tsx` plus a token-mapped `brand.ts`), a twenty-pattern motion catalogue, and a brand-adoption procedure, while keeping the `ImageResponse`, SVG, and still-visual output paths. The visual skills have been exercised on real code: the generated root Open Graph image, the typed React/local-file `/uses` visual resolver, and two route-local feature animations. `framer-motion` is the one animation dependency; no graphics dependency was added. `technical-seo-review` and `launch-review` remain deliberately deferred.
+Current progress: `site-clone` and `micro-ui` are complete in `.agents/skills`, with `.claude/skills` symlinks exposing the same canonical files to Claude. `site-clone` includes recursive sitemap inventory, exact URL-map output, wildcard page-family grouping, customer-owned asset migration, visible widget reproduction, implementation journaling with checklist escalation, agent-browser visual comparison, persistent homepage execution, and an approval gate before later routes. `micro-ui` absorbed the former `animated-ui` skill and the designer's motion system: a shared framer-motion kit (`_kit.tsx` plus a token-mapped `brand.ts`), a twenty-pattern motion catalogue, a brand-adoption procedure, a gated visual inventory, and browser-exported launch-asset frames, while keeping `ImageResponse` as the purpose-built Open Graph path. The visual skills have been exercised on real code: the generated root Open Graph image, the typed React/local-file project visual resolver shared by `/uses`, `/dev/visuals`, and launch assets, two route-local feature animations, and three exact-size example exports. `framer-motion` is the one animation dependency; no graphics dependency was added. `technical-seo-review` and `launch-review` remain deliberately deferred.
 
 ### Phase 7 — advanced content and LLM access
 

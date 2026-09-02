@@ -7,8 +7,9 @@ description: >
   graphics, Open Graph images, route-local animation, reveal sequences, micro-interactions, and
   motion audits. Triggers on: micro ui, feature visual, feature card, marketing card, product
   shot, feature illustration, illustrate this feature, animated feature graphic, animated hero,
-  OG image, social image. Preserve the project's design tokens, server-rendering boundary,
-  use-case visual-ID mapping, reduced-motion fallback, accessibility, and launch checks.
+  OG image, social image, launch asset, launch image, visual inventory. Preserve the project's
+  design tokens, server-rendering boundary, visual-ID mapping, reduced-motion fallback,
+  accessibility, and launch checks.
 ---
 
 # Micro UI
@@ -21,8 +22,9 @@ thing is running right now".
 That default is not the only output. Some briefs need a file — a share card, a social preview, an
 asset for a surface that cannot run JavaScript — and those paths are first-class here.
 
-Keep the result in the route or image implementation that consumes it; do not start a visual
-catalog.
+Keep the result in the route or image implementation that consumes it. This project has one
+intentional environment-gated inventory at `/dev/visuals`; register reusable work through its
+existing bounded source map instead of starting a public catalog or a second registry.
 
 ## Choose the output first
 
@@ -34,8 +36,10 @@ Use the smallest durable format:
    page-level motion — reveals, ambient background, micro-interactions. Start in that route's
    `_components` folder.
 3. **Next.js `ImageResponse`** for Open Graph or other generated social images.
-4. **Project-owned SVG** only when a reusable static asset is genuinely needed outside React.
-5. **Raster generation** only when the brief needs photographic, painterly, or textured artwork
+4. **Browser-exported React frame** for launch, marketplace, deck, or campaign assets that
+   should reuse the real site visuals. Follow `references/launch-assets.md`.
+5. **Project-owned SVG** only when a reusable static asset is genuinely needed outside React.
+6. **Raster generation** only when the brief needs photographic, painterly, or textured artwork
    that code cannot express well.
 
 Do not create a standalone HTML demo, add Satori directly, or install a graphics dependency when
@@ -51,8 +55,8 @@ system looks native to _this_ brand. Two things to establish before writing code
 **Is there already a kit here?** If so, extend it rather than starting over.
 
 ```bash
-ls src/app/uses/\[slug\]/_components/visuals/_kit.tsx \
-   src/app/uses/\[slug\]/_components/visuals/brand.ts 2>/dev/null
+ls src/components/visuals/visuals/_kit.tsx \
+   src/components/visuals/visuals/brand.ts 2>/dev/null
 ```
 
 **What is this brand's palette?** Colour is the only brand-coupled part of the
@@ -61,7 +65,7 @@ does not already use.
 
 ```bash
 grep -n "^\s*--" src/app/globals.css | head -60   # semantic tokens
-ls src/app/uses/\[slug\]/_components/              # existing use-case visuals
+ls src/components/visuals/                          # shared visual sources
 ```
 
 Then look at the actual homepage — the token block lists what exists, the pages
@@ -76,6 +80,9 @@ Read as well:
 - `references/visual-modes.md` to choose a structure for still output;
 - `references/project-boundaries.md` for this template's file and verification rules;
 - **at least one** example in `references/examples/` before writing code.
+
+For launch or marketplace images, also read `references/launch-assets.md` before changing the
+gallery or exporter.
 
 **Porting to a new company or repo: read `references/brand-adoption.md` first.**
 It is the whole procedure — prerequisites, what to fill into `brand.ts`, how to
@@ -105,20 +112,21 @@ performance numbers.
 ## The rule that makes the set work
 
 Each use-case capability carries a **stable `visualId`** — not the page, not the heading. That id
-selects the visual, through the project's bounded typed resolver. Same capability, same visual,
-everywhere it appears. A new page written later gets its visual for free.
+selects the visual through the project's one bounded typed resolver. The site, gated inventory,
+and launch assets all consume that resolver. Same capability, same visual, everywhere it appears.
 
 Adding one means:
 
-- add the id to `USE_CASE_VISUAL_IDS` in `src/lib/use-cases.ts`;
-- populate the exhaustive `Record<UseCaseVisualId, UseCaseVisualSource>` in
-  `use-case-visual.tsx` so TypeScript catches a missing source;
+- add the id to `VISUAL_IDS` in `src/lib/visuals.ts`;
+- populate the exhaustive `Record<VisualId, VisualSource>` in
+  `src/components/visuals/project-visual.tsx` so TypeScript catches a missing source;
 - use a `kind: "component"` source for route-local React and a `kind: "image"` source for an
   approved local file;
 - keep copy in the content file or route, not inside a generic registry.
 
 Do not add a second registry, a `FEATURE_VISUALS` map, or component names, paths, classes, or
-props in JSON. The `/uses` resolver is the only intentional ID-to-visual map in this project.
+props in JSON. `project-visual.tsx` is the only intentional ID-to-visual map in this project;
+`UseCaseVisual` is only its route-specific placement wrapper.
 
 ## Motion rules
 
@@ -252,6 +260,17 @@ For `ImageResponse`:
 - include the real site name and a clear visual motif, not a screenshot of an entire page;
 - omit claims that are not visible or verified elsewhere.
 
+## Writing a launch asset
+
+Use the gated `/dev/launch-assets` route and `pnpm launch:assets`. Keep asset copy and composition
+inside that route, select reusable illustrations only through a validated `visualId`, and let the
+exporter discover frames from the rendered `data-launch-asset` contract. Do not parse component
+source, copy generated PNGs into `public` automatically, or recreate a live visual in a second
+image-only component. The exporter emulates reduced motion and captures the exact frame bounds.
+
+See `references/launch-assets.md` for the file map, access model, content workflow, exporter
+contract, and failure modes.
+
 ## Content
 
 Real content, always. Real plan names, real objection text, real currency, real language mix.
@@ -269,12 +288,14 @@ defect, not a placeholder.
 ## Verify the real output
 
 - render or open the consuming route;
+- review every registered reusable visual at `/dev/visuals`;
 - inspect desktop and mobile crops;
 - emulate `prefers-reduced-motion: reduce` and confirm the resolved state is composed, not blank;
 - test keyboard focus and touch behavior on any interactive neighbour;
 - confirm no content or link disappears without JavaScript;
 - check for layout shift and excessive main-thread work;
 - inspect the generated OG endpoint at its final dimensions when applicable;
+- run `pnpm launch:assets` and inspect each exact PNG when launch assets are in scope;
 - confirm all visual IDs still resolve in both hero and capability placements;
 - check that core copy remains in server-rendered HTML;
 - walk the per-visual checklist at the end of `references/motion-system.md` for animated output;
@@ -297,8 +318,10 @@ defect, not a placeholder.
 ## Guardrails
 
 - Do not add `site.json`, a site-wide image/block registry, serialized React props, or
-  speculative visual variants. The bounded `/uses` visual resolver is the only intentional
-  ID-to-visual map.
+  speculative visual variants. The bounded shared project visual resolver is the only
+  intentional ID-to-visual map.
+- Do not expose `/dev`, its visual inventory, or its launch gallery without the exact server-only
+  `VISUAL_REVIEW_ENABLED=true` allow value.
 - Do not add unused example components to production code. `references/examples/` is the quality
   bar, not content to ship.
 - Do not use an external image when a small route-native diagram communicates the point better.

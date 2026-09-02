@@ -18,7 +18,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 
-import styles from "./use-case-visuals.module.css";
+import styles from "./visuals.module.css";
 
 // Placeholder visuals for the template's demo use cases. Replace or remove them before launch.
 
