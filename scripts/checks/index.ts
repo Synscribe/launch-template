@@ -2,6 +2,7 @@ import type { ChecklistItem, LaunchChecklist } from "../launch-checklist";
 
 import { checkLlmsTxtReady } from "./llms-txt-ready";
 import { checkNoTemplatePlaceholders } from "./no-template-placeholders";
+import { checkOrganizationLogoReady } from "./organization-logo-ready";
 import type { AutomatedCheck, AutomatedCheckResult } from "./types";
 
 export type { AutomatedCheckFinding, AutomatedCheckResult } from "./types";
@@ -9,6 +10,7 @@ export type { AutomatedCheckFinding, AutomatedCheckResult } from "./types";
 export const AUTOMATED_CHECKS = {
   "llms-txt-ready": checkLlmsTxtReady,
   "no-template-placeholders": checkNoTemplatePlaceholders,
+  "organization-logo-ready": checkOrganizationLogoReady,
 } satisfies Record<string, AutomatedCheck>;
 
 export function isAutomatedCheckName(

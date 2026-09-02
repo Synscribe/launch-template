@@ -6,6 +6,26 @@ export const alt = `${siteConfig.name} — build the site and check the launch`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// Satori's rasterizer cannot load an SVG through <img>, so the brand mark is drawn
+// inline here. It must stay in step with public/brand/logo.svg, which BRAND-02 and
+// BRAND-03 both require replacing before launch.
+function BrandMark() {
+  return (
+    <svg fill="none" height={36} viewBox="0 0 512 512" width={36}>
+      <rect fill="#17201f" height={512} rx={144} width={512} />
+      <path
+        d="M104 452q148 8 240-100"
+        opacity={0.75}
+        stroke="#bfe3d1"
+        strokeLinecap="round"
+        strokeWidth={20}
+      />
+      <path d="M136 152h240v64H288v176h-64V216H136z" fill="#f5f2ea" />
+      <circle cx={376} cy={376} fill="#df5028" r={56} />
+    </svg>
+  );
+}
+
 const launchSteps = [
   ["01", "Map the routes", "Migration"],
   ["02", "Write the page", "Message + SEO"],
@@ -63,22 +83,7 @@ export default function PlaceholderOpenGraphImage() {
         }}
       >
         <div style={{ alignItems: "center", display: "flex", gap: "14px" }}>
-          <div
-            style={{
-              alignItems: "center",
-              background: "#17201f",
-              borderRadius: "999px",
-              color: "#f5f2ea",
-              display: "flex",
-              fontSize: 14,
-              fontWeight: 800,
-              height: "36px",
-              justifyContent: "center",
-              width: "36px",
-            }}
-          >
-            LT
-          </div>
+          <BrandMark />
           <div style={{ display: "flex", fontSize: 23, fontWeight: 700 }}>
             {siteConfig.name}
           </div>

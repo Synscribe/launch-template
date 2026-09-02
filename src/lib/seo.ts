@@ -47,14 +47,36 @@ export function createPageMetadata({
   };
 }
 
+export const defaultOrganizationLogoPath = "/brand/logo.svg";
+export const organizationJsonLdId = `${siteConfig.url}/#organization`;
+export const websiteJsonLdId = `${siteConfig.url}/#website`;
+
+export function buildOrganizationJsonLd() {
+  const sameAs = siteConfig.socialLinks.map((link) => link.href);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": organizationJsonLdId,
+    name: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    logo: absoluteUrl(defaultOrganizationLogoPath),
+    ...(siteConfig.contactEmail ? { email: siteConfig.contactEmail } : {}),
+    ...(sameAs.length > 0 ? { sameAs } : {}),
+  } as const;
+}
+
 export function buildWebsiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": websiteJsonLdId,
     name: siteConfig.name,
     description: siteConfig.description,
     url: siteConfig.url,
     inLanguage: siteConfig.locale,
+    publisher: { "@id": organizationJsonLdId },
   } as const;
 }
 
@@ -104,7 +126,8 @@ export function buildArticleJsonLd({
     ...(authorName
       ? { author: { "@type": "Person" as const, name: authorName } }
       : {}),
-    publisher: { "@type": "Organization", name: siteConfig.name },
+    publisher: { "@id": organizationJsonLdId },
+    isPartOf: { "@id": websiteJsonLdId },
     ...(publishedAt ? { datePublished: publishedAt } : {}),
     ...(updatedAt ? { dateModified: updatedAt } : {}),
     ...(imagePath ? { image: absoluteUrl(imagePath) } : {}),

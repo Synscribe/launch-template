@@ -1,0 +1,25 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 512 512"
+  width="512"
+  height="512"
+  role="img"
+  aria-labelledby="logo-title logo-desc"
+>
+  <title id="logo-title">Launch Template</title>
+  <desc id="logo-desc">
+    TEMPLATE_PLACEHOLDER_LOGO — template brand mark. Replace with the client's
+    approved logo before launch.
+  </desc>
+  <rect width="512" height="512" rx="144" fill="#17201f" />
+  <path
+    d="M104 452q148 8 240-100"
+    fill="none"
+    stroke="#bfe3d1"
+    stroke-width="20"
+    stroke-linecap="round"
+    opacity="0.75"
+  />
+  <path d="M136 152h240v64H288v176h-64V216H136z" fill="#f5f2ea" />
+  <circle cx="376" cy="376" r="56" fill="#df5028" />
+</svg>

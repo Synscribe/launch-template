@@ -1,5 +1,8 @@
+import Image from "next/image";
+
 import { ProjectVisual } from "@/components/visuals/project-visual";
 import { siteConfig } from "@/config/site";
+import { defaultOrganizationLogoPath } from "@/lib/seo";
 
 import type { LaunchAsset } from "../_lib/launch-assets";
 
@@ -15,15 +18,6 @@ const toneClasses = {
     wash: "bg-signal/5",
   },
 } as const;
-
-function brandInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
 
 function brandDestination(): string {
   try {
@@ -62,9 +56,13 @@ export function LaunchFrame({ asset }: { asset: LaunchAsset }) {
       <div className="relative z-10 flex h-full flex-col px-[72px] py-[54px]">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-full bg-ink text-[11px] font-bold text-paper">
-              {brandInitials(siteConfig.name)}
-            </span>
+            <Image
+              alt=""
+              className="size-9"
+              height={36}
+              src={defaultOrganizationLogoPath}
+              width={36}
+            />
             <span className="text-xl font-semibold tracking-[-0.025em]">
               {siteConfig.name}
             </span>
