@@ -163,7 +163,6 @@ Check:
 - Files:
   - `src/app/robots.ts`
   - `src/app/**/page.tsx`
-  - `src/config/env.ts`
 
 Why it matters: a stray `noindex`, robots block, authentication wall, or preview header can erase every other SEO improvement.
 
@@ -171,14 +170,14 @@ How crawling and indexing differ:
 
 - `robots.txt` controls crawler access; it is not a reliable way to remove an already known URL from an index.
 - `noindex` controls indexing but the crawler must be able to fetch the page to see it.
-- Preview/local environments should be blocked. Production must deliberately switch to the public policy.
+- Public routes remain crawlable in every environment. Protect private previews with deployment access controls instead of a site-wide robots block.
 
 Check:
 
 - Representative production routes return 200 without authentication.
 - Production `robots.txt` permits intended public routes and points to the absolute sitemap.
 - Public pages do not emit `noindex` or an equivalent response header.
-- Preview/local deployments remain non-indexable.
+- Local, preview, and production deployments never return a site-wide `Disallow: /` rule.
 
 ### SEO-02 — page meaning is clear in the right order
 

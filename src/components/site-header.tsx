@@ -6,6 +6,13 @@ import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { defaultOrganizationLogoPath } from "@/lib/seo";
 
+import { MobileNav } from "./mobile-nav";
+
+const primaryAction = {
+  href: "/contact",
+  label: "Launch Website",
+} as const;
+
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-ink/10 bg-canvas/85 backdrop-blur-xl">
@@ -41,17 +48,24 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <Link
-          href="/contact"
-          className={buttonVariants({
-            size: "sm",
-            className:
-              "h-auto rounded-full bg-signal px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_28px_rgba(224,78,34,0.22)] hover:-translate-y-0.5 hover:bg-signal-strong",
-          })}
-        >
-          Launch Website
-          <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
-        </Link>
+        <div className="hidden md:block">
+          <Link
+            href={primaryAction.href}
+            className={buttonVariants({
+              size: "sm",
+              className:
+                "h-auto rounded-full bg-signal px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_28px_rgba(224,78,34,0.22)] hover:-translate-y-0.5 hover:bg-signal-strong",
+            })}
+          >
+            {primaryAction.label}
+            <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
+          </Link>
+        </div>
+
+        <MobileNav
+          navigation={siteConfig.navigation}
+          primaryAction={primaryAction}
+        />
       </div>
     </header>
   );

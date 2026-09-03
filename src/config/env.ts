@@ -1,17 +1,8 @@
-export type DeploymentEnvironment = "local" | "preview" | "production";
-
 const DEFAULT_SITE_URL = "http://localhost:3000";
 
 function optional(value: string | undefined): string | undefined {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
-}
-
-function deploymentEnvironment(
-  value: string | undefined,
-): DeploymentEnvironment {
-  if (value === "preview" || value === "production") return value;
-  return "local";
 }
 
 function normalizedUrl(value: string | undefined): string {
@@ -52,9 +43,6 @@ export const env = Object.freeze({
   siteDescription:
     optional(process.env.NEXT_PUBLIC_SITE_DESCRIPTION) ??
     "Launch Template is a Next.js website foundation for developers and business owners building with Claude Code, Codex, or another AI coding tool.",
-  deploymentEnvironment: deploymentEnvironment(
-    process.env.NEXT_PUBLIC_DEPLOYMENT_ENV,
-  ),
   contactEmail: optional(process.env.NEXT_PUBLIC_CONTACT_EMAIL),
   linkedinUrl: optional(process.env.NEXT_PUBLIC_LINKEDIN_URL),
   xUrl: optional(process.env.NEXT_PUBLIC_X_URL),
@@ -65,6 +53,5 @@ export const env = Object.freeze({
   ),
 });
 
-export const isProduction = env.deploymentEnvironment === "production";
 export const usesTemplateIdentity =
   env.siteName === "Launch Template" || env.siteUrl === DEFAULT_SITE_URL;

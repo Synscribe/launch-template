@@ -26,6 +26,7 @@ const args = process.argv.slice(2);
 const onlyIndex = args.indexOf("--only");
 const only = onlyIndex >= 0 ? args[onlyIndex + 1] : undefined;
 const skipBuild = args.includes("--skip-build");
+const debug = process.env.DEBUG_LAUNCH_ASSETS === "true";
 
 if (onlyIndex >= 0 && (!only || only.startsWith("--"))) {
   throw new Error("--only requires an asset ID");
@@ -80,8 +81,10 @@ function availablePort() {
 
 const children = [];
 let socket;
+let pageSocket;
 
 function cleanup() {
+  if (pageSocket?.readyState === WebSocket.OPEN) pageSocket.close();
   if (socket?.readyState === WebSocket.OPEN) socket.close();
   for (const child of children) {
     try {
@@ -198,27 +201,33 @@ async function run() {
   let messageId = 0;
   const pending = new Map();
 
-  socket.on("message", (data) => {
+  function handleMessage(data) {
     const message = JSON.parse(data.toString());
     if (!message.id || !pending.has(message.id)) return;
     const request = pending.get(message.id);
     pending.delete(message.id);
+    if (debug) {
+      const value = message.result?.result?.value;
+      console.error(
+        `← ${request.method}${value === undefined ? "" : ` ${JSON.stringify(value)}`}`,
+      );
+    }
     if (message.error) request.reject(new Error(message.error.message));
     else request.resolve(message.result);
-  });
+  }
 
-  function send(method, params = {}, sessionId) {
+  socket.on("message", handleMessage);
+
+  function sendOn(transport, method, params = {}) {
     const id = ++messageId;
     return new Promise((resolveRequest, rejectRequest) => {
-      pending.set(id, { reject: rejectRequest, resolve: resolveRequest });
-      socket.send(
-        JSON.stringify({
-          id,
-          method,
-          params,
-          ...(sessionId ? { sessionId } : {}),
-        }),
-      );
+      pending.set(id, {
+        method,
+        reject: rejectRequest,
+        resolve: resolveRequest,
+      });
+      if (debug) console.error(`→ ${method}`);
+      transport.send(JSON.stringify({ id, method, params }));
       setTimeout(() => {
         if (pending.delete(id)) {
           rejectRequest(new Error(`${method} timed out.`));
@@ -227,37 +236,62 @@ async function run() {
     });
   }
 
+  const send = (method, params) => sendOn(socket, method, params);
+  const sendPage = (method, params) => sendOn(pageSocket, method, params);
+
+  async function connectToTarget(targetId) {
+    let pageWebSocketUrl;
+    await waitFor("Chrome target", async () => {
+      const targets = await (
+        await fetch(`http://127.0.0.1:${cdpPort}/json/list`)
+      ).json();
+      pageWebSocketUrl = targets.find(
+        (target) => target.id === targetId,
+      )?.webSocketDebuggerUrl;
+      return Boolean(pageWebSocketUrl);
+    });
+
+    pageSocket = new WebSocket(pageWebSocketUrl);
+    await new Promise((resolvePageSocket, rejectPageSocket) => {
+      pageSocket.once("open", resolvePageSocket);
+      pageSocket.once("error", rejectPageSocket);
+    });
+    pageSocket.on("message", handleMessage);
+  }
+
+  async function closeTarget(targetId) {
+    if (pageSocket?.readyState === WebSocket.OPEN) pageSocket.close();
+    pageSocket = undefined;
+    await send("Target.closeTarget", { targetId });
+  }
+
   let { targetId } = await send("Target.createTarget", {
     url: "about:blank",
   });
-  let { sessionId } = await send("Target.attachToTarget", {
-    flatten: true,
-    targetId,
-  });
+  await connectToTarget(targetId);
 
   async function configurePage(width, height) {
-    await send("Page.enable", {}, sessionId);
-    await send("Runtime.enable", {}, sessionId);
-    await send(
-      "Emulation.setDeviceMetricsOverride",
-      { deviceScaleFactor: 1, height, mobile: false, width },
-      sessionId,
-    );
-    await send(
-      "Emulation.setEmulatedMedia",
-      { features: [{ name: "prefers-reduced-motion", value: "reduce" }] },
-      sessionId,
-    );
+    await sendPage("Page.enable");
+    await sendPage("Runtime.enable");
+    await sendPage("Emulation.setDeviceMetricsOverride", {
+      deviceScaleFactor: 1,
+      height,
+      mobile: false,
+      width,
+    });
+    await sendPage("Emulation.setEmulatedMedia", {
+      features: [{ name: "prefers-reduced-motion", value: "reduce" }],
+    });
   }
 
   await configurePage(1440, 900);
 
   async function evaluate(expression, awaitPromise = false) {
-    const response = await send(
-      "Runtime.evaluate",
-      { awaitPromise, expression, returnByValue: true },
-      sessionId,
-    );
+    const response = await sendPage("Runtime.evaluate", {
+      awaitPromise,
+      expression,
+      returnByValue: true,
+    });
     if (response.exceptionDetails) {
       throw new Error(
         response.exceptionDetails.exception?.description ??
@@ -269,8 +303,12 @@ async function run() {
   }
 
   async function navigate(url) {
-    const result = await send("Page.navigate", { url }, sessionId);
+    const result = await sendPage("Page.navigate", { url });
     if (result.errorText) throw new Error(result.errorText);
+    // Avoid polling Runtime while the renderer is still replacing the
+    // about:blank document; recent Chrome builds can leave an in-flight CDP
+    // evaluation unanswered during that handoff.
+    await sleep(1_000);
     await waitFor("Page", async () =>
       evaluate(
         `location.href === ${JSON.stringify(url)} && document.readyState === 'complete'`,
@@ -279,19 +317,19 @@ async function run() {
   }
 
   async function settlePage() {
-    await evaluate(
-      `(async () => {
-        await document.fonts.ready;
-        await Promise.all([...document.images].map((image) =>
-          image.complete ? Promise.resolve() : image.decode().catch(() => undefined)
-        ));
-        await new Promise((resolve) => requestAnimationFrame(() =>
-          requestAnimationFrame(resolve)
-        ));
-        return true;
-      })()`,
-      true,
+    // Recent Chrome builds can leave document.fonts.ready pending in a
+    // background headless target even after its status is "loaded". Poll
+    // observable state instead, then settle on the process side.
+    await waitFor("Page assets", async () =>
+      evaluate(
+        `document.fonts.status === 'loaded' && [...document.images].every((image) => {
+          const rect = image.getBoundingClientRect();
+          const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+          return !isVisible || image.complete;
+        })`,
+      ),
     );
+    await evaluate("void document.documentElement.offsetHeight");
     await sleep(300);
   }
 
@@ -334,7 +372,7 @@ async function run() {
     }
   }
 
-  await send("Target.closeTarget", { targetId });
+  await closeTarget(targetId);
 
   if (!only) {
     // Chromium can reuse painted layers across related pages. A separate process per
@@ -368,26 +406,20 @@ async function run() {
   );
   for (const asset of targets) {
     ({ targetId } = await send("Target.createTarget", { url: "about:blank" }));
-    ({ sessionId } = await send("Target.attachToTarget", {
-      flatten: true,
-      targetId,
-    }));
+    await connectToTarget(targetId);
     await configurePage(asset.width, asset.height + 240);
     await navigate(`${galleryUrl}?asset=${encodeURIComponent(asset.id)}`);
     await settlePage();
     // Invalidate and settle the complete frame before taking a surface screenshot.
     await evaluate(
-      `(async () => {
+      `(() => {
         const frame = document.querySelector('[data-launch-asset]');
         frame.style.transform = 'translateZ(0)';
         void frame.offsetHeight;
-        await new Promise((resolve) => requestAnimationFrame(() =>
-          requestAnimationFrame(resolve)
-        ));
         return true;
       })()`,
-      true,
     );
+    await sleep(100);
 
     const reducedMotion = await evaluate(
       "matchMedia('(prefers-reduced-motion: reduce)').matches",
@@ -419,16 +451,12 @@ async function run() {
       );
     }
 
-    const screenshot = await send(
-      "Page.captureScreenshot",
-      {
-        captureBeyondViewport: false,
-        clip: { ...bounds, scale: 1 },
-        format: "png",
-        fromSurface: true,
-      },
-      sessionId,
-    );
+    const screenshot = await sendPage("Page.captureScreenshot", {
+      captureBeyondViewport: false,
+      clip: { ...bounds, scale: 1 },
+      format: "png",
+      fromSurface: true,
+    });
     const png = Buffer.from(screenshot.data, "base64");
     assertPng(png, asset.width, asset.height);
 
@@ -438,7 +466,7 @@ async function run() {
     const fileName = `${order}-${asset.id}.png`;
     writeFileSync(join(OUT, fileName), png);
     console.log(`  ✓ ${fileName}`);
-    await send("Target.closeTarget", { targetId });
+    await closeTarget(targetId);
   }
 
   console.log(`\nDone. PNG files are in ${OUT}`);

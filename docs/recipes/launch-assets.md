@@ -14,7 +14,7 @@ VISUAL_REVIEW_ENABLED=true pnpm dev
 ```
 
 `.env.example` sets that value so a copied local configuration exposes the tools. The routes do
-not infer access from `NODE_ENV` or `NEXT_PUBLIC_DEPLOYMENT_ENV`, and the value must not use a
+not infer access from `NODE_ENV`, and the value must not use a
 `NEXT_PUBLIC_` prefix. Do not configure it on a public deployment.
 
 The shared `src/app/dev/layout.tsx` owns the access check and noindex metadata for:
@@ -88,7 +88,11 @@ pnpm launch:assets
 pnpm launch:assets -- --only migration-system
 pnpm launch:assets -- --skip-build
 CHROME=/absolute/path/to/chrome pnpm launch:assets
+DEBUG_LAUNCH_ASSETS=true pnpm launch:assets -- --only migration-system
 ```
+
+Use `DEBUG_LAUNCH_ASSETS=true` only while diagnosing an export. It logs the
+Chrome DevTools Protocol requests and returned values without changing the PNG.
 
 The exporter:
 

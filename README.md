@@ -90,10 +90,6 @@ Set both `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and server-only `TURNSTILE_SECRET_KEY`
 
 Set server-only `VISUAL_REVIEW_ENABLED=true` to expose `/dev`, `/dev/visuals`, and `/dev/launch-assets`. `.env.example` enables it for copied local configuration; do not set it on a public deployment. The exporter supplies it only to its temporary local server.
 
-Set `NEXT_PUBLIC_DEPLOYMENT_ENV` deliberately:
-
-- `local`: robots disallows crawling.
-- `preview`: robots disallows crawling.
-- `production`: robots allows the public site and publishes the sitemap URL.
-
-This environment value is a deployment safety control, not a feature flag.
+`robots.txt` always allows public routes and publishes the sitemap URL. It
+blocks only `/api/` and `/dev/`. Protect private previews with deployment
+access controls instead of a site-wide robots block.

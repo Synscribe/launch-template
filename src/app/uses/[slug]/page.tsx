@@ -12,6 +12,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   buildBreadcrumbJsonLd,
+  buildFaqJsonLd,
   createPageMetadata,
   serializeJsonLd,
 } from "@/lib/seo";
@@ -56,12 +57,17 @@ export default async function UseCasePage({ params }: UseCasePageProps) {
     { name: "Uses", path: "/uses" },
     { name: useCase.metadata.anchor, path },
   ]);
+  const faqJsonLd = buildFaqJsonLd(useCase.faq.items);
 
   return (
     <main id="main-content">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
 
       <section className={`${styles.hero} border-b border-ink/10`}>

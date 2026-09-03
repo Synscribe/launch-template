@@ -772,11 +772,9 @@ async function liveAudit(checklist: LaunchChecklist): Promise<void> {
     const blocked = /disallow:\s*\/\s*$/im.test(robots.html);
     record(
       "SEO-01",
-      blocked ? "PASS" : "FAIL",
+      blocked ? "FAIL" : "PASS",
       "/robots.txt",
-      blocked
-        ? `${mode} crawling is blocked`
-        : `${mode} must be blocked from crawling`,
+      blocked ? `${mode} is blocked from crawling` : `${mode} crawl is allowed`,
     );
   }
 
