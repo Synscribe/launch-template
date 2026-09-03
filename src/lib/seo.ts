@@ -52,8 +52,6 @@ export const organizationJsonLdId = `${siteConfig.url}/#organization`;
 export const websiteJsonLdId = `${siteConfig.url}/#website`;
 
 export function buildOrganizationJsonLd() {
-  const sameAs = siteConfig.socialLinks.map((link) => link.href);
-
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -62,8 +60,6 @@ export function buildOrganizationJsonLd() {
     description: siteConfig.description,
     url: siteConfig.url,
     logo: absoluteUrl(defaultOrganizationLogoPath),
-    ...(siteConfig.contactEmail ? { email: siteConfig.contactEmail } : {}),
-    ...(sameAs.length > 0 ? { sameAs } : {}),
   } as const;
 }
 

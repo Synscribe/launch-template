@@ -80,9 +80,9 @@ The `.claude/skills/*` entries are symlinks to `.agents/skills/*`. Keep the name
 
 ## Configuration
 
-Global identity and navigation live in `src/config/site.ts`; environment parsing lives in `src/config/env.ts`. Email and social links are optional. Page content does not belong in global config.
+Global identity and navigation live in `src/config/site.ts`; `src/config/env.ts` parses the deployment-specific site URL and Wisp publication ID. Page content does not belong in global config.
 
-Set the server-only `WISP_BLOG_ID` to the publication used by `/blog` and `WISP_CONTENT_ORIGIN` to the site that owns source-relative links in those articles. Featured content and optional filters are declared in `src/app/blog/blog.config.ts`. See [`docs/recipes/blog.md`](docs/recipes/blog.md) for configuration and complete removal steps.
+Set the server-only `WISP_BLOG_ID` to the publication used by `/blog`. Featured content and optional filters are declared in `src/app/blog/blog.config.ts`. See [`docs/recipes/blog.md`](docs/recipes/blog.md) for configuration and complete removal steps.
 
 Set all `MAIL_*` values and `CONTACT_TO_EMAIL` to activate `/contact`; none may use a `NEXT_PUBLIC_` prefix. The default stores only first-touch campaign fields and five recent same-site paths, and sends no form values to PostHog. See [`docs/recipes/contact.md`](docs/recipes/contact.md) for privacy decisions, verification, and removal.
 

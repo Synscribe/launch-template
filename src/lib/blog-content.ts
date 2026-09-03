@@ -89,7 +89,6 @@ function removeDuplicateLeadImage(
 export function sanitizeBlogContent(
   html: string,
   headerImage?: string | null,
-  sourceOrigin?: string,
 ): string {
   return sanitizeHtml(removeDuplicateLeadImage(html, headerImage), {
     allowedTags: [
@@ -147,26 +146,17 @@ export function sanitizeBlogContent(
           return { tagName: "span", attribs: {} };
         }
 
-        const sourceRelative =
-          sourceOrigin &&
-          href.startsWith("/") &&
-          !href.startsWith("//") &&
-          !/^\/blog(?:[/?#]|$)/.test(href);
-        const resolvedHref = sourceRelative
-          ? new URL(href, `${sourceOrigin}/`).toString()
-          : href;
-        const external = /^https?:\/\//i.test(resolvedHref);
+        const external = /^https?:\/\//i.test(href);
 
         return {
           tagName,
           attribs: external
             ? {
                 ...attributes,
-                href: resolvedHref,
                 target: "_blank",
                 rel: "noopener noreferrer",
               }
-            : { ...attributes, href: resolvedHref },
+            : attributes,
         };
       },
       img(tagName, attributes) {

@@ -151,7 +151,7 @@ Covers:
 
 - **Section order** — the eleven positions in §3, with which are required and which are conditional on real input.
 - **Where proof goes** — the three kinds of proof and their separate jobs; the default position; the rule for switching a logo strip to a specific claim; the two conditions for moving the whole proof block down; and the requirement to record the placement choice in the page file.
-- **Never invent proof** — no plausible logo, number, quote, name, or company, and no sample logos to show a layout. A section with no real input does not render, following the `contactEmail` and `socialLinks` pattern in `src/config/site.ts`. Pending values use a `TODO_CLIENT_*` sentinel, which the production audit already fails on, so no new audit code was needed.
+- **Never invent proof** — no plausible logo, number, quote, name, or company, and no sample logos to show a layout. A section with no real input does not render. Pending values use a `TODO_CLIENT_*` sentinel, which the production audit already fails on, so no new audit code was needed.
 - **What counts as a number** and **what makes a quote work**.
 - **The positioning summary** — the capsule shape, six rules, the lead-sentence mechanism, and the four taste warnings.
 - **Write plainly** — short sentences, common words, active voice, no unexplained jargon, cut adjectives that carry no information, read it out loud before shipping.
@@ -181,7 +181,7 @@ Inserted in canonical order; `docs/launch/checklist.md` regenerated with `pnpm l
 
 - `src/lib/seo.ts` — new `buildFaqJsonLd` for the questions section.
 - `src/components/site-header.tsx` — CTA label unified to "Launch Website".
-- `src/config/env.ts`, `.env.example` — `NEXT_PUBLIC_SITE_DESCRIPTION` documented as the canonical positioning sentence, under 155 characters, shared by the page, the meta description, and the JSON-LD.
+- `src/config/site.ts` — `siteConfig.description` holds the canonical positioning sentence, under 155 characters, shared by the page, the meta description, and the JSON-LD.
 - `src/app/(marketing)/home.module.css` — `.faqItem` and `.faqMarker`. Reduced motion is already handled globally in `globals.css`; do not re-declare it per module.
 - `src/app/(marketing)/page.tsx` — the existing server-rendered homepage with a real-stack trust bar, positioning summary, reordered checklist/workflow, questions, and closing action. Customer-proof placement is recorded beside the intentionally omitted proof block.
 

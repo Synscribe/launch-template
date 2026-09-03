@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { usesTemplateIdentity } from "@/config/env";
+import { usesDefaultSiteUrl } from "@/config/env";
 import { siteConfig } from "@/config/site";
 
 export function SiteFooter() {
@@ -39,34 +39,12 @@ export function SiteFooter() {
                 Terms
               </Link>
             </li>
-            {siteConfig.contactEmail ? (
-              <li>
-                <a
-                  className="hover:text-ink"
-                  href={`mailto:${siteConfig.contactEmail}`}
-                >
-                  Email
-                </a>
-              </li>
-            ) : null}
-            {siteConfig.socialLinks.map((item) => (
-              <li key={item.href}>
-                <a
-                  className="hover:text-ink"
-                  href={item.href}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
           </ul>
         </nav>
 
         <p className="text-xs text-ink-faint md:col-span-2">
           © {new Date().getFullYear()} {siteConfig.name}.
-          {usesTemplateIdentity
+          {usesDefaultSiteUrl
             ? " Replace this identity before production."
             : ""}
         </p>

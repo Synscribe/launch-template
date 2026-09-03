@@ -42,7 +42,7 @@ Write one self-contained block that can answer “what is this?” without depen
 
 - name the brand, category, and audience;
 - remain at or below 155 characters;
-- appear word for word in `NEXT_PUBLIC_SITE_DESCRIPTION`, homepage metadata, visible homepage copy, and WebSite JSON-LD;
+- appear word for word in `siteConfig.description`, homepage metadata, visible homepage copy, and WebSite JSON-LD;
 - use common words and active voice.
 
 The rest of the block may name the core capabilities, but keep the full block under roughly 55 words. Do not put links inside it. Read it aloud. Rewrite it when it sounds like a keyword list, repeats the next section, or shifts into a different voice.
@@ -64,7 +64,7 @@ Critical copy and links stay in server-rendered HTML. Animation may enhance a se
 
 - Homepage composition and the proof-placement decision: `src/app/(marketing)/page.tsx`
 - Route-local styling: `src/app/(marketing)/home.module.css`
-- Canonical positioning sentence and public configuration: `src/config/env.ts`, `.env.example`
+- Canonical positioning sentence and public configuration: `src/config/site.ts`
 - Shared primary action: `src/components/site-header.tsx`
 - Metadata and FAQ/WebSite structured data: `src/lib/seo.ts`
 - Conversion destination: `src/app/contact`

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { LegalTemplate } from "@/components/legal-template";
-import { usesTemplateIdentity } from "@/config/env";
+import { usesDefaultSiteUrl } from "@/config/env";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
@@ -9,7 +9,7 @@ export const metadata: Metadata = createPageMetadata({
   description:
     "Terms-of-service implementation scaffold for this Next.js launch template.",
   path: "/terms",
-  noIndex: usesTemplateIdentity,
+  noIndex: usesDefaultSiteUrl,
 });
 
 export default function TermsPage() {

@@ -5,9 +5,9 @@ The blog is ordinary, deletable application code. It connects directly to Wisp o
 ## Configure
 
 1. Set `WISP_BLOG_ID` in the local and deployment environments. Keep it server-only; the browser does not need it.
-2. Set `WISP_CONTENT_ORIGIN` only when the publication contains source-relative links or legacy images. Valid blog links stay local; other root-relative links return to this origin, and Next Image permits this hostname.
-3. Replace the demo publication ID before using the template for a client.
-4. Confirm the Wisp publication belongs to the client and contains only content approved for the production domain.
+2. Replace the demo publication ID before using the template for a client.
+3. Confirm the Wisp publication belongs to the client and contains only content approved for the production domain.
+4. Keep article links absolute or relative to this website. Root-relative links remain on the current domain.
 5. In Wisp, add the real tags that the index should use. The demo source includes `tips-and-tricks`; do not assume a client publication uses it.
 6. Edit `src/app/blog/blog.config.ts`. Add only filters backed by maintained Wisp tags. Set the optional lead article slug and featured tag, or use `null` to omit either featured surface. Remove a filter entry to hide it; there are no runtime feature flags.
 7. Review the first page, every configured filter, an empty result, a search result, a middle and final pagination page, an article with an image, an article without an image, a long and short table of contents, every share destination, related articles, `/feed.xml`, and `/sitemap.xml`.
@@ -34,9 +34,9 @@ The article table of contents uses sanitized `h2` and `h3` headings. Keep meanin
 
 1. Delete `src/app/blog` and `src/app/feed.xml`.
 2. Delete `src/lib/blog.ts`, `src/lib/blog-content.ts`, and `src/lib/blog-content.test.ts`.
-3. Remove `WISP_BLOG_ID` and `WISP_CONTENT_ORIGIN` from `.env.example`, `src/config/env.ts`, and every deployment environment.
+3. Remove `WISP_BLOG_ID` from `.env.example`, `src/config/env.ts`, and every deployment environment.
 4. Remove `@wisp-cms/client`, `sanitize-html`, and `@types/sanitize-html`, then reinstall dependencies.
-5. Remove `contentImageRemotePattern` and the Wisp image delivery pattern from `next.config.ts` if no remaining page uses them.
+5. Remove the Wisp image delivery pattern from `next.config.ts` if no remaining page uses it.
 6. Remove Blog from `src/config/site.ts` and `src/components/site-footer.tsx`.
 7. Remove the blog imports, index route, and article entries from `src/app/sitemap.ts`.
 8. Remove `buildArticleJsonLd` and its tests from `src/lib/seo.ts` only if no remaining article-like route uses it.

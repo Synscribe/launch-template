@@ -464,8 +464,7 @@ The default keeps first-touch UTM fields, an external referrer without its query
 - [ ] **Todo**
 - Recipe: [docs/recipes/homepage.md](../recipes/homepage.md)
 - Files:
-  - `.env.example`
-  - `src/config/env.ts`
+  - `src/config/site.ts`
   - `src/app/(marketing)/page.tsx`
   - `src/lib/seo.ts`
 
@@ -474,7 +473,7 @@ Why it matters: one concise definition helps people, search results, and other s
 Check:
 
 - Include one self-contained positioning summary that names the brand, category, audience, and core capabilities in plain language.
-- Keep its lead sentence at or below 155 characters and use it word for word as `NEXT_PUBLIC_SITE_DESCRIPTION`, the homepage meta description, visible homepage copy, and the WebSite JSON-LD description.
+- Keep its lead sentence at or below 155 characters and use it word for word as `siteConfig.description`, the homepage meta description, visible homepage copy, and the WebSite JSON-LD description.
 - Keep links out of the summary and avoid repeating the same capability list in the next section.
 - Read it aloud. Rewrite keyword lists, unexplained jargon, and sentences that sound unlike the rest of the page.
 

@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { env } from "@/config/env";
 import {
   getBlogPost,
   getRelatedBlogPosts,
@@ -63,11 +62,7 @@ async function Article({ params }: BlogPostPageProps) {
   const description = descriptionFromPost(post.description, post.content);
   const publishedAt = isoDate(post.publishedAt);
   const updatedAt = isoDate(post.updatedAt);
-  const sanitizedContent = sanitizeBlogContent(
-    post.content,
-    post.image,
-    env.wispContentOrigin,
-  );
+  const sanitizedContent = sanitizeBlogContent(post.content, post.image);
   const { html: content, tableOfContents } =
     addBlogHeadingAnchors(sanitizedContent);
   const category = labelForBlogTags(post.tags);

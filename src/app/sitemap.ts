@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { usesTemplateIdentity } from "@/config/env";
+import { usesDefaultSiteUrl } from "@/config/env";
 import { siteConfig } from "@/config/site";
 import { getAllBlogPosts, type BlogPostSummary } from "@/lib/blog";
 import { getAllUseCases } from "@/lib/use-cases";
@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/contact",
   ];
 
-  if (!usesTemplateIdentity) routes.push("/privacy", "/terms");
+  if (!usesDefaultSiteUrl) routes.push("/privacy", "/terms");
 
   return [
     ...routes.map((route) => ({ url: `${siteConfig.url}${route}` })),
