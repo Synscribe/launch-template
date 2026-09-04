@@ -17,37 +17,48 @@ type MobileNavProps = {
 export function MobileNav({ navigation, primaryAction }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
-  const firstLinkRef = useRef<HTMLAnchorElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
-
-    firstLinkRef.current?.focus();
-
-    function closeOnOutsidePointer(event: PointerEvent) {
-      const root = rootRef.current;
-      if (root && !root.contains(event.target as Node)) setOpen(false);
-    }
-
-    function closeOnEscape(event: KeyboardEvent) {
-      if (event.key !== "Escape") return;
-      setOpen(false);
-      triggerRef.current?.focus();
-    }
-
-    document.addEventListener("pointerdown", closeOnOutsidePointer);
-    document.addEventListener("keydown", closeOnEscape);
-
-    return () => {
-      document.removeEventListener("pointerdown", closeOnOutsidePointer);
-      document.removeEventListener("keydown", closeOnEscape);
-    };
+    panelRef.current?.querySelector<HTMLElement>("a[href]")?.focus();
   }, [open]);
 
   return (
-    <div className="relative md:hidden" ref={rootRef}>
+    <div
+      className="relative md:hidden"
+      onKeyDown={(event) => {
+        if (!open) return;
+
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setOpen(false);
+          triggerRef.current?.focus();
+          return;
+        }
+
+        if (event.key !== "Tab") return;
+
+        const panelControls = panelRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+        const focusable = [
+          triggerRef.current,
+          ...(panelControls ? Array.from(panelControls) : []),
+        ].filter((element): element is HTMLElement => Boolean(element));
+        const first = focusable[0];
+        const last = focusable.at(-1);
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }}
+    >
       <button
         aria-controls={menuId}
         aria-expanded={open}
@@ -66,23 +77,32 @@ export function MobileNav({ navigation, primaryAction }: MobileNavProps) {
 
       {open ? (
         <>
-          <div
+          <button
             aria-hidden="true"
-            className="pointer-events-none fixed inset-0 z-40 bg-ink/5"
+            className="fixed inset-0 z-40 cursor-default bg-ink/5"
+            onClick={() => {
+              setOpen(false);
+              triggerRef.current?.focus();
+            }}
+            tabIndex={-1}
+            type="button"
           />
           <div
+            aria-label="Site navigation"
+            aria-modal="true"
             className="absolute top-12 right-0 z-50 w-64 rounded-2xl border border-ink/10 bg-paper p-3 shadow-[var(--shadow-card)]"
             id={menuId}
+            ref={panelRef}
+            role="dialog"
           >
             <nav aria-label="Mobile navigation">
               <ul className="space-y-1">
-                {navigation.map((item, index) => (
+                {navigation.map((item) => (
                   <li key={item.href}>
                     <Link
                       className="block rounded-xl px-3 py-2.5 text-sm font-medium text-ink-muted hover:bg-canvas hover:text-ink"
                       href={item.href}
                       onClick={() => setOpen(false)}
-                      ref={index === 0 ? firstLinkRef : undefined}
                     >
                       {item.label}
                     </Link>

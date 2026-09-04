@@ -37,6 +37,10 @@ type ChecklistSummary = {
   p0TodoIds: string[];
 };
 
+const LEGACY_TEMPLATE_IDENTITY =
+  /\b(?:Next(?:\.js)? Client Launch Template|next-launch-template)\b/i;
+const LEGACY_TEMPLATE_TITLE = /(?:^|\|\s*)Launch Template(?:$|\s*\|)/i;
+
 const args = process.argv.slice(2);
 const baseUrl = normalizeBase(argument("--url") ?? "http://localhost:3000");
 const mode = parseMode(argument("--mode") ?? "template");
@@ -393,9 +397,21 @@ function isMarkdownResponse(page: Page): boolean {
   );
 }
 
+function isXmlDiscoveryResponse(page: Page): boolean {
+  return (
+    /^(?:application|text)\/(?:[a-z0-9.+-]+\+)?xml(?:;|$)/i.test(
+      page.contentType,
+    ) &&
+    /^\s*(?:<\?xml[^>]*>\s*)?<(?:urlset|sitemapindex|rss|feed)\b/i.test(
+      page.html,
+    )
+  );
+}
+
 function isPublicContentResponse(page: Page): boolean {
   return (
     isMarkdownResponse(page) ||
+    isXmlDiscoveryResponse(page) ||
     (/^text\/html(?:;|$)/i.test(page.contentType) &&
       /^\s*<!doctype\s+html\b/i.test(page.html))
   );
@@ -462,7 +478,7 @@ async function auditLlmsTxt(llmsTxt: Page): Promise<void> {
       target.requestedUrl,
       passed
         ? `Direct public content response (${target.contentType})`
-        : `Expected direct HTTP 200 HTML or Markdown; received HTTP ${target.status}, ${target.contentType || "no content type"}${direct ? "" : `, redirected to ${target.finalUrl}`}`,
+        : `Expected direct HTTP 200 HTML, Markdown, sitemap, or feed; received HTTP ${target.status}, ${target.contentType || "no content type"}${direct ? "" : `, redirected to ${target.finalUrl}`}`,
     );
   }
 }
@@ -711,15 +727,14 @@ function auditPage(page: Page, sitemapUrls: Set<string>): void {
 
   if (
     mode === "production" &&
-    /Launch Template|next-launch-template/i.test(
-      `${title ?? ""} ${plainText(page.html)}`,
-    )
+    (LEGACY_TEMPLATE_IDENTITY.test(`${title ?? ""} ${plainText(page.html)}`) ||
+      LEGACY_TEMPLATE_TITLE.test(title ?? ""))
   ) {
     record(
       "BRAND-01",
       "FAIL",
       subject,
-      "Template identity is visible in production",
+      "Legacy template identity is visible in production",
     );
   }
 }

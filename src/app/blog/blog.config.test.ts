@@ -17,10 +17,10 @@ describe("blog index configuration", () => {
     );
   });
 
-  it("maps configured values and tags to their public label", () => {
-    expect(getBlogFilter("tips-and-tricks")?.tag).toBe("tips-and-tricks");
+  it("does not expose an unconfigured demo filter", () => {
+    expect(getBlogFilter("tips-and-tricks")).toBeUndefined();
     expect(labelForBlogTags([{ name: "tips-and-tricks" }])).toBe(
-      "Tips & Tricks",
+      "Tips And Tricks",
     );
   });
 
@@ -31,6 +31,7 @@ describe("blog index configuration", () => {
 
   it("keeps optional featured settings explicit", () => {
     expect(BLOG_FEATURED.limit).toBeGreaterThan(0);
-    expect(BLOG_FEATURED.tag).toBe("tips-and-tricks");
+    expect(BLOG_FEATURED.heroSlug).toBeNull();
+    expect(BLOG_FEATURED.tag).toBeNull();
   });
 });

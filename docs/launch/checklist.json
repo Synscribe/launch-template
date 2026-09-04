@@ -133,11 +133,7 @@
         "- Keep proof directly below the hero by default. Move the whole proof block later only when the product needs explaining first or the names need context; record that choice in the page source."
       ],
       "recipe": "docs/recipes/homepage.md",
-      "files": [
-        "src/app/(marketing)/page.tsx",
-        "public/media",
-        "docs/launch/status.md"
-      ]
+      "files": ["src/app/(marketing)/page.tsx", "public/media"]
     },
     {
       "id": "HOME-03",
@@ -728,13 +724,16 @@
     },
     {
       "id": "INDEX-01",
-      "title": "IndexNow",
+      "title": "IndexNow ownership key is unique and verifiable",
       "priority": "P2",
       "group": "later enhancements",
       "status": "todo",
       "details": [
-        "Add submission automation only when publishing frequency and target search engines justify the operational work. Never copy an old site's key."
-      ]
+        "Run `pnpm indexnow:key` after a production site is created. Commit the generated config and public key file, deploy them, and confirm the root URL returns only that site's key. Never copy a key from the template or another site.",
+        "Add URL submission automation only when publishing frequency and target search engines justify the operational work; keep the XML sitemap for complete discovery."
+      ],
+      "recipe": "docs/recipes/indexnow.md",
+      "files": ["scripts/generate-indexnow-key.mjs", "indexnow-key.json"]
     },
     {
       "id": "CONTENT-01",

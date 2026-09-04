@@ -35,6 +35,7 @@ Launch commands have separate jobs:
 - `pnpm launch:checklist` displays manual progress and identifies automated items. Its `--set`, `--add-project`, `--write`, and `--check` options manage or validate the canonical checklist.
 - `pnpm launch:verify` executes every named check whose checklist status is `auto`. It needs no running website and exits non-zero when a check fails.
 - `pnpm launch:audit` runs those automated checks plus live crawling, route, metadata, indexability, sitemap, and production-safety checks against a URL.
+- `pnpm indexnow:key` creates or rotates a site's IndexNow ownership key and root-level public verification file.
 
 `pnpm check` includes `pnpm launch:checklist --check` so invalid checklist data or stale generated Markdown fails normal CI. It does not run `pnpm launch:verify`, because the base template intentionally contains marked placeholders until a client replaces them.
 
@@ -77,6 +78,10 @@ pnpm launch:audit --url https://example.com --mode production
 - `$micro-ui` builds route-native interface visuals, route-local motion, local use-case images, generated social images, and browser-exported launch assets. Looping capability visuals use its shared framer-motion kit; page-level motion stays CSS-first. Server-rendered content stays visible without JavaScript and every animation has a composed reduced-motion state. Reusable visuals resolve through one bounded typed map shared by `/uses`, the gated inventory, and launch assets instead of a site-wide block registry.
 
 The `.claude/skills/*` entries are symlinks to `.agents/skills/*`. Keep the names aligned and validate both the canonical skill and its symlink after changing one.
+
+## License
+
+The template code is available under the [MIT License](LICENSE).
 
 ## Configuration
 
