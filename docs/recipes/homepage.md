@@ -88,7 +88,7 @@ pnpm build
 pnpm launch:audit --url http://localhost:3000 --mode template
 ```
 
-Before production, repeat the audit against the deployed URL and record the evidence in `docs/launch/status.md`.
+Before production, repeat the audit against the deployed URL and record the relevant decisions in `docs/launch/checklist.json`.
 
 ## Removing optional sections
 

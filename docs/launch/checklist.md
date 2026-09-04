@@ -117,7 +117,6 @@ This check covers reaching the conversion path. `FORM-01` separately covers whet
 - Files:
   - `src/app/(marketing)/page.tsx`
   - `public/media`
-  - `docs/launch/status.md`
 
 Why it matters: invented or vague proof creates legal and trust risk. A layout gap is safer than a believable fictional customer claim.
 
@@ -587,11 +586,16 @@ Check:
 
 Optional and non-blocking. Generate selected `.md` routes from the same Markdown/MDX source as HTML, keep HTML canonical, define an indexing policy for the alternate representation, and exclude alternates from the main HTML sitemap.
 
-### INDEX-01 — IndexNow
+### INDEX-01 — IndexNow ownership key is unique and verifiable
 
 - [ ] **Todo**
+- Recipe: [docs/recipes/indexnow.md](../recipes/indexnow.md)
+- Files:
+  - `scripts/generate-indexnow-key.mjs`
+  - `indexnow-key.json`
 
-Add submission automation only when publishing frequency and target search engines justify the operational work. Never copy an old site's key.
+Run `pnpm indexnow:key` after a production site is created. Commit the generated config and public key file, deploy them, and confirm the root URL returns only that site's key. Never copy a key from the template or another site.
+Add URL submission automation only when publishing frequency and target search engines justify the operational work; keep the XML sitemap for complete discovery.
 
 ### CONTENT-01 — richer publishing tools
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import posthog from "posthog-js";
 import {
   type FormEvent,
@@ -261,7 +262,7 @@ export function ContactForm({
             value={fields.message}
           />
           <p
-            className="mt-2 text-xs leading-5 text-ink-faint"
+            className="mt-2 text-xs leading-5 text-ink-muted"
             id="message-help"
           >
             Please do not send passwords or other sensitive information.
@@ -310,6 +311,13 @@ export function ContactForm({
           <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
         ) : null}
       </Button>
+      <p className="mt-3 max-w-md text-xs leading-5 text-ink-muted">
+        We use your details to respond to this enquiry. Read our{" "}
+        <Link className="underline underline-offset-3" href="/privacy">
+          Privacy Policy
+        </Link>
+        .
+      </p>
     </form>
   );
 }
