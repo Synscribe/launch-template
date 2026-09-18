@@ -24,6 +24,7 @@ type Page = {
   status: number;
   contentType: string;
   linkHeader: string;
+  varyHeader: string;
   setsCookie: boolean;
   html: string;
 };
@@ -282,11 +283,16 @@ function internalLinks(html: string, fromUrl: string): string[] {
   return [...urls];
 }
 
-async function fetchPage(url: string): Promise<Page> {
+async function fetchPage(
+  url: string,
+  requestHeaders: HeadersInit = {},
+): Promise<Page> {
   try {
+    const headers = new Headers(requestHeaders);
+    headers.set("user-agent", "launch-template-audit/1.0");
     const response = await fetch(url, {
       redirect: "follow",
-      headers: { "user-agent": "launch-template-audit/1.0" },
+      headers,
     });
     return {
       requestedUrl: url,
@@ -294,6 +300,7 @@ async function fetchPage(url: string): Promise<Page> {
       status: response.status,
       contentType: response.headers.get("content-type") ?? "",
       linkHeader: response.headers.get("link") ?? "",
+      varyHeader: response.headers.get("vary") ?? "",
       setsCookie: response.headers.has("set-cookie"),
       html: await response.text(),
     };
@@ -304,6 +311,7 @@ async function fetchPage(url: string): Promise<Page> {
       status: 0,
       contentType: "",
       linkHeader: "",
+      varyHeader: "",
       setsCookie: false,
       html: error instanceof Error ? error.message : String(error),
     };
@@ -394,6 +402,89 @@ function isMarkdownResponse(page: Page): boolean {
   return (
     /^text\/(?:plain|markdown)(?:;|$)/i.test(page.contentType) &&
     !/^\s*<!doctype\s+html\b/i.test(page.html)
+  );
+}
+
+function hasVaryToken(page: Page, token: string): boolean {
+  return page.varyHeader
+    .split(",")
+    .some((value) => value.trim().toLowerCase() === token.toLowerCase());
+}
+
+async function auditMarkdownNegotiation(enabled: boolean): Promise<void> {
+  if (!enabled) {
+    const markdownRequest = await fetchPage(baseUrl, {
+      Accept: "text/markdown",
+    });
+    const removed = !/^text\/markdown(?:;|$)/i.test(
+      markdownRequest.contentType,
+    );
+    record(
+      "LLM-03",
+      removed ? "PASS" : "FAIL",
+      "Markdown negotiation",
+      removed
+        ? "Deliberately removed"
+        : "Checklist marks negotiation not applicable, but the homepage still serves text/markdown",
+    );
+    return;
+  }
+
+  const [markdown, html, htmlPreferred, unsupported] = await Promise.all([
+    fetchPage(baseUrl, { Accept: "text/markdown" }),
+    fetchPage(baseUrl, { Accept: "text/html" }),
+    fetchPage(baseUrl, {
+      Accept: "text/markdown;q=0.2, text/html;q=1",
+    }),
+    fetchPage(baseUrl, { Accept: "application/pdf" }),
+  ]);
+
+  const markdownPassed =
+    markdown.status === 200 &&
+    /^text\/markdown(?:;|$)/i.test(markdown.contentType) &&
+    markdown.html.trim().length >= 20 &&
+    hasVaryToken(markdown, "Accept");
+  record(
+    "LLM-03",
+    markdownPassed ? "PASS" : "FAIL",
+    "homepage Markdown representation",
+    markdownPassed
+      ? `HTTP 200 with ${markdown.contentType}, Vary: Accept, and ${markdown.html.trim().length} characters`
+      : `Expected nonempty HTTP 200 text/markdown with Vary: Accept; received HTTP ${markdown.status}, ${markdown.contentType || "no content type"}, Vary: ${markdown.varyHeader || "none"}, ${markdown.html.trim().length} characters`,
+  );
+
+  const htmlPassed =
+    html.status === 200 &&
+    /^text\/html(?:;|$)/i.test(html.contentType) &&
+    /^\s*<!doctype\s+html\b/i.test(html.html);
+  record(
+    "LLM-03",
+    htmlPassed ? "PASS" : "FAIL",
+    "homepage HTML representation",
+    htmlPassed
+      ? `HTTP 200 with ${html.contentType}`
+      : `Expected an HTML document for Accept: text/html; received HTTP ${html.status}, ${html.contentType || "no content type"}`,
+  );
+
+  const qualityPassed =
+    htmlPreferred.status === 200 &&
+    /^text\/html(?:;|$)/i.test(htmlPreferred.contentType);
+  record(
+    "LLM-03",
+    qualityPassed ? "PASS" : "FAIL",
+    "Accept quality values",
+    qualityPassed
+      ? "Higher-quality text/html was selected"
+      : `Expected text/html; received HTTP ${htmlPreferred.status}, ${htmlPreferred.contentType || "no content type"}`,
+  );
+
+  record(
+    "LLM-03",
+    unsupported.status === 406 ? "PASS" : "FAIL",
+    "unsupported document representation",
+    unsupported.status === 406
+      ? "Unsupported Accept value returns HTTP 406"
+      : `Expected HTTP 406; received ${unsupported.status}`,
   );
 }
 
@@ -740,14 +831,20 @@ function auditPage(page: Page, sitemapUrls: Set<string>): void {
 }
 
 async function liveAudit(checklist: LaunchChecklist): Promise<void> {
+  const checklistItems = allChecklistItems(checklist);
   const llmsTxtEnabled =
-    allChecklistItems(checklist).find((item) => item.id === "LLM-01")
-      ?.status !== "not_applicable";
+    checklistItems.find((item) => item.id === "LLM-01")?.status !==
+    "not_applicable";
+  const markdownNegotiationEnabled =
+    checklistItems.find((item) => item.id === "LLM-03")?.status !==
+    "not_applicable";
   const [robots, sitemap, llmsTxt] = await Promise.all([
     fetchPage(`${baseUrl}/robots.txt`),
     fetchPage(`${baseUrl}/sitemap.xml`),
     fetchPage(`${baseUrl}/llms.txt`),
   ]);
+
+  await auditMarkdownNegotiation(markdownNegotiationEnabled);
 
   if (llmsTxtEnabled) {
     await auditLlmsTxt(llmsTxt);
@@ -815,15 +912,37 @@ async function liveAudit(checklist: LaunchChecklist): Promise<void> {
   );
   for (const page of pages.values()) auditPage(page, sitemapUrls);
 
-  const missing = await fetchPage(
-    `${baseUrl}/__launch-audit-missing-${Date.now().toString(36)}`,
-  );
+  const missingUrl = `${baseUrl}/__launch-audit-missing-${Date.now().toString(36)}`;
+  const [missing, markdownMissing] = await Promise.all([
+    fetchPage(missingUrl),
+    markdownNegotiationEnabled
+      ? fetchPage(missingUrl, { Accept: "text/markdown" })
+      : Promise.resolve(undefined),
+  ]);
   record(
     "ROUTE-02",
     missing.status === 404 ? "PASS" : "FAIL",
     "unknown route",
     `Expected 404; received ${missing.status}`,
   );
+  if (markdownMissing) {
+    const markdownMissingPassed =
+      markdownMissing.status === 404 &&
+      /^text\/markdown(?:;|$)/i.test(markdownMissing.contentType) &&
+      markdownMissing.html.trim().length >= 20 &&
+      hasVaryToken(markdownMissing, "Accept") &&
+      /\[[^\]]+]\((?:\/|\/sitemap\.xml|\/llms\.txt)\)/.test(
+        markdownMissing.html,
+      );
+    record(
+      "ROUTE-02",
+      markdownMissingPassed ? "PASS" : "FAIL",
+      "unknown route for Markdown clients",
+      markdownMissingPassed
+        ? "HTTP 404 with a useful text/markdown body, Vary: Accept, and a recovery link"
+        : `Expected a useful HTTP 404 text/markdown response with Vary: Accept and a recovery link; received HTTP ${markdownMissing.status}, ${markdownMissing.contentType || "no content type"}, Vary: ${markdownMissing.varyHeader || "none"}`,
+    );
+  }
 
   if (pages.size >= maxPages) {
     record(

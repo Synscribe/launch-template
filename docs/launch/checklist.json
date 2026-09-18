@@ -183,6 +183,7 @@
         "Check:",
         "",
         "- Unknown routes return HTTP 404.",
+        "- Requests for unknown routes with `Accept: text/markdown` keep HTTP 404 and return a useful Markdown explanation with `Content-Type: text/markdown`, `Vary: Accept`, and a recovery link.",
         "- Intentionally removed content returns 404/410 or a relevant permanent redirect.",
         "- Redirects go directly to the final relevant destination.",
         "- Error and not-found experiences still help a human recover."
@@ -713,6 +714,37 @@
       "check": "llms-txt-ready"
     },
     {
+      "id": "LLM-03",
+      "title": "public pages negotiate a useful Markdown representation",
+      "priority": "P0",
+      "group": "every site",
+      "status": "todo",
+      "details": [
+        "Why it matters: agents can read the same canonical page with less navigation, script, and layout noise while browsers keep the existing HTML experience.",
+        "",
+        "Check:",
+        "",
+        "- A homepage request with `Accept: text/markdown` returns HTTP 200, a nonempty Markdown body, `Content-Type: text/markdown; charset=utf-8`, and `Vary: Accept`.",
+        "- A request with `Accept: text/html` still returns the existing HTML page and visual design.",
+        "- Negotiation honors media-range specificity, quality values, wildcards, and `q=0`; return HTTP 406 when neither HTML nor Markdown is acceptable.",
+        "- Generated Markdown comes from the rendered page's `<main>` content. Do not maintain a second Markdown copy for ordinary pages.",
+        "- A file under `src/content/markdown` may deliberately override one route. `/` maps to `index.md`; `/uses/example` maps to `uses/example.md`. An override changes only the Markdown representation and never creates a missing HTML route or changes its status.",
+        "- Keep source paths in the internal rewrite cache key so cached Markdown cannot leak between routes.",
+        "",
+        "The live launch audit checks both homepage representations, quality-value selection, HTTP 406 behavior, and Markdown 404 recovery. Repeat it against the production URL before launch."
+      ],
+      "recipe": "docs/recipes/markdown-negotiation.md",
+      "files": [
+        "src/proxy.ts",
+        "src/app/api/agent-markdown/route.ts",
+        "src/lib/content-negotiation.ts",
+        "src/lib/markdown-representation.ts",
+        "src/content/markdown",
+        "next.config.ts",
+        "scripts/launch-audit.ts"
+      ]
+    },
+    {
       "id": "LLM-02",
       "title": "`.md` representations",
       "priority": "P2",
@@ -815,6 +847,14 @@
     {
       "label": "Core Web Vitals thresholds",
       "url": "https://web.dev/articles/defining-core-web-vitals-thresholds"
+    },
+    {
+      "label": "Accept Markdown content negotiation guide",
+      "url": "https://acceptmarkdown.com/"
+    },
+    {
+      "label": "RFC 9110 content negotiation",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html#name-content-negotiation"
     },
     {
       "label": "llms.txt proposal and format",

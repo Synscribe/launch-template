@@ -16,11 +16,11 @@ describe("launch checklist", () => {
       JSON.parse(await readFile(CHECKLIST_JSON_PATH, "utf8")),
     );
 
-    expect(checklist.items).toHaveLength(43);
+    expect(checklist.items).toHaveLength(44);
     expect(checklist.projectItems).toEqual([]);
     expect(
       new Set(allChecklistItems(checklist).map((item) => item.id)).size,
-    ).toBe(43);
+    ).toBe(44);
     expect(checklist.items.find((item) => item.id === "SEO-02")?.priority).toBe(
       "P0",
     );
@@ -37,6 +37,11 @@ describe("launch checklist", () => {
         "scripts/launch-audit.ts",
       ]),
     );
+    expect(checklist.items.find((item) => item.id === "LLM-03")).toMatchObject({
+      priority: "P0",
+      status: "todo",
+      recipe: "docs/recipes/markdown-negotiation.md",
+    });
   });
 
   it("renders status and guidance from the same item", async () => {
@@ -156,7 +161,7 @@ describe("launch checklist", () => {
       ],
     });
 
-    expect(allChecklistItems(expanded)).toHaveLength(44);
+    expect(allChecklistItems(expanded)).toHaveLength(45);
     expect(await renderChecklist(expanded)).toContain(
       "### WIDGET-01 — cookie consent behavior is production-ready",
     );

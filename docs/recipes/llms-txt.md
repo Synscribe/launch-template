@@ -28,7 +28,7 @@ This follows the discovery pattern described in Roboto Studio's Next.js AEO/GEO 
 
 `describedby` is a registered link relation for a resource that provides information about the current context. `sitemap` is a commonly used extension but is not in the IANA link-relation registry. Keep the absolute sitemap declaration in `robots.txt`; the response header is an additional discovery hint, not a replacement for the standard search-engine path.
 
-The header does not implement content negotiation, does not create Markdown versions of HTML pages, and does not guarantee that an agent or search engine will follow either link.
+The discovery header itself does not implement content negotiation and does not guarantee that an agent or search engine will follow either link. The separate default negotiation path serves Markdown from canonical HTML URLs; see [`markdown-negotiation.md`](markdown-negotiation.md).
 
 `next.config.ts` checks for `public/llms.txt` when the project is built or the server starts. If the file is absent, `buildDiscoveryHeaderRules(false)` returns no rule, so the complete header—including the sitemap link—is removed automatically. This is file-coupled behavior rather than an environment feature flag.
 
