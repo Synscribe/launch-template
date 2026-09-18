@@ -152,6 +152,7 @@ Why it matters: returning a generic 200 page for missing content creates soft 40
 Check:
 
 - Unknown routes return HTTP 404.
+- Requests for unknown routes with `Accept: text/markdown` keep HTTP 404 and return a useful Markdown explanation with `Content-Type: text/markdown`, `Vary: Accept`, and a recovery link.
 - Intentionally removed content returns 404/410 or a relevant permanent redirect.
 - Redirects go directly to the final relevant destination.
 - Error and not-found experiences still help a human recover.
@@ -456,6 +457,34 @@ Collect only useful attribution fields, document first/recent-page storage, avoi
 
 The default keeps first-touch UTM fields, an external referrer without its query string, the first landing page, and at most five same-site paths. It drops all other query values, expires browser context after 90 days, validates it again on the server, and sends no form values or attribution to PostHog.
 
+## P0 — every site
+
+### LLM-03 — public pages negotiate a useful Markdown representation
+
+- [ ] **Todo**
+- Recipe: [docs/recipes/markdown-negotiation.md](../recipes/markdown-negotiation.md)
+- Files:
+  - `src/proxy.ts`
+  - `src/app/api/agent-markdown/route.ts`
+  - `src/lib/content-negotiation.ts`
+  - `src/lib/markdown-representation.ts`
+  - `src/content/markdown`
+  - `next.config.ts`
+  - `scripts/launch-audit.ts`
+
+Why it matters: agents can read the same canonical page with less navigation, script, and layout noise while browsers keep the existing HTML experience.
+
+Check:
+
+- A homepage request with `Accept: text/markdown` returns HTTP 200, a nonempty Markdown body, `Content-Type: text/markdown; charset=utf-8`, and `Vary: Accept`.
+- A request with `Accept: text/html` still returns the existing HTML page and visual design.
+- Negotiation honors media-range specificity, quality values, wildcards, and `q=0`; return HTTP 406 when neither HTML nor Markdown is acceptable.
+- Generated Markdown comes from the rendered page's `<main>` content. Do not maintain a second Markdown copy for ordinary pages.
+- A file under `src/content/markdown` may deliberately override one route. `/` maps to `index.md`; `/uses/example` maps to `uses/example.md`. An override changes only the Markdown representation and never creates a missing HTML route or changes its status.
+- Keep source paths in the internal rewrite cache key so cached Markdown cannot leak between routes.
+
+The live launch audit checks both homepage representations, quality-value selection, HTTP 406 behavior, and Markdown 404 recovery. Repeat it against the production URL before launch.
+
 ## P1 — non-blocking quality and feature-dependent checks
 
 ### HOME-03 — the homepage defines the offer once and consistently
@@ -639,6 +668,8 @@ Check:
 - [Google site-move guidance](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes)
 - [Google structured-data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies)
 - [Core Web Vitals thresholds](https://web.dev/articles/defining-core-web-vitals-thresholds)
+- [Accept Markdown content negotiation guide](https://acceptmarkdown.com/)
+- [RFC 9110 content negotiation](https://www.rfc-editor.org/rfc/rfc9110.html#name-content-negotiation)
 - [llms.txt proposal and format](https://llmstxt.org/)
 - [Synscribe llms.txt implementation guide](https://www.synscribe.com/agentic-discovery/llms-txt)
 - [Synscribe llms.txt template pack](https://www.synscribe.com/agentic-discovery/resources/llms-txt-template-pack)

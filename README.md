@@ -60,6 +60,7 @@ pnpm launch:audit --url https://example.com --mode production
 - Blog: connected directly to Wisp with a configurable lead story, real-tag filters, compact search, numbered pagination, article contents/share links, related posts, RSS, and sitemap entries. Replace the demo publication ID or delete the blog for a client project.
 - Contact: server-rendered page and form markup with bounded API validation, explicit SMTP delivery, minimized first/recent-touch attribution, basic abuse controls, optional Cloudflare Turnstile, and a clean removal path. Delivery stays unavailable until every server-only mail value is configured; Turnstile stays inactive until both of its keys are configured.
 - `llms.txt`: a complete website-level example selling Launch Template, conditional homepage `Link` discovery header, focused source validator, production header/response/public-target audit, and configuration/removal recipe are included. Deleting `public/llms.txt` removes the discovery header rule on the next build or server start. `pnpm launch:verify` deliberately fails until the example is replaced for the client.
+- Markdown negotiation: canonical page URLs return generated Markdown when an agent requests `Accept: text/markdown`; HTML remains the default, quality values and HTTP 406 are handled, and optional files under `src/content/markdown` can override individual paths. See `docs/recipes/markdown-negotiation.md`.
 - Project skills: `$site-clone` and `$micro-ui` live in `.agents/skills`. Claude discovers the same files through `.claude/skills` symlinks, so edit only the canonical `.agents` copies.
 
 ## Architecture rules
@@ -94,6 +95,8 @@ Set all `MAIL_*` values and `CONTACT_TO_EMAIL` to activate `/contact`; none may 
 Set both `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and server-only `TURNSTILE_SECRET_KEY` to add Cloudflare Turnstile to the contact form. With either value absent, the widget script is not loaded and server verification is skipped. See [`docs/recipes/turnstile.md`](docs/recipes/turnstile.md) for the reusable file map and setup flow.
 
 Set server-only `VISUAL_REVIEW_ENABLED=true` to expose `/dev`, `/dev/visuals`, and `/dev/launch-assets`. `.env.example` enables it for copied local configuration; do not set it on a public deployment. The exporter supplies it only to its temporary local server.
+
+Markdown responses require no environment values and normally require no duplicate content file. Add `src/content/markdown/index.md` for a homepage override or mirror another public pathname under `src/content/markdown` only when its agent-facing representation should differ. See [`docs/recipes/markdown-negotiation.md`](docs/recipes/markdown-negotiation.md).
 
 `robots.txt` always allows public routes and publishes the sitemap URL. It
 blocks only `/api/` and `/dev/`. Protect private previews with deployment

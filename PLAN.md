@@ -1,6 +1,6 @@
 # Next.js Client Launch Template — Architecture and Delivery Plan
 
-Status: foundation, homepage, contact, use cases, Wisp blog, visual workshop, launch-asset export, and the first visual skills implemented. This document remains the architecture and phased roadmap.
+Status: foundation, homepage, contact, use cases, Wisp blog, Markdown content negotiation, visual workshop, launch-asset export, and the first visual skills implemented. This document remains the architecture and phased roadmap.
 
 This document defines the template's architecture, documentation contract, launch priorities, and page-by-page build order.
 
@@ -55,31 +55,31 @@ A small TypeScript config is still useful for truly global identity such as the 
 
 This is the repository map. Other agents and client repositories should be able to start here.
 
-| Planned path                 | Canonical responsibility                                                                                                                       | Copy/reference policy                                                      |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `README.md`                  | Setup, project modes, and links to the documents below.                                                                                        | Start here. Keep short.                                                    |
-| `AGENTS.md`                  | Mandatory agent workflow, source-of-truth paths, and required checks.                                                                          | Copy into client repos.                                                    |
-| `docs/launch/checklist.json` | **Canonical prioritized launch requirements and current status**, with stable IDs, rationale, checks, code links, and optional recipes.        | Edit this file or use the checklist CLI; there is no separate status file. |
-| `docs/launch/checklist.md`   | Generated readable view of the canonical JSON checklist.                                                                                       | Read or copy this view, but never edit it directly.                        |
-| `docs/launch/migration.md`   | Existing-site inventory, URL mapping, redirects, DNS/domain cutover, and monitoring.                                                           | Required for migration/rebuild projects.                                   |
-| `docs/features.md`           | **Canonical feature/consideration catalog**: default, opt-in, future, dependencies, and relevant checks.                                       | Use during project kickoff and scoping.                                    |
-| `docs/recipes/README.md`     | Index of configuration, deletion, and add-on recipes.                                                                                          | Default features document clean removal; add-ons document installation.    |
-| `docs/recipes/*.md`          | Configuration/removal notes for default features plus installation notes for docs/MDX, `llms.txt`, `.md` routes, i18n, and advanced animation. | Each recipe lists files added/changed and removal steps.                   |
-| `docs/launch/url-map.csv`    | Old URL → new URL/disposition inventory for migrations.                                                                                        | Created per migration; not needed for new startups.                        |
-| `public/llms.txt`            | Product-facing Launch Template example served directly from the domain root.                                                                   | Replace per client; generate link sets from real sources when warranted.   |
-| `src/config/site.ts`         | Minimal typed global identity and navigation.                                                                                                  | No page bodies, blocks, or per-page layout config.                         |
-| `src/config/env.ts`          | Required/optional environment validation with no production fallbacks.                                                                         | The build fails on invalid required values.                                |
-| `src/config/redirects.ts`    | Small/medium migration redirect map, when applicable.                                                                                          | Generated or reviewed from `url-map.csv`; empty for new sites.             |
-| `src/lib/seo.ts`             | Metadata, URL normalization, and typed builders for applicable structured data.                                                                | One SEO implementation boundary; no arbitrary JSON blobs in content files. |
-| `src/app/robots.ts`          | Environment-aware crawl policy and sitemap URL.                                                                                                | Production and preview behavior must be tested.                            |
-| `src/app/sitemap.ts`         | Enabled, canonical, indexable routes only.                                                                                                     | Derived from actual content sources.                                       |
-| `scripts/launch-*`           | Pnpm command entry points for checklist management, automatic verification, live auditing, and launch-asset export.                            | Keep helper modules and tests out of the scripts root.                     |
-| `src/lib/visuals.ts`         | Stable IDs for the current project's bounded visual system.                                                                                    | Content may reference IDs, never paths, components, classes, or props.     |
-| `src/components/visuals`     | One typed React/local-file source resolver shared by real visual consumers.                                                                    | Not a block registry or component catalog.                                 |
-| `src/app/dev`                | Explicitly gated, non-indexable visual inventory and launch-asset workshop.                                                                    | Enable only with server-only `VISUAL_REVIEW_ENABLED=true`.                 |
-| `scripts/checks/*.ts`        | Named automated-check registry and one focused implementation per check.                                                                       | Checklist `check` values must map to this explicit registry.               |
-| `scripts/tests/**/*.test.ts` | Tests for checklist parsing, registry dispatch, and individual automated checks.                                                               | Each automated check needs passing and failing fixtures.                   |
-| `.agents/skills/*/SKILL.md`  | Focused workflows for cloning, animation, visuals, SEO review, and launch review.                                                              | Skills point back to canonical docs instead of copying them.               |
+| Planned path                 | Canonical responsibility                                                                                                                                                      | Copy/reference policy                                                      |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `README.md`                  | Setup, project modes, and links to the documents below.                                                                                                                       | Start here. Keep short.                                                    |
+| `AGENTS.md`                  | Mandatory agent workflow, source-of-truth paths, and required checks.                                                                                                         | Copy into client repos.                                                    |
+| `docs/launch/checklist.json` | **Canonical prioritized launch requirements and current status**, with stable IDs, rationale, checks, code links, and optional recipes.                                       | Edit this file or use the checklist CLI; there is no separate status file. |
+| `docs/launch/checklist.md`   | Generated readable view of the canonical JSON checklist.                                                                                                                      | Read or copy this view, but never edit it directly.                        |
+| `docs/launch/migration.md`   | Existing-site inventory, URL mapping, redirects, DNS/domain cutover, and monitoring.                                                                                          | Required for migration/rebuild projects.                                   |
+| `docs/features.md`           | **Canonical feature/consideration catalog**: default, opt-in, future, dependencies, and relevant checks.                                                                      | Use during project kickoff and scoping.                                    |
+| `docs/recipes/README.md`     | Index of configuration, deletion, and add-on recipes.                                                                                                                         | Default features document clean removal; add-ons document installation.    |
+| `docs/recipes/*.md`          | Configuration/removal notes for default features plus installation notes for Markdown negotiation, docs/MDX, `llms.txt`, explicit `.md` routes, i18n, and advanced animation. | Each recipe lists files added/changed and removal steps.                   |
+| `docs/launch/url-map.csv`    | Old URL → new URL/disposition inventory for migrations.                                                                                                                       | Created per migration; not needed for new startups.                        |
+| `public/llms.txt`            | Product-facing Launch Template example served directly from the domain root.                                                                                                  | Replace per client; generate link sets from real sources when warranted.   |
+| `src/config/site.ts`         | Minimal typed global identity and navigation.                                                                                                                                 | No page bodies, blocks, or per-page layout config.                         |
+| `src/config/env.ts`          | Required/optional environment validation with no production fallbacks.                                                                                                        | The build fails on invalid required values.                                |
+| `src/config/redirects.ts`    | Small/medium migration redirect map, when applicable.                                                                                                                         | Generated or reviewed from `url-map.csv`; empty for new sites.             |
+| `src/lib/seo.ts`             | Metadata, URL normalization, and typed builders for applicable structured data.                                                                                               | One SEO implementation boundary; no arbitrary JSON blobs in content files. |
+| `src/app/robots.ts`          | Environment-aware crawl policy and sitemap URL.                                                                                                                               | Production and preview behavior must be tested.                            |
+| `src/app/sitemap.ts`         | Enabled, canonical, indexable routes only.                                                                                                                                    | Derived from actual content sources.                                       |
+| `scripts/launch-*`           | Pnpm command entry points for checklist management, automatic verification, live auditing, and launch-asset export.                                                           | Keep helper modules and tests out of the scripts root.                     |
+| `src/lib/visuals.ts`         | Stable IDs for the current project's bounded visual system.                                                                                                                   | Content may reference IDs, never paths, components, classes, or props.     |
+| `src/components/visuals`     | One typed React/local-file source resolver shared by real visual consumers.                                                                                                   | Not a block registry or component catalog.                                 |
+| `src/app/dev`                | Explicitly gated, non-indexable visual inventory and launch-asset workshop.                                                                                                   | Enable only with server-only `VISUAL_REVIEW_ENABLED=true`.                 |
+| `scripts/checks/*.ts`        | Named automated-check registry and one focused implementation per check.                                                                                                      | Checklist `check` values must map to this explicit registry.               |
+| `scripts/tests/**/*.test.ts` | Tests for checklist parsing, registry dispatch, and individual automated checks.                                                                                              | Each automated check needs passing and failing fixtures.                   |
+| `.agents/skills/*/SKILL.md`  | Focused workflows for cloning, animation, visuals, SEO review, and launch review.                                                                                             | Skills point back to canonical docs instead of copying them.               |
 
 Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-01`, `MIG-01`, `A11Y-01`, `PERF-01`, `FORM-01`, `DATA-01`, and `OPS-01`. IDs let other repos cite a requirement without depending on heading text.
 
@@ -112,6 +112,7 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 │   └── launch-verify.ts
 ├── src/
 │   ├── app/
+│   │   ├── api/agent-markdown/   # internal Markdown representation handler
 │   │   ├── (marketing)/
 │   │   │   ├── _components/         # homepage-only components
 │   │   │   └── page.tsx
@@ -132,14 +133,18 @@ Stable checklist IDs should use categories such as `BRAND-01`, `ROUTE-01`, `SEO-
 │   │   ├── visuals/                 # bounded resolver shared by current consumers
 │   │   ├── site-footer.tsx
 │   │   └── site-header.tsx
+│   ├── content/markdown/            # optional pathname-based Markdown overrides
 │   ├── config/
 │   │   ├── env.ts
 │   │   ├── redirects.ts
 │   │   └── site.ts
-│   └── lib/
-│       ├── seo.ts
-│       ├── visuals.ts
-│       └── utils.ts
+│   ├── lib/
+│   │   ├── seo.ts
+│   │   ├── content-negotiation.ts
+│   │   ├── markdown-representation.ts
+│   │   ├── visuals.ts
+│   │   └── utils.ts
+│   └── proxy.ts                     # document content negotiation
 └── .agents/skills/
 ```
 
@@ -156,7 +161,7 @@ Important boundaries:
 
 ### P0 — blocks launch
 
-A P0 item protects indexability, user trust, data safety, a working conversion path, or an existing site's traffic. An applicable P0 item must be `done` before production; use `not_applicable` only when the check genuinely does not belong to the project.
+A P0 item protects indexability, agent and browser access, user trust, data safety, a working conversion path, or an existing site's traffic. An applicable P0 item must be `done` before production; use `not_applicable` only when the check genuinely does not belong to the project.
 
 ### P1 — expected quality, feature-dependent
 
@@ -164,7 +169,7 @@ P1 items are valuable for most professional launches but may be inapplicable. Ex
 
 ### P2 — enable after the core is stable
 
-P2 items are enhancements or advanced capabilities: blog search, content tags, PostHog session replay, IndexNow automation, `llms.txt`, `.md` routes, a docs portal, i18n, experimentation, personalization, and advanced animation.
+P2 items are enhancements or advanced capabilities: blog search, content tags, PostHog session replay, IndexNow automation, `llms.txt`, explicit `.md` sibling routes, a docs portal, i18n, experimentation, personalization, and advanced animation. Header-based Markdown negotiation for canonical pages is part of the P0 agent-access baseline.
 
 Priority and default state are separate. A contact form can be P0 **if the project selects it**, while remaining deletable in projects that do not need a form.
 

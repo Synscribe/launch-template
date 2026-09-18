@@ -19,6 +19,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    "/api/agent-markdown": ["./src/content/markdown/**/*.md"],
+  },
   images: {
     remotePatterns: [{ protocol: "https", hostname: "imagedelivery.net" }],
   },

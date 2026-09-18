@@ -13,6 +13,7 @@ Checklist priority, guidance, and status live only in `docs/launch/checklist.jso
 - [`contact.md`](contact.md): configure the contact delivery adapter, review minimized attribution and abuse controls, test it end to end, or remove it cleanly.
 - [`turnstile.md`](turnstile.md): activate the optional Cloudflare Turnstile form protection, reuse it on another form, verify it, or remove it cleanly.
 - [`llms-txt.md`](llms-txt.md): replace the root machine-readable index, advertise it through the conditional homepage `Link` header, verify every public target, or remove both surfaces through the documented opt-out.
+- [`markdown-negotiation.md`](markdown-negotiation.md): serve generated Markdown from canonical page URLs, add route-specific overrides only when needed, verify content negotiation and Markdown 404s, or remove the feature cleanly.
 - [`launch-assets.md`](launch-assets.md): review the gated visual inventory, replace the template launch frames, export exact PNGs, or remove the internal tooling cleanly.
 - [`indexnow.md`](indexnow.md): generate or rotate a unique site ownership key, publish its exact root verification file, and decide whether submission automation is worthwhile.
 
@@ -20,7 +21,7 @@ Checklist priority, guidance, and status live only in `docs/launch/checklist.jso
 
 - animated route-local sections;
 - docs/knowledge base;
-- `.md` representations beyond those selected for `llms.txt`;
+- explicit `.md` sibling URLs when a project needs discoverable alternate paths in addition to header negotiation;
 - internationalization and hreflang;
 - real-user monitoring and performance budgets.
 
