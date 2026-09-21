@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   MARKDOWN_BYPASS_HEADER,
+  MARKDOWN_EXPLICIT_PARAM,
   MARKDOWN_SOURCE_HEADER,
 } from "@/lib/markdown-routing";
 
@@ -94,6 +95,63 @@ describe("Markdown representation route", () => {
     expect(response.body).toBeNull();
     expect(response.headers.get("content-type")).toBe(
       "text/markdown; charset=utf-8",
+    );
+  });
+
+  it("keeps explicit Markdown aliases across same-origin redirects", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(null, {
+          status: 308,
+          headers: { Location: "/uses/new?from=old" },
+        }),
+      ),
+    );
+
+    const response = await GET(
+      new NextRequest(
+        `https://example.com/api/agent-markdown?${MARKDOWN_EXPLICIT_PARAM}=1`,
+        { headers: { [MARKDOWN_SOURCE_HEADER]: "/uses/old" } },
+      ),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe("/uses/new.md?from=old");
+  });
+
+  it("keeps negotiated and external redirect destinations unchanged", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        new Response(null, {
+          status: 308,
+          headers: { Location: "/uses/new" },
+        }),
+      )
+      .mockResolvedValueOnce(
+        new Response(null, {
+          status: 307,
+          headers: { Location: "https://docs.example.org/new" },
+        }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const negotiated = await GET(
+      new NextRequest("https://example.com/api/agent-markdown", {
+        headers: { [MARKDOWN_SOURCE_HEADER]: "/uses/old" },
+      }),
+    );
+    const external = await GET(
+      new NextRequest(
+        `https://example.com/api/agent-markdown?${MARKDOWN_EXPLICIT_PARAM}=1`,
+        { headers: { [MARKDOWN_SOURCE_HEADER]: "/external" } },
+      ),
+    );
+
+    expect(negotiated.headers.get("location")).toBe("/uses/new");
+    expect(external.headers.get("location")).toBe(
+      "https://docs.example.org/new",
     );
   });
 

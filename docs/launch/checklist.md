@@ -609,11 +609,28 @@ Check:
 
 `pnpm launch:verify` fails while the Launch Template example is unchanged or the source shape is invalid. The live launch audit checks the homepage discovery header, the deployed response, and every described public target in production.
 
-### LLM-02 — `.md` representations
+### LLM-02 — explicit `.md` URLs match negotiated Markdown
 
 - [ ] **Todo**
+- Recipe: [docs/recipes/markdown-negotiation.md](../recipes/markdown-negotiation.md)
+- Files:
+  - `src/proxy.ts`
+  - `src/app/api/agent-markdown/route.ts`
+  - `src/lib/markdown-routing.ts`
+  - `scripts/launch-audit.ts`
 
-Optional and non-blocking. Generate selected `.md` routes from the same Markdown/MDX source as HTML, keep HTML canonical, define an indexing policy for the alternate representation, and exclude alternates from the main HTML sitemap.
+Why it matters: an agent that cannot set an `Accept` header can still request the same readable representation by appending `.md` to a public page path.
+
+Check:
+
+- `/uses.md` returns the exact body produced by requesting `/uses` with `Accept: text/markdown`, even when the `.md` request sends `Accept: text/html` or no specific preference.
+- Nested aliases follow the same rule: `/uses/example.md` maps to `/uses/example`. `/index.md` maps to the homepage.
+- Aliases use the same generated content and optional override files as header negotiation. Never maintain a second `.md` copy for the alias.
+- Preserve source status codes. A missing alias returns HTTP 404 with the Markdown recovery body, and same-origin redirects keep the `.md` representation.
+- Keep the HTML URL canonical and keep `.md` aliases out of the HTML sitemap unless a project adopts a reviewed alternate-indexing policy.
+- The `.md` suffix is reserved for this convention. Do not publish unrelated static `.md` files at conflicting public paths.
+
+The live launch audit compares exact bodies for top-level and nested aliases, verifies explicit preference, and checks a missing `.md` route.
 
 ### INDEX-01 — IndexNow ownership key is unique and verifiable
 

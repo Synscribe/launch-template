@@ -42,6 +42,11 @@ describe("launch checklist", () => {
       status: "todo",
       recipe: "docs/recipes/markdown-negotiation.md",
     });
+    expect(checklist.items.find((item) => item.id === "LLM-02")).toMatchObject({
+      priority: "P2",
+      status: "todo",
+      recipe: "docs/recipes/markdown-negotiation.md",
+    });
   });
 
   it("renders status and guidance from the same item", async () => {
