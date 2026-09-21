@@ -12,6 +12,27 @@ For a request with `Accept: text/markdown`, the server fetches the rendered HTML
 
 The HTML response keeps the existing page, components, metadata, interactions, and visual design. The Markdown response intentionally omits the shared navigation, footer, scripts, styles, templates, and SVG decoration outside the useful page content.
 
+## How visual cards become readable Markdown
+
+HTML can wrap an entire card in one link, including a heading, description, image, and call to action. Markdown cannot put block headings or paragraphs inside link brackets. The converter handles that difference before returning the response:
+
+- A link containing a heading becomes ordinary Markdown blocks. The heading carries the card destination.
+- Elements marked `aria-hidden="true"` and images without useful alt text are omitted as decoration.
+- A meaningful image keeps its alt text. When Next.js serves it through `/_next/image`, the Markdown uses the original `url` source instead of the optimizer URL.
+- Inline links and links without a heading keep normal Markdown link behavior.
+
+For example, a linked use-case card becomes:
+
+```md
+### [Website migrations](/uses/website-migrations)
+
+We protect important URLs, search traffic, and customer journeys while the new site is built.
+
+View use case
+```
+
+This normalization is generated from the rendered page. It does not require a second content file or any change to the visual card. Use a pathname override only when the agent-facing content should deliberately differ from the page.
+
 ## Use an explicit `.md` URL
 
 Append `.md` to a public page path when a client cannot send an `Accept` header:
@@ -91,7 +112,7 @@ curl -sS -L -i http://localhost:3000/uses.md
 curl -sS -L -i http://localhost:3000/uses/website-migrations.md
 ```
 
-The Markdown request must finish with HTTP 200, `Content-Type: text/markdown; charset=utf-8`, `Vary: Accept`, and a nonempty Markdown body. The HTML requests must return the existing HTML document. The unsupported request must return HTTP 406.
+The Markdown request must finish with HTTP 200, `Content-Type: text/markdown; charset=utf-8`, `Vary: Accept`, and a nonempty Markdown body. The HTML requests must return the existing HTML document. The unsupported request must return HTTP 406. Linked cards must have linked headings rather than headings or paragraphs inside one pair of link brackets.
 
 Confirm that an explicit alias and negotiated Markdown are byte-for-byte identical:
 

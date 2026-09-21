@@ -537,6 +537,21 @@ async function auditExplicitMarkdownRoutes(enabled: boolean): Promise<void> {
       : `Expected HTTP 200 text/markdown identical to negotiated /uses; received HTTP ${alias.status}, ${alias.contentType || "no content type"}`,
   );
 
+  const linkedCardsPassed =
+    alias.status === 200 &&
+    /^text\/markdown(?:;|$)/i.test(alias.contentType) &&
+    /#{1,6}[ \t]+\[[^\]\n]+\]\(\/uses\/[^)\s]+\)/.test(alias.html) &&
+    !/\[\s*#{1,6}[ \t]+/.test(alias.html) &&
+    !/!\[\]\(/.test(alias.html);
+  record(
+    "LLM-03",
+    linkedCardsPassed ? "PASS" : "FAIL",
+    "/uses Markdown cards",
+    linkedCardsPassed
+      ? "Card headings carry their links without multiline block content inside link brackets"
+      : "Expected linked card headings without multiline block links or empty-alt images",
+  );
+
   const explicitWins =
     aliasWithHtmlAccept.status === 200 &&
     /^text\/markdown(?:;|$)/i.test(aliasWithHtmlAccept.contentType) &&
