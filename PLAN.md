@@ -1,6 +1,6 @@
 # Next.js Client Launch Template — Architecture and Delivery Plan
 
-Status: foundation, homepage, contact, use cases, Wisp blog, Markdown content negotiation, visual workshop, launch-asset export, and the first visual skills implemented. This document remains the architecture and phased roadmap.
+Status: foundation, homepage, contact, use cases, Wisp blog, Markdown negotiation and `.md` aliases, visual workshop, launch-asset export, and the first visual skills implemented. This document remains the architecture and phased roadmap.
 
 This document defines the template's architecture, documentation contract, launch priorities, and page-by-page build order.
 
@@ -169,7 +169,7 @@ P1 items are valuable for most professional launches but may be inapplicable. Ex
 
 ### P2 — enable after the core is stable
 
-P2 items are enhancements or advanced capabilities: blog search, content tags, PostHog session replay, IndexNow automation, `llms.txt`, explicit `.md` sibling routes, a docs portal, i18n, experimentation, personalization, and advanced animation. Header-based Markdown negotiation for canonical pages is part of the P0 agent-access baseline.
+P2 items are enhancements or advanced capabilities: blog search, content tags, PostHog session replay, IndexNow automation, `llms.txt`, a docs portal, i18n, experimentation, personalization, and advanced animation. Explicit `.md` sibling routes are implemented as a P2 companion to the P0 header-negotiation baseline.
 
 Priority and default state are separate. A contact form can be P0 **if the project selects it**, while remaining deletable in projects that do not need a form.
 

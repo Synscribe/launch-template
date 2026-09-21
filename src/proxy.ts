@@ -8,12 +8,33 @@ import {
 import {
   MARKDOWN_BYPASS_HEADER,
   MARKDOWN_CACHE_KEY_PARAM,
+  MARKDOWN_EXPLICIT_PARAM,
   MARKDOWN_ROUTE,
   MARKDOWN_SOURCE_HEADER,
+  sourcePathnameFromMarkdownAlias,
 } from "@/lib/markdown-routing";
 
 function nextHtmlResponse(): NextResponse {
   const response = NextResponse.next();
+  appendVary(response.headers, "Accept");
+  return response;
+}
+
+function rewriteMarkdownResponse(
+  request: NextRequest,
+  sourcePath: string,
+  explicit: boolean,
+): NextResponse {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(MARKDOWN_SOURCE_HEADER, sourcePath);
+
+  const destination = new URL(MARKDOWN_ROUTE, request.url);
+  destination.searchParams.set(MARKDOWN_CACHE_KEY_PARAM, sourcePath);
+  if (explicit) destination.searchParams.set(MARKDOWN_EXPLICIT_PARAM, "1");
+
+  const response = NextResponse.rewrite(destination, {
+    request: { headers: requestHeaders },
+  });
   appendVary(response.headers, "Accept");
   return response;
 }
@@ -24,6 +45,17 @@ export function proxy(request: NextRequest): Response {
     request.headers.get(MARKDOWN_BYPASS_HEADER) === "1"
   ) {
     return NextResponse.next();
+  }
+
+  const explicitSourcePathname = sourcePathnameFromMarkdownAlias(
+    request.nextUrl.pathname,
+  );
+  if (explicitSourcePathname !== undefined) {
+    return rewriteMarkdownResponse(
+      request,
+      `${explicitSourcePathname}${request.nextUrl.search}`,
+      true,
+    );
   }
 
   const representation = negotiateDocumentRepresentation(
@@ -46,21 +78,12 @@ export function proxy(request: NextRequest): Response {
     );
   }
 
-  const requestHeaders = new Headers(request.headers);
   const sourcePath = `${request.nextUrl.pathname}${request.nextUrl.search}`;
-  requestHeaders.set(MARKDOWN_SOURCE_HEADER, sourcePath);
-
-  const destination = new URL(MARKDOWN_ROUTE, request.url);
-  destination.searchParams.set(MARKDOWN_CACHE_KEY_PARAM, sourcePath);
-  const response = NextResponse.rewrite(destination, {
-    request: { headers: requestHeaders },
-  });
-  appendVary(response.headers, "Accept");
-  return response;
+  return rewriteMarkdownResponse(request, sourcePath, false);
 }
 
 export const config = {
   matcher: [
-    "/((?!api/|_next/|_vercel/|favicon.ico|icon.svg|opengraph-image|robots.txt|sitemap.xml|feed.xml|llms.txt|.*\\.[^/]+$).*)",
+    "/((?!api/|_next/|_vercel/|favicon.ico|icon.svg|opengraph-image|robots.txt|sitemap.xml|feed.xml|llms.txt|.*\\.(?!md$)[^/]+$).*)",
   ],
 };

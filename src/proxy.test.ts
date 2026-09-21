@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   MARKDOWN_CACHE_KEY_PARAM,
+  MARKDOWN_EXPLICIT_PARAM,
   MARKDOWN_ROUTE,
   MARKDOWN_SOURCE_HEADER,
 } from "@/lib/markdown-routing";
@@ -28,6 +29,20 @@ describe("Markdown negotiation proxy", () => {
         config,
         nextConfig: {},
         url: "/api/contact",
+      }),
+    ).toBe(false);
+    expect(
+      unstable_doesMiddlewareMatch({
+        config,
+        nextConfig: {},
+        url: "/uses.md",
+      }),
+    ).toBe(true);
+    expect(
+      unstable_doesMiddlewareMatch({
+        config,
+        nextConfig: {},
+        url: "/guide.pdf",
       }),
     ).toBe(false);
     expect(
@@ -63,7 +78,29 @@ describe("Markdown negotiation proxy", () => {
     expect(rewritten.searchParams.get(MARKDOWN_CACHE_KEY_PARAM)).toBe(
       "/uses/example?ref=agent",
     );
+    expect(rewritten.searchParams.has(MARKDOWN_EXPLICIT_PARAM)).toBe(false);
     expect(response.headers.get("vary")).toContain("Accept");
+    expect(
+      response.headers.get("x-middleware-request-x-agent-markdown-source"),
+    ).toBe("/uses/example?ref=agent");
+  });
+
+  it("serves an explicit .md alias regardless of the Accept header", () => {
+    const request = new NextRequest(
+      "https://example.com/uses/example.md?ref=agent",
+      { headers: { Accept: "text/html" } },
+    );
+    const response = proxy(request);
+
+    expect(isRewrite(response as NextResponse)).toBe(true);
+    const rewrittenUrl = getRewrittenUrl(response as NextResponse);
+    expect(rewrittenUrl).not.toBeNull();
+    const rewritten = new URL(rewrittenUrl!);
+    expect(rewritten.pathname).toBe(MARKDOWN_ROUTE);
+    expect(rewritten.searchParams.get(MARKDOWN_CACHE_KEY_PARAM)).toBe(
+      "/uses/example?ref=agent",
+    );
+    expect(rewritten.searchParams.get(MARKDOWN_EXPLICIT_PARAM)).toBe("1");
     expect(
       response.headers.get("x-middleware-request-x-agent-markdown-source"),
     ).toBe("/uses/example?ref=agent");

@@ -488,6 +488,96 @@ async function auditMarkdownNegotiation(enabled: boolean): Promise<void> {
   );
 }
 
+async function auditExplicitMarkdownRoutes(enabled: boolean): Promise<void> {
+  if (!enabled) {
+    const alias = await fetchPage(`${baseUrl}/uses.md`);
+    const removed = !/^text\/markdown(?:;|$)/i.test(alias.contentType);
+    record(
+      "LLM-02",
+      removed ? "PASS" : "FAIL",
+      "explicit Markdown routes",
+      removed
+        ? "Deliberately removed"
+        : "Checklist marks explicit Markdown routes not applicable, but /uses.md still serves text/markdown",
+    );
+    return;
+  }
+
+  const missingPath = `/__launch-audit-explicit-missing-${Date.now().toString(36)}`;
+  const [
+    alias,
+    aliasWithHtmlAccept,
+    negotiated,
+    nestedAlias,
+    nestedNegotiated,
+    missingAlias,
+  ] = await Promise.all([
+    fetchPage(`${baseUrl}/uses.md`),
+    fetchPage(`${baseUrl}/uses.md`, { Accept: "text/html" }),
+    fetchPage(`${baseUrl}/uses`, { Accept: "text/markdown" }),
+    fetchPage(`${baseUrl}/uses/website-migrations.md`),
+    fetchPage(`${baseUrl}/uses/website-migrations`, {
+      Accept: "text/markdown",
+    }),
+    fetchPage(`${baseUrl}${missingPath}.md`),
+  ]);
+
+  const aliasPassed =
+    alias.status === 200 &&
+    /^text\/markdown(?:;|$)/i.test(alias.contentType) &&
+    alias.html.trim().length >= 20 &&
+    hasVaryToken(alias, "Accept") &&
+    alias.html === negotiated.html;
+  record(
+    "LLM-02",
+    aliasPassed ? "PASS" : "FAIL",
+    "/uses.md",
+    aliasPassed
+      ? "Matches the Markdown negotiated from /uses"
+      : `Expected HTTP 200 text/markdown identical to negotiated /uses; received HTTP ${alias.status}, ${alias.contentType || "no content type"}`,
+  );
+
+  const explicitWins =
+    aliasWithHtmlAccept.status === 200 &&
+    /^text\/markdown(?:;|$)/i.test(aliasWithHtmlAccept.contentType) &&
+    aliasWithHtmlAccept.html === negotiated.html;
+  record(
+    "LLM-02",
+    explicitWins ? "PASS" : "FAIL",
+    "explicit representation preference",
+    explicitWins
+      ? "/uses.md stays Markdown when the request accepts HTML"
+      : `Expected /uses.md to remain Markdown; received HTTP ${aliasWithHtmlAccept.status}, ${aliasWithHtmlAccept.contentType || "no content type"}`,
+  );
+
+  const nestedPassed =
+    nestedAlias.status === 200 &&
+    /^text\/markdown(?:;|$)/i.test(nestedAlias.contentType) &&
+    nestedAlias.html === nestedNegotiated.html;
+  record(
+    "LLM-02",
+    nestedPassed ? "PASS" : "FAIL",
+    "/uses/website-migrations.md",
+    nestedPassed
+      ? "Nested alias matches its negotiated Markdown representation"
+      : `Expected a nested Markdown alias identical to its negotiated page; received HTTP ${nestedAlias.status}, ${nestedAlias.contentType || "no content type"}`,
+  );
+
+  const missingPassed =
+    missingAlias.status === 404 &&
+    /^text\/markdown(?:;|$)/i.test(missingAlias.contentType) &&
+    missingAlias.html.trim().length >= 20 &&
+    /\[[^\]]+]\((?:\/|\/sitemap\.xml|\/llms\.txt)\)/.test(missingAlias.html);
+  record(
+    "LLM-02",
+    missingPassed ? "PASS" : "FAIL",
+    `${missingPath}.md`,
+    missingPassed
+      ? "Missing explicit alias keeps HTTP 404 and a Markdown recovery link"
+      : `Expected HTTP 404 text/markdown with a recovery link; received HTTP ${missingAlias.status}, ${missingAlias.contentType || "no content type"}`,
+  );
+}
+
 function isXmlDiscoveryResponse(page: Page): boolean {
   return (
     /^(?:application|text)\/(?:[a-z0-9.+-]+\+)?xml(?:;|$)/i.test(
@@ -838,6 +928,9 @@ async function liveAudit(checklist: LaunchChecklist): Promise<void> {
   const markdownNegotiationEnabled =
     checklistItems.find((item) => item.id === "LLM-03")?.status !==
     "not_applicable";
+  const explicitMarkdownEnabled =
+    checklistItems.find((item) => item.id === "LLM-02")?.status !==
+    "not_applicable";
   const [robots, sitemap, llmsTxt] = await Promise.all([
     fetchPage(`${baseUrl}/robots.txt`),
     fetchPage(`${baseUrl}/sitemap.xml`),
@@ -845,6 +938,7 @@ async function liveAudit(checklist: LaunchChecklist): Promise<void> {
   ]);
 
   await auditMarkdownNegotiation(markdownNegotiationEnabled);
+  await auditExplicitMarkdownRoutes(explicitMarkdownEnabled);
 
   if (llmsTxtEnabled) {
     await auditLlmsTxt(llmsTxt);

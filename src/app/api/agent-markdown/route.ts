@@ -7,7 +7,9 @@ import {
 } from "@/lib/markdown-representation";
 import {
   MARKDOWN_BYPASS_HEADER,
+  MARKDOWN_EXPLICIT_PARAM,
   MARKDOWN_SOURCE_HEADER,
+  markdownAliasPathname,
 } from "@/lib/markdown-routing";
 
 export const dynamic = "force-dynamic";
@@ -43,6 +45,22 @@ function responseHeaders(source: Response): Headers {
   return headers;
 }
 
+function redirectLocation(
+  request: NextRequest,
+  sourceUrl: URL,
+  location: string,
+): string {
+  if (request.nextUrl.searchParams.get(MARKDOWN_EXPLICIT_PARAM) !== "1") {
+    return location;
+  }
+
+  const target = new URL(location, sourceUrl);
+  if (target.origin !== sourceUrl.origin) return location;
+
+  target.pathname = markdownAliasPathname(target.pathname);
+  return `${target.pathname}${target.search}${target.hash}`;
+}
+
 async function markdownResponse(
   request: NextRequest,
   includeBody: boolean,
@@ -73,7 +91,12 @@ async function markdownResponse(
     const location = source.headers.get("location");
     return new Response(null, {
       status: source.status,
-      headers: location ? { Location: location, Vary: "Accept" } : undefined,
+      headers: location
+        ? {
+            Location: redirectLocation(request, sourceUrl, location),
+            Vary: "Accept",
+          }
+        : undefined,
     });
   }
 
