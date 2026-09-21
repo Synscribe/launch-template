@@ -74,6 +74,44 @@ export function extractMainHtml(html: string): string {
   );
 }
 
+function markdownLinkDestination(destination: string): string {
+  const escaped = destination.replace(/([<>()])/g, "\\$1");
+  return escaped.includes(" ") ? `<${escaped}>` : escaped;
+}
+
+function markdownLinkTitle(title: string | null): string {
+  const cleaned = title?.replace(/(\n+\s*)+/g, "\n") ?? "";
+  return cleaned ? ` "${cleaned.replace(/"/g, '\\"')}"` : "";
+}
+
+function originalImageSource(source: string): string {
+  try {
+    const url = new URL(source, "https://markdown.invalid");
+    if (url.pathname !== "/_next/image") return source;
+    return url.searchParams.get("url") || source;
+  } catch {
+    return source;
+  }
+}
+
+function headingLink(content: string, node: HTMLElement): string | undefined {
+  const heading = node.querySelector("h1, h2, h3, h4, h5, h6");
+  const href = node.getAttribute("href");
+  if (!heading || !href) return undefined;
+
+  const level = Number(heading.tagName.slice(1));
+  const headingPattern = new RegExp(`(^|\\n)(#{${level}}[ \\t]+)([^\\n]+)`);
+  const title = markdownLinkTitle(node.getAttribute("title"));
+  const destination = markdownLinkDestination(href);
+
+  const normalized = content.replace(
+    headingPattern,
+    (_match, boundary: string, prefix: string, headingContent: string) =>
+      `${boundary}${prefix}[${headingContent.trim()}](${destination}${title})`,
+  );
+  return normalized === content ? undefined : normalized;
+}
+
 export function htmlToMarkdown(html: string): string {
   const turndown = new TurndownService({
     bulletListMarker: "-",
@@ -86,6 +124,32 @@ export function htmlToMarkdown(html: string): string {
   turndown.remove(["script", "style", "template", "noscript"]);
   turndown.addRule("remove-svg", {
     filter: (node) => node.nodeName.toLowerCase() === "svg",
+    replacement: () => "",
+  });
+  turndown.addRule("readable-image", {
+    filter: "img",
+    replacement: (_content, node) => {
+      const alt = node.getAttribute("alt")?.trim() ?? "";
+      if (!alt) return "";
+
+      const source = originalImageSource(node.getAttribute("src") ?? "");
+      if (!source) return "";
+
+      return `![${turndown.escape(alt)}](${markdownLinkDestination(source)}${markdownLinkTitle(node.getAttribute("title"))})`;
+    },
+  });
+  turndown.addRule("linked-card", {
+    filter: (node) =>
+      node.nodeName === "A" &&
+      Boolean(node.getAttribute("href")) &&
+      Boolean(node.querySelector("h1, h2, h3, h4, h5, h6")),
+    replacement: (content, node) => {
+      const normalized = headingLink(content, node);
+      return normalized ? `\n\n${normalized.trim()}\n\n` : content;
+    },
+  });
+  turndown.addRule("remove-aria-hidden", {
+    filter: (node) => node.getAttribute("aria-hidden") === "true",
     replacement: () => "",
   });
 

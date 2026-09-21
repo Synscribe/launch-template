@@ -480,10 +480,11 @@ Check:
 - A request with `Accept: text/html` still returns the existing HTML page and visual design.
 - Negotiation honors media-range specificity, quality values, wildcards, and `q=0`; return HTTP 406 when neither HTML nor Markdown is acceptable.
 - Generated Markdown comes from the rendered page's `<main>` content. Do not maintain a second Markdown copy for ordinary pages.
+- Normalize full-card links into ordinary blocks with a linked heading. Omit accessibility-hidden elements and images without useful alt text, and expose the original source URL for meaningful Next.js optimized images.
 - A file under `src/content/markdown` may deliberately override one route. `/` maps to `index.md`; `/uses/example` maps to `uses/example.md`. An override changes only the Markdown representation and never creates a missing HTML route or changes its status.
 - Keep source paths in the internal rewrite cache key so cached Markdown cannot leak between routes.
 
-The live launch audit checks both homepage representations, quality-value selection, HTTP 406 behavior, and Markdown 404 recovery. Repeat it against the production URL before launch.
+The live launch audit checks both homepage representations, quality-value selection, HTTP 406 behavior, linked-card structure, and Markdown 404 recovery. Repeat it against the production URL before launch.
 
 ## P1 — non-blocking quality and feature-dependent checks
 

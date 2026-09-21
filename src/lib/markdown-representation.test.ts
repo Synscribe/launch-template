@@ -48,6 +48,62 @@ describe("Markdown representations", () => {
     expect(markdown).not.toContain("Decoration");
   });
 
+  it("turns a linked card into ordinary blocks with a linked heading", () => {
+    const markdown = htmlToMarkdown(`<main>
+      <ul>
+        <li>
+          <a href="/uses/website-migrations" title="Open use case">
+            <article>
+              <h3>Website migrations</h3>
+              <p>Protect important URLs and search traffic.</p>
+            </article>
+            <span>View use case <svg><path /></svg></span>
+          </a>
+        </li>
+      </ul>
+    </main>`);
+
+    expect(markdown).toContain(
+      '### [Website migrations](/uses/website-migrations "Open use case")',
+    );
+    expect(markdown).toContain("Protect important URLs and search traffic.");
+    expect(markdown).toContain("View use case");
+    expect(markdown).not.toMatch(/\[\s*#{1,6}\s/);
+  });
+
+  it("removes decorative images and accessibility-hidden content", () => {
+    const markdown = htmlToMarkdown(`<main>
+      <a aria-hidden="true" href="/blog/example">
+        <img alt="" src="/_next/image?url=%2Fcover.png&amp;w=1200&amp;q=75">
+        Hidden image link
+      </a>
+      <a href="/blog/example">
+        <div><img alt="" src="/_next/image?url=%2Fcover.png&amp;w=1200&amp;q=75"></div>
+        <div><h2>Example article</h2><p>A useful summary.</p></div>
+      </a>
+    </main>`);
+
+    expect(markdown).toContain("## [Example article](/blog/example)");
+    expect(markdown).toContain("A useful summary.");
+    expect(markdown).not.toContain("Hidden image link");
+    expect(markdown).not.toContain("![](");
+    expect(markdown).not.toContain("/_next/image");
+  });
+
+  it("uses the original source for meaningful optimized images", () => {
+    const markdown = htmlToMarkdown(`<main>
+      <img
+        alt="Migration flow"
+        title="Page redirects"
+        src="/_next/image?url=https%3A%2F%2Fimages.example.com%2Fflow.png&amp;w=1920&amp;q=75"
+      >
+    </main>`);
+
+    expect(markdown).toBe(
+      '![Migration flow](https://images.example.com/flow.png "Page redirects")',
+    );
+  });
+
   it("maps canonical paths to optional nested Markdown overrides", () => {
     const root = "/tmp/example-markdown-root";
 
