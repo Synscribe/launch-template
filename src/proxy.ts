@@ -8,6 +8,7 @@ import {
 import {
   MARKDOWN_BYPASS_HEADER,
   MARKDOWN_CACHE_KEY_PARAM,
+  MARKDOWN_EXPLICIT_HEADER,
   MARKDOWN_EXPLICIT_PARAM,
   MARKDOWN_ROUTE,
   MARKDOWN_SOURCE_HEADER,
@@ -27,6 +28,10 @@ function rewriteMarkdownResponse(
 ): NextResponse {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(MARKDOWN_SOURCE_HEADER, sourcePath);
+  // Route handlers see the public URL, not the rewrite, so the alias flag
+  // travels as a header. The query parameter only separates cache entries.
+  if (explicit) requestHeaders.set(MARKDOWN_EXPLICIT_HEADER, "1");
+  else requestHeaders.delete(MARKDOWN_EXPLICIT_HEADER);
 
   const destination = new URL(MARKDOWN_ROUTE, request.url);
   destination.searchParams.set(MARKDOWN_CACHE_KEY_PARAM, sourcePath);

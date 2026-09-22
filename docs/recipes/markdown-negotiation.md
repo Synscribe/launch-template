@@ -147,7 +147,7 @@ After deployment, repeat the `curl` checks and run the audit against the reviewe
 
 Header negotiation is the P0 baseline. If a project keeps negotiation but deliberately removes the P2 aliases:
 
-1. Remove `sourcePathnameFromMarkdownAlias`, `markdownAliasPathname`, and `MARKDOWN_EXPLICIT_PARAM` from `src/lib/markdown-routing.ts` and their tests.
+1. Remove `sourcePathnameFromMarkdownAlias`, `markdownAliasPathname`, `MARKDOWN_EXPLICIT_PARAM`, and `MARKDOWN_EXPLICIT_HEADER` from `src/lib/markdown-routing.ts` and their tests.
 2. Remove the explicit-path branch and `.md` matcher exception from `src/proxy.ts`.
 3. Remove explicit redirect rewriting from `src/app/api/agent-markdown/route.ts`.
 4. Set `LLM-02` to `not_applicable`, update the feature catalog and this recipe, then regenerate the readable checklist.

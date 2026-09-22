@@ -65,7 +65,10 @@ describe("Markdown negotiation proxy", () => {
     const request = new NextRequest(
       "https://example.com/uses/example?ref=agent",
       {
-        headers: { Accept: "text/markdown" },
+        headers: {
+          Accept: "text/markdown",
+          "x-agent-markdown-explicit": "1",
+        },
       },
     );
     const response = proxy(request);
@@ -79,6 +82,9 @@ describe("Markdown negotiation proxy", () => {
       "/uses/example?ref=agent",
     );
     expect(rewritten.searchParams.has(MARKDOWN_EXPLICIT_PARAM)).toBe(false);
+    expect(
+      response.headers.get("x-middleware-request-x-agent-markdown-explicit"),
+    ).toBeNull();
     expect(response.headers.get("vary")).toContain("Accept");
     expect(
       response.headers.get("x-middleware-request-x-agent-markdown-source"),
@@ -101,6 +107,9 @@ describe("Markdown negotiation proxy", () => {
       "/uses/example?ref=agent",
     );
     expect(rewritten.searchParams.get(MARKDOWN_EXPLICIT_PARAM)).toBe("1");
+    expect(
+      response.headers.get("x-middleware-request-x-agent-markdown-explicit"),
+    ).toBe("1");
     expect(
       response.headers.get("x-middleware-request-x-agent-markdown-source"),
     ).toBe("/uses/example?ref=agent");

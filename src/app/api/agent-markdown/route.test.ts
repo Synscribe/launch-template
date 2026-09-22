@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   MARKDOWN_BYPASS_HEADER,
-  MARKDOWN_EXPLICIT_PARAM,
+  MARKDOWN_EXPLICIT_HEADER,
   MARKDOWN_SOURCE_HEADER,
 } from "@/lib/markdown-routing";
 
@@ -110,10 +110,12 @@ describe("Markdown representation route", () => {
     );
 
     const response = await GET(
-      new NextRequest(
-        `https://example.com/api/agent-markdown?${MARKDOWN_EXPLICIT_PARAM}=1`,
-        { headers: { [MARKDOWN_SOURCE_HEADER]: "/uses/old" } },
-      ),
+      new NextRequest("https://example.com/api/agent-markdown", {
+        headers: {
+          [MARKDOWN_SOURCE_HEADER]: "/uses/old",
+          [MARKDOWN_EXPLICIT_HEADER]: "1",
+        },
+      }),
     );
 
     expect(response.status).toBe(308);
@@ -143,10 +145,12 @@ describe("Markdown representation route", () => {
       }),
     );
     const external = await GET(
-      new NextRequest(
-        `https://example.com/api/agent-markdown?${MARKDOWN_EXPLICIT_PARAM}=1`,
-        { headers: { [MARKDOWN_SOURCE_HEADER]: "/external" } },
-      ),
+      new NextRequest("https://example.com/api/agent-markdown", {
+        headers: {
+          [MARKDOWN_SOURCE_HEADER]: "/external",
+          [MARKDOWN_EXPLICIT_HEADER]: "1",
+        },
+      }),
     );
 
     expect(negotiated.headers.get("location")).toBe("/uses/new");
