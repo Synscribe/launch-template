@@ -7,7 +7,7 @@ import {
 } from "@/lib/markdown-representation";
 import {
   MARKDOWN_BYPASS_HEADER,
-  MARKDOWN_EXPLICIT_PARAM,
+  MARKDOWN_EXPLICIT_HEADER,
   MARKDOWN_SOURCE_HEADER,
   markdownAliasPathname,
 } from "@/lib/markdown-routing";
@@ -46,13 +46,11 @@ function responseHeaders(source: Response): Headers {
 }
 
 function redirectLocation(
-  request: NextRequest,
+  explicit: boolean,
   sourceUrl: URL,
   location: string,
 ): string {
-  if (request.nextUrl.searchParams.get(MARKDOWN_EXPLICIT_PARAM) !== "1") {
-    return location;
-  }
+  if (!explicit) return location;
 
   const target = new URL(location, sourceUrl);
   if (target.origin !== sourceUrl.origin) return location;
@@ -93,7 +91,11 @@ async function markdownResponse(
       status: source.status,
       headers: location
         ? {
-            Location: redirectLocation(request, sourceUrl, location),
+            Location: redirectLocation(
+              request.headers.get(MARKDOWN_EXPLICIT_HEADER) === "1",
+              sourceUrl,
+              location,
+            ),
             Vary: "Accept",
           }
         : undefined,
