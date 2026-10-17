@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { isHumanPaced } from "@/lib/form-timing";
+
 import { parseContactPayload } from "@/lib/contact";
 import {
   deliverContactSubmission,
@@ -12,8 +14,6 @@ import { checkContactRateLimit } from "./_lib/rate-limit";
 export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 20_000;
-const MIN_COMPLETION_MS = 1_200;
-const MAX_COMPLETION_MS = 12 * 60 * 60 * 1000;
 
 function clientKey(request: Request): string {
   return (
@@ -84,14 +84,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   }
 
-  const startedAt =
-    typeof source.startedAt === "number" ? source.startedAt : Number.NaN;
-  const elapsed = Date.now() - startedAt;
-  if (
-    !Number.isFinite(startedAt) ||
-    elapsed < MIN_COMPLETION_MS ||
-    elapsed > MAX_COMPLETION_MS
-  ) {
+  if (!isHumanPaced(source.elapsedMs)) {
     return safeError("Please reload the page and try again.", 400);
   }
 
