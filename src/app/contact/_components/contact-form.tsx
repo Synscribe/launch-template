@@ -21,6 +21,7 @@ import {
 import { getVisitorContext } from "@/lib/visitor-context";
 
 import { useTurnstile } from "./turnstile";
+import { elapsedSince } from "@/lib/form-timing";
 
 type ContactFormProps = {
   deliveryConfigured: boolean;
@@ -64,7 +65,7 @@ export function ContactForm({
   });
 
   useEffect(() => {
-    startedAt.current = Date.now();
+    startedAt.current = performance.now();
   }, []);
 
   function updateField(name: keyof ContactFields, value: string) {
@@ -96,7 +97,7 @@ export function ContactForm({
           ...validation.data,
           attribution: getVisitorContext(),
           companyWebsite,
-          startedAt: startedAt.current,
+          elapsedMs: elapsedSince(startedAt.current),
           ...(turnstileEnabled ? { turnstileToken } : {}),
         }),
       });
@@ -145,7 +146,7 @@ export function ContactForm({
           <Button
             className="h-auto rounded-full px-5 py-3"
             onClick={() => {
-              startedAt.current = Date.now();
+              startedAt.current = performance.now();
               setState("idle");
             }}
             type="button"

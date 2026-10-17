@@ -209,7 +209,7 @@ export function parseContactPayload(
     "website",
     "message",
     "attribution",
-    "startedAt",
+    "elapsedMs",
     "companyWebsite",
     "turnstileToken",
   ]);

@@ -43,7 +43,7 @@ describe("contact validation", () => {
     const result = parseContactPayload(
       {
         ...validFields,
-        startedAt: Date.now() - 5_000,
+        elapsedMs: 5_000,
         companyWebsite: "",
         turnstileToken: "single-use-token",
         attribution: {
